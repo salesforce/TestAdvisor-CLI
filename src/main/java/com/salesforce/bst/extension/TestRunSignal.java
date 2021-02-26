@@ -68,11 +68,11 @@ public class TestRunSignal {
         return this.endTime;
     }
 
-    public boolean isAutomationChanged(){
+    public boolean hasAutomationChanged(){
         return this.hasAutomationChanged;
     }
 
-    public boolean isMetadataChanged(){
+    public boolean hasMetadataChanged(){
         return this.hasMetadataChanged;
     }
 
