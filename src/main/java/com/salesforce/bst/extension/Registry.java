@@ -16,16 +16,16 @@ public class Registry {
     @JsonProperty
     private String registryName; // Regex "[a-zA-Z0-9]{1,80}"
     @JsonProperty
-    private TimeZone timezone;
+    private TimeZone timeZone;
     
     public Registry(UUID id){
         this.registryGuid = id;
     }
 
-    public Registry(UUID id, String name, TimeZone timezone){
+    public Registry(UUID id, String name, TimeZone timeZone){
         this(id);
         this.registryName = name;
-        this.timezone = timezone;
+        this.timeZone = timeZone;
     }
 
     public UUID getRegistryGuid(){
@@ -36,7 +36,7 @@ public class Registry {
         return this.registryName;
     }
 
-    public TimeZone getTimeZone(){
-        return this.timezone;
+    public TimeZone timeZone(){
+        return this.timeZone;
     }
 }

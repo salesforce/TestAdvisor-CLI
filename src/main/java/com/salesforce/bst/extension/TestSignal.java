@@ -41,7 +41,7 @@ public class TestSignal {
     }
 
     public String getTestName(){
-        return this.getTestName();
+        return this.testName;
     }
 
     public long getStartTime(){
@@ -49,7 +49,7 @@ public class TestSignal {
     }
 
     public long getEndTime(){
-        return this.getEndTime();
+        return this.endTime;
     }
 
     public TestResult getTestResult(){
@@ -74,7 +74,7 @@ public class TestSignal {
         this.seleniumFailures = seleniumFailures;
     }
 
-    public List<TestFailure> getBroswerFailures(){
+    public List<TestFailure> getBrowserFailures(){
         return this.browserFailures;
     }
     public void setBrowserFailures(List<TestFailure> browserFailures){
