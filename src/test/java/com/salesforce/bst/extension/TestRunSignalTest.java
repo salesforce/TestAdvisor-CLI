@@ -2,7 +2,10 @@ package com.salesforce.bst.extension;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -24,6 +27,8 @@ public class TestRunSignalTest {
     TestFailure seleniumFailure = new TestFailure("ElementNotFound", System.currentTimeMillis());
     TestSignal signal = new TestSignal("TestCase1", System.currentTimeMillis(), 
                     System.currentTimeMillis(), TestResult.PASS);
+    signal.setTestFailures(new ArrayList<>());
+    signal.setSeleniumFailures(new ArrayList<>());
     signal.getTestFailures().add(testFailure);
     signal.getSeleniumFailures().add(seleniumFailure);
     TestRunSignal testRunSignal = new TestRunSignal(customer,registry,UUID.randomUUID(), 
@@ -34,5 +39,9 @@ public class TestRunSignalTest {
     String content = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(testRunSignal);
     
     assertTrue(content.contains("testSignals"));
+
+    BufferedWriter writer = new BufferedWriter(new FileWriter("target/sample.json"));
+    writer.write(content);
+    writer.close();
   }
 }
