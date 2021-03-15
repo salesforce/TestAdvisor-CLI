@@ -21,17 +21,15 @@ public class TestRunSignalTest {
 
   @Test
   public void testSerialization() throws JsonGenerationException, JsonMappingException, IOException {
-    Customer customer = new Customer("123","cs997","1234567890","bst");
-    Registry registry = new Registry(UUID.randomUUID());
-    TestFailure testFailure = new TestFailure("AssertTrue", System.currentTimeMillis());
-    TestFailure seleniumFailure = new TestFailure("ElementNotFound", System.currentTimeMillis());
+    Customer customer = new Customer("123","cs997","00D9A0000009IsD","bst");
+    Registry registry = new Registry(UUID.randomUUID(),"bst registry", "0.0.1");
     TestSignal signal = new TestSignal("TestCase1", System.currentTimeMillis(), 
                     System.currentTimeMillis(), TestResult.PASS);
     signal.setTestFailures(new ArrayList<>());
-    signal.setSeleniumFailures(new ArrayList<>());
-    signal.getTestFailures().add(testFailure);
-    signal.getSeleniumFailures().add(seleniumFailure);
-    TestRunSignal testRunSignal = new TestRunSignal(customer,registry,UUID.randomUUID(), 
+    signal.getTestFailures().add(new TestFailure("AutomationLog","AssertTrue", System.currentTimeMillis()));
+    signal.getTestFailures().add(new TestFailure("SeleniumLog","ElementNotFound", System.currentTimeMillis()));
+   
+    TestRunSignal testRunSignal = new TestRunSignal(customer,registry, 
                                 System.currentTimeMillis(), System.currentTimeMillis());
     testRunSignal.getTestSignals().add(signal);
 
