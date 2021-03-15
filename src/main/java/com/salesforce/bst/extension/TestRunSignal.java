@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -17,7 +18,7 @@ public class TestRunSignal {
     private Customer customer;
     @JsonProperty
     private Registry registry; 
-    
+    @JsonIgnore
     private String testRunRecordId;
     // both start and end time are define as the time difference in milliseconds between
     // the current time and midnight, January 1, 1970, UTC
