@@ -18,6 +18,7 @@ public class Registry {
     @JsonProperty
     private String bstClientVersion;
 
+    public Registry() {}
     public Registry(UUID id, String name, String version){
         this.registryGuid = id;
         this.registryName = name;
@@ -30,5 +31,9 @@ public class Registry {
 
     public String getRegistryName(){
         return this.registryName;
+    }
+
+    public String getBstClientVersion(){
+        return this.bstClientVersion;
     }
 }

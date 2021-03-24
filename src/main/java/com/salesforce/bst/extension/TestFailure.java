@@ -15,6 +15,7 @@ public class TestFailure {
     @JsonProperty
     private long failureTime;
 
+    public TestFailure(){}
     public TestFailure(String source, String type, long time){
         this.failureSource = source;
         this.failureTime = time;

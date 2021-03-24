@@ -1,0 +1,30 @@
+{
+  "customer" : {
+    "customerId" : "123",
+    "sandboxInstanceName" : "cs997",
+    "sandboxOrgId" : "00D9A0000009IsD",
+    "sandboxOrgName" : "bst"
+  },
+  "registry" : {
+    "registryGuid" : "f185df4e-ee4f-4a99-9a57-e61f6682f49b",
+    "registryName" : "bst registry",
+    "bstClientVersion" : "0.0.1"
+  },
+  "startTime" : 1615772301416,
+  "endTime" : 1615772301416,
+  "testSignals" : [ {
+    "testName" : "TestCase1",
+    "startTime" : 1615772301414,
+    "endTime" : 1615772301414,
+    "testResult" : "PASS",
+    "testFailures" : [ {
+      "failureSource" : "AutomationLog",
+      "failureType" : "AssertTrue",
+      "failureTime" : 1615772301415
+    }, {
+      "failureSource" : "SeleniumLog",
+      "failureType" : "ElementNotFound",
+      "failureTime" : 1615772301415
+    } ]
+  } ]
+}

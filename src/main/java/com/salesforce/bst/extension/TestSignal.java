@@ -25,6 +25,7 @@ public class TestSignal {
     @JsonProperty
     private List<TestFailure> testFailures; // test failures collected from all sources
 
+    public TestSignal(){}
     public TestSignal(String name, long start, long end, TestResult result){
         this.testName = name;
         this.startTime = start;

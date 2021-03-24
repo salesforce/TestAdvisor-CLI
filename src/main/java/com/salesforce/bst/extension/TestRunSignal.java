@@ -29,12 +29,14 @@ public class TestRunSignal {
     @JsonProperty
     private List<TestSignal> testSignals;
 
-    public TestRunSignal(Customer customer, Registry registry, long start, long end){
+    public TestRunSignal(){}
+    
+    public TestRunSignal(Customer customer, Registry registry, long start, long end, List<TestSignal> signals){
         this.customer = customer;
         this.registry = registry;
         this.startTime = start;
         this.endTime = end;
-        this.testSignals = new ArrayList<>();
+        this.testSignals = signals;
     }
 
     public Customer getCustomer(){
