@@ -11,22 +11,90 @@
   <url>http://maven.apache.org</url>
 
   <properties>
+    <assertj.version>3.2.0</assertj.version>
+    <cglib-nodep.version>3.2.5</cglib-nodep.version>
+    <dsl.version>1.70</dsl.version>
+    <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+    <java.version>1.8</java.version>
+    <junit.version>4.12</junit.version>
+    <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
+    <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
+    <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+    <mockito.groovy.support.version>1.3</mockito.groovy.support.version>
+    <!-- Can't use mockito 1.10.9+ due to this:
+        https://github.com/cyrusinnovation/mockito-groovy-support/issues/13-->
+    <mockito.version>1.10.8</mockito.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
+
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>2.12.0</version>
-  </dependency>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+        </configuration>
+    </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+            <reportNameSuffix>junit</reportNameSuffix>
+            <properties>
+                <property>
+                    <name>junit</name>
+                    <value>false</value>
+                </property>
+            </properties>
+            <threadCount>1</threadCount>
+        </configuration>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.maven.surefire</groupId>
+                <artifactId>surefire-junit47</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-maven-plugin.version}</version>
+        <executions>
+            <execution>
+                <id>pre-unit-test</id>
+                <goals>
+                    <goal>prepare-agent</goal>
+                </goals>
+            </execution>
+            <execution>
+                <id>post-unit-test</id>
+                <goals>
+                    <goal>report</goal>
+                </goals>
+                <phase>test</phase>
+            </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
 </project>
