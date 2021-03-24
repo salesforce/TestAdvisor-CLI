@@ -15,6 +15,8 @@ public class Customer {
     @JsonProperty
     private String sandboxOrgName; // Regex "[a-zA-Z0-9]{1,80}"
 
+    public Customer() {}
+
     public Customer(String id, String instanceName, String orgId, String orgName){
         this.customerId = id;
         this.sandboxInstanceName = instanceName;

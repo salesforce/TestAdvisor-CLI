@@ -23,16 +23,9 @@ public class TestSignal {
     @JsonProperty
     private TestResult testResult;
     @JsonProperty
-    private TriageResult testTriageResult; // test case triage result from BST backend
-    @JsonProperty
-    private List<TestFailure> testFailures; // test failures collected from test output
-    @JsonProperty
-    private List<TestFailure> seleniumFailures; // test failures collected from Selenium logsp
-    @JsonProperty
-    private List<TestFailure> browserFailures; // test failures collected from browser console
-    @JsonProperty
-    private List<TestFailure> screenshotFailures; // test failures collected from screenshots
+    private List<TestFailure> testFailures; // test failures collected from all sources
 
+    public TestSignal(){}
     public TestSignal(String name, long start, long end, TestResult result){
         this.testName = name;
         this.startTime = start;
@@ -56,36 +49,11 @@ public class TestSignal {
         return this.testResult;
     }
 
-    public TriageResult getTestTriageResult(){
-        return this.testTriageResult;
-    }
-
     public List<TestFailure> getTestFailures(){
         return this.testFailures;
     }
     public void setTestFailures(List<TestFailure> testFailures){
         this.testFailures = testFailures;
-    }
-
-    public List<TestFailure> getSeleniumFailures(){
-        return this.seleniumFailures;
-    }
-    public void setSeleniumFailures(List<TestFailure> seleniumFailures){
-        this.seleniumFailures = seleniumFailures;
-    }
-
-    public List<TestFailure> getBrowserFailures(){
-        return this.browserFailures;
-    }
-    public void setBrowserFailures(List<TestFailure> browserFailures){
-        this.browserFailures = browserFailures;
-    }
-
-    public List<TestFailure> getScreenshotFailures(){
-        return this.screenshotFailures;
-    }
-    public void setScreenshotFailures(List<TestFailure> screenshotFailures){
-        this.screenshotFailures = screenshotFailures;
     }
 
 }

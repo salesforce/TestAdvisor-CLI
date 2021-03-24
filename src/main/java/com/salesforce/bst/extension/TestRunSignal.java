@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -17,8 +18,8 @@ public class TestRunSignal {
     private Customer customer;
     @JsonProperty
     private Registry registry; 
-    @JsonProperty
-    private UUID testRunGuid;
+    @JsonIgnore
+    private String testRunRecordId;
     // both start and end time are define as the time difference in milliseconds between
     // the current time and midnight, January 1, 1970, UTC
     @JsonProperty
@@ -26,28 +27,18 @@ public class TestRunSignal {
     @JsonProperty
     private long   endTime;
     @JsonProperty
-    private boolean hasAutomationChanged; // true == customer test automation changed since last test run
-    @JsonProperty
-    private boolean hasMetadataChanged; // true == customer test org metadata changed since last test run
-    @JsonProperty
     private List<TestSignal> testSignals;
 
-    public TestRunSignal(Customer customer, Registry registry, UUID id, long start, long end){
+    public TestRunSignal(){}
+    
+    public TestRunSignal(Customer customer, Registry registry, long start, long end, List<TestSignal> signals){
         this.customer = customer;
         this.registry = registry;
-        this.testRunGuid = id;
         this.startTime = start;
         this.endTime = end;
-        this.testSignals = new ArrayList<>();
+        this.testSignals = signals;
     }
 
-    public TestRunSignal(Customer customer, Registry registry, UUID id, long start, long end,
-                        boolean hasAutomationChanged, boolean hasMetadataChanged){
-        this(customer, registry, id, start, end);
-        this.hasAutomationChanged = hasAutomationChanged;
-        this.hasMetadataChanged = hasMetadataChanged;
-    }    
-    
     public Customer getCustomer(){
         return this.customer;
     }
@@ -56,8 +47,11 @@ public class TestRunSignal {
         return this.registry;
     }
 
-    public UUID getTestRunGuid(){
-        return this.testRunGuid;
+    public String getTestRunRecordId(){
+        return this.testRunRecordId;
+    }
+    public void setTestRunRecordId(String id){
+        this.testRunRecordId = id;
     }
 
     public long getStartTime(){
@@ -66,14 +60,6 @@ public class TestRunSignal {
 
     public long getEndTime(){
         return this.endTime;
-    }
-
-    public boolean hasAutomationChanged(){
-        return this.hasAutomationChanged;
-    }
-
-    public boolean hasMetadataChanged(){
-        return this.hasMetadataChanged;
     }
 
     public List<TestSignal> getTestSignals(){
