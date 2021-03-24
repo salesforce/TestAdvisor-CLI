@@ -1,9 +1,6 @@
-package com.salesforce.bst.extension;
+package com.salesforce.bst.datamodel.client;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

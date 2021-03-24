@@ -1,4 +1,4 @@
-package com.salesforce.bst.extension;
+package com.salesforce.bst.datamodel.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,4 +1,4 @@
-package com.salesforce.bst.extension;
+package com.salesforce.bst.datamodel.client;
 
 /**
  * @author Yibing Tao

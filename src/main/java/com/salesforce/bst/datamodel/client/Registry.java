@@ -1,6 +1,5 @@
-package com.salesforce.bst.extension;
+package com.salesforce.bst.datamodel.client;
 
-import java.util.TimeZone;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
