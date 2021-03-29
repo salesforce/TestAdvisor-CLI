@@ -15,7 +15,6 @@ import java.util.Scanner;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
@@ -57,11 +56,6 @@ public class RestHelper {
 			SecretsHelper.setPassPhrase("Hello World!", false);
 
 //			SecretsHelper.clearAccessToken();
-
-//			RestHelper.revoke();
-			// give 10 secs between revocation and authorization
-//			try { Thread.sleep(2000L); } catch (InterruptedException ie) { ; }
-//			if (true) return;
 //			RestHelper.authorize();
 //			if (true) return;
 
@@ -69,13 +63,10 @@ public class RestHelper {
 			JSONObject listOfTestSuites = RestHelper.query("/query?q=Select+Id,+Name+From+Test_Suite__c+Limit+5");
 			System.out.println("Test Suite records found: ");
 			JSONArray j = listOfTestSuites.getJSONArray("records");
-			String testSuiteId = null;
 			for (int i = 0; i < j.length(); i++) {
 				String testSuiteName = listOfTestSuites.getJSONArray("records").getJSONObject(i).getString("Name");
-				String tempSuiteId = listOfTestSuites.getJSONArray("records").getJSONObject(i).getString("Id");
-				if (testSuiteName.startsWith("DrillBit"))
-					testSuiteId = tempSuiteId;
-				System.out.println(tempSuiteId + " " + testSuiteName);
+				String testSuiteId = listOfTestSuites.getJSONArray("records").getJSONObject(i).getString("Id");
+				System.out.println(testSuiteId + " " + testSuiteName);
 			}
 
 			// create the JSON object containing the new test suite details.
@@ -92,11 +83,6 @@ public class RestHelper {
 			RestHelper.update("/sobjects/Test_Suite__c/" + newTestSuiteId, testSuite);
 			System.out.println("Updated account with ID: " + newTestSuiteId);
 
-			// delete old test suite or new one if no old could be found
-			String testSuiteToBeDeleted = Strings.isNullOrEmpty(testSuiteId) ? newTestSuiteId : testSuiteId;
-			RestHelper.delete("/sobjects/Test_Suite__c/" + testSuiteToBeDeleted);
-			System.out.println("Deleted test suite with ID: " + testSuiteToBeDeleted);
-			
 			// close connection
 			RestHelper.close();
 		} catch (Exception e) {
@@ -131,7 +117,7 @@ public class RestHelper {
 		// verify response is HTTP OK
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode != HttpStatus.SC_OK) {
-			throw new Exception("Authorization has failed!");
+			throw new Exception("Optaining device code has failed!");
 		}
 		String result = EntityUtils.toString(response.getEntity());
 
@@ -281,63 +267,12 @@ public class RestHelper {
 	}
 
 	/**
-	 * Deletes (i.e. HTTP Delete) a record at the given URI.
-	 * 
-	 * @param url the URI relative to base URI, e.g. "/sobjects/Account/" + accountId
-	 * @throws Exception in case of problems during deletion; any HTTP status
-	 * code other than {@link HttpStatus#SC_NO_CONTENT} will also trigger an exception
-	 */
-	public static void delete(String url) throws Exception {
-		// ensure there is a "/" between baseURL and URL
-		String fullUrl = (url.startsWith("/")) ? getBaseURL() + url : getBaseURL() + "/" + url;
-
-		CloseableHttpClient httpClient = getHttpClient();
-		HttpDelete httpDelete = new HttpDelete(fullUrl);
-		httpDelete.addHeader(getOAuthHeader());
-		httpDelete.addHeader(PRETTY_PRINT_HEADER);
-
-		// Execute the DELETE request
-		HttpResponse response = httpClient.execute(httpDelete);
-
-		// Process the result
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (statusCode != HttpStatus.SC_NO_CONTENT) {
-			throw new Exception("Deletion of record " + url + " unsuccessful. Status code returned is " + statusCode);
-		}
-	}
-
-	/**
 	 * Closes the HTTP client connection.
 	 * 
 	 * @throws Exception in case of problems during closing of the connection
 	 */
 	public static void close() throws Exception {
 		new HttpPost(getBaseURL()).releaseConnection();
-	}
-
-	/**
-	 * Revokes API access for access token currently on file.
-	 * @throws Exception if accessing the token or revocation of API access has failed
-	 */
-	private static void revokeDefunct() throws Exception {
-		String accessToken = SecretsHelper.getAccessToken();
-		if (accessToken.length() == 0)
-			return;
-
-		String revocationURL = getAuthenticationURL() + "/services/oauth2/revoke?token=" + URLEncoder.encode(accessToken, ENCODING);		
-		CloseableHttpClient httpClient = getHttpClient();
-
-		HttpPost httpPost = new HttpPost(revocationURL);
-		HttpResponse response = httpClient.execute(httpPost);
-
-		// verify response is HTTP OK
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (statusCode != HttpStatus.SC_OK) {
-			// TODO always getting status 302 :-(
-			throw new Exception("Revoking authorization has failed! HTTPS Status: " + statusCode);
-		}
-		SecretsHelper.clearAccessToken();
-		System.out.println("API access revoken for user account");
 	}
 
 	/**
