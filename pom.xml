@@ -24,6 +24,10 @@
     <!-- Can't use mockito 1.10.9+ due to this:
         https://github.com/cyrusinnovation/mockito-groovy-support/issues/13-->
     <mockito.version>1.10.8</mockito.version>
+    <jackson-databind.version>2.12.2</jackson-databind.version>
+    <apache.httpclient.version>4.5.13</apache.httpclient.version>
+    <org.json.version>20210307</org.json.version>
+    <google.guava.version>30.1.1-jre</google.guava.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -38,24 +42,24 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.12.2</version>
+      <version>${jackson-databind.version}</version>
     </dependency>
 	<dependency>
 	    <groupId>org.apache.httpcomponents</groupId>
 	    <artifactId>httpclient</artifactId>
-	    <version>4.5.13</version>
+	    <version>${apache.httpclient.version}</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.json/json -->
 	<dependency>
 	    <groupId>org.json</groupId>
 	    <artifactId>json</artifactId>
-	    <version>20210307</version>
+	    <version>${org.json.version}</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 	<dependency>
 	    <groupId>com.google.guava</groupId>
 	    <artifactId>guava</artifactId>
-	    <version>30.1.1-jre</version>
+	    <version>${google.guava.version}</version>
 	</dependency>
   </dependencies>
 

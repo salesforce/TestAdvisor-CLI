@@ -28,10 +28,8 @@ import com.google.common.base.Strings;
  */
 public class SecretsHelper {
 	private static final String CREDENTIALS_FILE = "credentials.properties";
-	private static final String USERENAME_PROPERTY = "portal.username";
-	private static final String PASSWORD_PROPERTY = "portal.password";
-	private static final String CLIENT_ID_PROPERTY = "portal.clientid";
-	private static final String CLIENT_SECRET_PROPERTY = "portal.clientsecret";
+	private static final String ACCESS_TOKEN_PROPERTY = "portal.accesstoken";
+	private static final String REFRESH_TOKEN_PROPERTY = "portal.refreshtoken";
 	private static final String PASSPHRASE_HASH_PROPERTY = "bcrypt.hash";
 	private static final String UNICODE_CHARSET = "UTF8";
 
@@ -41,109 +39,85 @@ public class SecretsHelper {
 	private static String passPhrase = null;
 
 	/**
-	 * Saves the given user name to credentials file.
+	 * Saves the given access token to credentials file.
 	 * 
-	 * @param userName user name to be stored in clear text
-	 * @throws Exception if accessing credentials file failed for any reason
-	 */
-	public static void setUserName(String userName) throws Exception {
-		if (Strings.isNullOrEmpty(userName))
-			throw new IllegalArgumentException("Username must not be null or empty!");
-		loadCredentials();
-		credentials.setProperty(USERENAME_PROPERTY, userName);
-		saveCredentials();
-	}
-
-	/**
-	 * Gets the user name from credentials file.
-	 * 
-	 * @return user name or empty string if none could be found in credentials file
-	 * @throws Exception if accessing credentials file failed for any reason
-	 */
-	public static String getUserName() throws Exception {
-		loadCredentials();
-		return credentials.getProperty(USERENAME_PROPERTY, "");
-	}
-
-	/**
-	 * Saves the given user password to credentials file.
-	 * 
-	 * @param passWord password to be stored in encrypted way
+	 * @param accessToken access token obtained during authorization; to be stored in encrypted way
 	 * @throws Exception if accessing credentials file or encryption failed for any reason
 	 */
-	public static void setPassWord(String passWord) throws Exception {
-		if (Strings.isNullOrEmpty(passWord))
-			throw new IllegalArgumentException("Password must not be null or empty!");
+	public static void setAccessToken(String accessToken) throws Exception {
+		if (Strings.isNullOrEmpty(accessToken))
+			throw new IllegalArgumentException("Access token is missing; authentication is required!");
 		loadCredentials();
 		initializeSecretKey();
-		credentials.setProperty(PASSWORD_PROPERTY, encrypt(passWord));
+		credentials.setProperty(ACCESS_TOKEN_PROPERTY, encrypt(accessToken));
 		saveCredentials();
 	}
 
 	/**
-	 * Gets the user password from credentials file.
+	 * Clears the given access token by setting it to empty string.
 	 * 
-	 * @return decrypted password
-	 * @throws Exception if accessing credentials file or decryption failed for any reason
-	 * or if password could be found in credentials file
-	 */
-	public static String getPassWord() throws Exception {
-		loadCredentials();
-		initializeSecretKey();
-		return decrypt(credentials.getProperty(PASSWORD_PROPERTY));
-	}
-
-	/**
-	 * Saves the given client id, aka "Connected App ID" to credentials file.
-	 * 
-	 * @param clientId client ID to be stored in clear text
-	 * @throws Exception if accessing credentials file failed for any reason
-	 */
-	public static void setClientId(String clientId) throws Exception {
-		if (Strings.isNullOrEmpty(clientId))
-			throw new IllegalArgumentException("Connected app ID (aka \"Client ID\") must not be null or empty!");
-		loadCredentials();
-		credentials.setProperty(CLIENT_ID_PROPERTY, clientId);
-		saveCredentials();
-	}
-
-	/**
-	 * Gets the client ID from credentials file.
-	 * 
-	 * @return client ID or empty string if none could be found in credentials file
-	 * @throws Exception if accessing credentials file failed for any reason
-	 */
-	public static String getClientId() throws Exception {
-		loadCredentials();
-		return credentials.getProperty(CLIENT_ID_PROPERTY, "");
-	}
-
-	/**
-	 * Saves the given client secret aka "Connected App Secret" to credentials file.
-	 * 
-	 * @param clientSecret client secret to be stored in encrypted way
 	 * @throws Exception if accessing credentials file or encryption failed for any reason
 	 */
-	public static void setClientSecret(String clientSecret) throws Exception {
-		if (Strings.isNullOrEmpty(clientSecret))
-			throw new IllegalArgumentException("Connected app secrett(aka \"Client Secret\") must not be null or empty!");
+	public static void clearAccessToken() throws Exception {
 		loadCredentials();
 		initializeSecretKey();
-		credentials.setProperty(CLIENT_SECRET_PROPERTY, encrypt(clientSecret));
+		credentials.setProperty(ACCESS_TOKEN_PROPERTY, "");
 		saveCredentials();
 	}
 
 	/**
-	 * Gets the client secret from credentials file.
+	 * Gets the access token from credentials file.
 	 * 
-	 * @return decrypted client secret
+	 * @return decrypted access token or empty string
 	 * @throws Exception if accessing credentials file or decryption failed for any reason
-	 * or if client secret could be found in credentials file
+	 * or if access token could not be found in credentials file
 	 */
-	public static String getClientSecret() throws Exception {
+	public static String getAccessToken() throws Exception {
 		loadCredentials();
 		initializeSecretKey();
-		return decrypt(credentials.getProperty(CLIENT_SECRET_PROPERTY));
+		String token = credentials.getProperty(ACCESS_TOKEN_PROPERTY, "");
+		return (token.length() == 0) ? token : decrypt(token);
+	}
+
+	/**
+	 * Saves the given refresh token to credentials file.
+	 * 
+	 * @param refreshToken refresh token obtained during authorization; to be stored in encrypted way
+	 * @throws Exception if accessing credentials file or encryption failed for any reason
+	 */
+	public static void setRefreshToken(String refreshToken) throws Exception {
+		if (Strings.isNullOrEmpty(refreshToken))
+			throw new IllegalArgumentException("Refresh token is missing; authentication is required!");
+		loadCredentials();
+		initializeSecretKey();
+		credentials.setProperty(REFRESH_TOKEN_PROPERTY, encrypt(refreshToken));
+		saveCredentials();
+	}
+
+	/**
+	 * Clears the given refresh token by setting it to empty string.
+	 * 
+	 * @throws Exception if accessing credentials file or encryption failed for any reason
+	 */
+	public static void clearRefreshToken() throws Exception {
+		loadCredentials();
+		initializeSecretKey();
+		credentials.setProperty(REFRESH_TOKEN_PROPERTY, "");
+		saveCredentials();
+	}
+
+	/**
+	 * Gets the refresh token from credentials file.
+	 * 
+	 * @return decrypted refresh token or empty string
+	 * @throws Exception if accessing credentials file or decryption failed for any reason
+	 * or if refresh token could not be found in credentials file
+	 */
+	public static String getRefreshToken() throws Exception {
+		loadCredentials();
+		initializeSecretKey();
+		String token = credentials.getProperty(REFRESH_TOKEN_PROPERTY, "");
+		return (token.length() == 0) ? token : decrypt(token);
 	}
 
 	/**
