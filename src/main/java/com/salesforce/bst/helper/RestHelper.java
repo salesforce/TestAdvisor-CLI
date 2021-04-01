@@ -84,7 +84,7 @@ public class RestHelper {
 			// update new account
 			testSuite.put("Name", "DrillBit Test UPDATED at " + System.currentTimeMillis());
 			RestHelper.update("/sobjects/Test_Suite__c/" + newTestSuiteId, testSuite);
-			System.out.println("Updated account with ID: " + newTestSuiteId);
+			System.out.println("Updated test suite with ID: " + newTestSuiteId);
 
 			// close connection
 			RestHelper.close();

@@ -39,8 +39,9 @@ public class SecretsHelper {
 	private static final String CREDENTIALS_FILE = "credentials.properties";
 	private static final String ENCRYPTION_ACTIVE_PROPERTY = "portal.token.encrypted";
 	private static final String ENCRYPTION_ACTIVE_VALUE = "yes";
-	private static final String KEYRING_DOMAIN = "DrillBit";
 	private static final String KEYRING_ACCOUNT = "API";
+	private static final String KEYRING_DOMAIN = "DrillBit";
+	private static final String KEYRING_FILENAME = "drillbit.crd";
 	private static final String REFRESH_TOKEN_PROPERTY = "portal.refreshtoken";
 	private static final String UNICODE_CHARSET = "UTF8";
 
@@ -127,9 +128,14 @@ public class SecretsHelper {
 		try {
 			// initiate key store
 			keyring = Keyring.create();
+			if (keyring.isKeyStorePathRequired()) {
+				// create empty file if none exists yet to avoid FileNotFoundException
+				new File(KEYRING_FILENAME).createNewFile();
+				keyring.setKeyStorePath(KEYRING_FILENAME);
+			}
 		} catch (BackendNotSupportedException e1) {
 			System.err.println("Local key store not supported!");
-			System.err.println("Supported: MacOS: Keychain, Windows: Credential Manager, GNOME: Keyring");
+			System.err.println("Supported OS: MacOS, Windows, GNOME");
 			System.err.println("Warning: tokens will be stored in clear text");
 			return true;
 		}
