@@ -1,30 +1,27 @@
 {
-  "customer" : {
-    "customerId" : "123",
-    "sandboxInstanceName" : "cs997",
-    "sandboxOrgId" : "00D9A0000009IsD",
-    "sandboxOrgName" : "bst"
-  },
-  "registry" : {
-    "registryGuid" : "f185df4e-ee4f-4a99-9a57-e61f6682f49b",
-    "registryName" : "bst registry",
-    "bstClientVersion" : "0.0.1"
-  },
-  "startTime" : 1615772301416,
-  "endTime" : 1615772301416,
-  "testSignals" : [ {
-    "testName" : "TestCase1",
-    "startTime" : 1615772301414,
-    "endTime" : 1615772301414,
-    "testResult" : "PASS",
-    "testFailures" : [ {
-      "failureSource" : "AutomationLog",
-      "failureType" : "AssertTrue",
-      "failureTime" : 1615772301415
+  "buildStartTime" : "2021-05-25T03:36:13.420563Z",
+  "buildEndTime" : "2021-05-25T03:36:18.420563Z",
+  "clientBuildId" : "123",
+  "clientRegistryGuid" : "202314a1-f4b4-49ee-a65c-0ec08f4b7ed1",
+  "clientCliVersion" : "1.0.1",
+  "clientLibraryVersion" : "1.0.1",
+  "sandboxInstance" : "CS997",
+  "sandboxOrgId" : "00D9A0000009IsD",
+  "sandboxOrgName" : "bst",
+  "testSuiteName" : "testSuite1",
+  "testExecutions" : [ {
+    "startTime" : "2021-05-25T03:36:13.420563Z",
+    "endTime" : "2021-05-25T03:36:18.420563Z",
+    "status" : "FAIL",
+    "testCaseName" : "testcase1",
+    "testSignals" : [ {
+      "signalName" : "AUTOMATION",
+      "signalValue" : "org.testng.Assert.assertEquals",
+      "signalTime" : "2021-05-25T03:36:14.420563Z"
     }, {
-      "failureSource" : "SeleniumLog",
-      "failureType" : "ElementNotFound",
-      "failureTime" : 1615772301415
+      "signalName" : "SELENIUM",
+      "signalValue" : "org.openqa.selenium.NoSuchElementException",
+      "signalTime" : "2021-05-25T03:36:15.420563Z"
     } ]
   } ]
 }
