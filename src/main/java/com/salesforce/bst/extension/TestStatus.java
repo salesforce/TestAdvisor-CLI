@@ -3,7 +3,7 @@ package com.salesforce.bst.extension;
 /**
  * @author Yibing Tao
  */
-public enum TestResult {
+public enum TestStatus {
     FAIL,
     PASS,
     SKIP
