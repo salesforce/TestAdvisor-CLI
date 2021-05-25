@@ -24,7 +24,7 @@ public class TestRunSignal {
     @JsonProperty
     public String   clientBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
     @JsonProperty
-    public UUID     clientRegistryGuid;
+    public UUID     clientRegistryGuid; //version 4 UUID  https://datatracker.ietf.org/doc/html/rfc4122#section-4.4
     @JsonProperty
     public String   clientCliVersion; // Regex "[a-zA-Z0-9\.]{1,20}"
     @JsonProperty
