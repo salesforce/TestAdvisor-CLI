@@ -1,7 +1,10 @@
 /**
  * 
  */
-package com.salesforce.bst.helper;
+package com.salesforce.cqe.helper;
+
+import com.salesforce.cqe.helper.RestHelper;
+import com.salesforce.cqe.helper.SecretsHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

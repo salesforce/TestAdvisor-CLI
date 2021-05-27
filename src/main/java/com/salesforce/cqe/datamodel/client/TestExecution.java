@@ -1,4 +1,4 @@
-package com.salesforce.bst.extension;
+package com.salesforce.cqe.datamodel.client;
 
 import java.util.List;
 

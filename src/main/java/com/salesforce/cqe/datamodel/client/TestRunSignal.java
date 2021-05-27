@@ -1,9 +1,8 @@
-package com.salesforce.bst.extension;
+package com.salesforce.cqe.datamodel.client;
 
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

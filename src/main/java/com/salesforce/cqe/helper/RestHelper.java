@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.salesforce.bst.helper;
+package com.salesforce.cqe.helper;
 
 import java.io.File;
 import java.io.FileInputStream;
