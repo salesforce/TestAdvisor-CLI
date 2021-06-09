@@ -2,11 +2,23 @@
 
 Drillbit CLI is a command line tool to which response for process test result, upload test signals and download server signals. This tool will be triggered after test execution and test result generated in a separated process. 
 
-## Command line
-> java -jar drillbit-cli.jar [--version] [--help] -c <path> <command> [--force] [--args]
+## Command line usage
+```
+Usage: Drillbit-CLI [-c <COMMAND>] [-f] [-h] [-p <PATH TO RESULT>] [-v]
+A command line tool to process test results and manage Drillbit registry
+ -c,--command <COMMAND>       Drillbit-CLI command.
+                              Setup|Process|Upload|Download|Clean
+ -f,--force                   Force to run current command while ignore
+                              Drillbit registry state.
+ -h,--help                    Show Drillbit-CLI usage.
+ -p,--path <PATH TO RESULT>   Path to test result files.
+                              Default will be Drillbit registry root.
+ -v,--version                 Show Drillbit-CLI version.
 
+Please report all issues to cqe-us@salesforce.com
+```
 Supported command
-* authorize
+* setup
 * process
 * upload
 * download
@@ -16,8 +28,8 @@ If path option was skipped, the client will first search registry root folder, w
 
 If force option was provided, the client will ignore the previous command output and rerun the command anyway. 
 
-### Authorize
-The authorize command will initiate the authorization process to authorize the CLI to the Portal.
+### Setup
+The setup command will setup drillbit registry and connect to portal
 ### Process
 Process command will find all un-processed test result file recursively from the path, collect all client side signals and write back the signal file along with the test result file.
 ### Upload
