@@ -2,18 +2,25 @@ package com.salesforce.cqe.drillbit;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.InvalidKeyException;
 import java.util.Properties;
 import java.util.Scanner;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
@@ -28,7 +35,7 @@ import org.json.JSONTokener;
 
 import com.google.common.base.Strings;
 import com.salesforce.cqe.helper.DrillbitException;
-import com.salesforce.cqe.helper.SecretsHelper;
+import com.salesforce.cqe.helper.SecretsManager;
 
 /**
  * Connector class providing support for REST calls from client to portal.
@@ -51,6 +58,7 @@ public class Connector implements AutoCloseable {
 	private static final String AUTHURL_PROPERTY = "auth.url";
 	private static final String BASE_URL_PROPERTY = "portal.url";
 
+	private SecretsManager secretsManager;
 	private SSLConnectionSocketFactory connectionSocketFactory = null;
 	private Header oauthHeader;
 	private Properties restConfig = new Properties();
@@ -60,7 +68,9 @@ public class Connector implements AutoCloseable {
 	private CloseableHttpClient httpClient;
 	private HttpPost httpPost;
 
-	public Connector() throws Exception{
+	public Connector(SecretsManager secretsManager) 
+			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
+		this.secretsManager = secretsManager;
 		//load configuration file
 		File credentialsFile = new File(REST_CONFIG_FILE);
 		if (!credentialsFile.canRead()) {
@@ -79,27 +89,38 @@ public class Connector implements AutoCloseable {
 		clientId = restConfig.getProperty(CLIENT_ID_PROPERTY, "");
 		clientId = (clientId.length() == 0) ? clientId : URLEncoder.encode(clientId, ENCODING);
 
-		oauthHeader = new BasicHeader("Authorization", "OAuth " + SecretsHelper.getAccessToken());
+		oauthHeader = new BasicHeader("Authorization", "OAuth " + secretsManager.getAccessToken());
 	}
 
-	public Connector(CloseableHttpClient httpClient,HttpPost httpPost){
+	public Connector(CloseableHttpClient httpClient,HttpPost httpPost,SecretsManager secretsManager) 
+			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException{
 		//constructor for unit test
+		this(secretsManager);
 		this.httpClient=httpClient;
 		this.httpPost=httpPost;
+		
 	}
 
 	/**
 	 * Authorizes this system (aka "device") with the Portal app using
 	 * <a href="https://help.salesforce.com/articleView?id=sf.remoteaccess_oauth_device_flow.htm&type=5">
 	 * OAuth 2.0 Device Flow</a>.
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws DrillbitException
+	 * @throws InterruptedException
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 * @throws InvalidKeyException
 	 * 
 	 * @throws Exception in case of problems during authorization and response
 	 *                   conversion; any HTTP status code other than
 	 *                   {@link HttpStatus#SC_OK} will also trigger an exception
 	 */
-	public void setupConnectionWithPortal() throws Exception {
+	public void setupConnectionWithPortal() throws ClientProtocolException, IOException, DrillbitException, 
+					InterruptedException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		try {
-			if (SecretsHelper.getAccessToken().length() > 0)
+			if (secretsManager.getAccessToken().length() > 0)
 				return;
 		} catch (Exception e) {	; /* ignore because access token is not yet set */}
 
@@ -160,8 +181,8 @@ public class Connector implements AutoCloseable {
 		String instanceUrl = jsonObject.getString("instance_url");
 		String refreshToken = jsonObject.getString("refresh_token");
 
-		SecretsHelper.setAccessToken(accessToken);
-		SecretsHelper.setRefreshToken(refreshToken);
+		secretsManager.setAccessToken(accessToken);
+		secretsManager.setRefreshToken(refreshToken);
 		setBaseURL(instanceUrl + REST_ENDPOINT + API_VERSION);
 
 		System.out.println("Authorization successful!");
@@ -169,13 +190,20 @@ public class Connector implements AutoCloseable {
 
 	/**
 	 * Refreshes the access token issued for this system.
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 * @throws InvalidKeyException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws DrillbitException
 	 * 
 	 * @throws Exception in case of problems during authorization and response
 	 *                   conversion; any HTTP status code other than
 	 *                   {@link HttpStatus#SC_OK} will also trigger an exception
 	 */
-	public void connectToPortal() throws Exception {
-		String refreshTokenFromCredentials = SecretsHelper.getRefreshToken();
+	public void connectToPortal() throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, 
+				IOException, DrillbitException {
+		String refreshTokenFromCredentials = secretsManager.getRefreshToken();
 		if (refreshTokenFromCredentials.length() == 0)
 			throw new IllegalArgumentException("Unable to retrieve refresh token");
 
@@ -196,7 +224,7 @@ public class Connector implements AutoCloseable {
 		}
 		String result = EntityUtils.toString(response.getEntity());
 		JSONObject jsonObject = (JSONObject) new JSONTokener(result).nextValue();
-		SecretsHelper.setAccessToken(jsonObject.getString("access_token"));
+		secretsManager.setAccessToken(jsonObject.getString("access_token"));
 	}
 
 

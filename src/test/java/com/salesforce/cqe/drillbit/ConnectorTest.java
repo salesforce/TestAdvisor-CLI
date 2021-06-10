@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.salesforce.cqe.helper.DrillbitException;
+import com.salesforce.cqe.helper.SecretsManager;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -31,7 +32,8 @@ public class ConnectorTest {
         when(httpClient.execute(httpPost)).thenReturn(httpResponse);
 
         //and:
-        try(Connector connector = new Connector(httpClient,httpPost)){
+        SecretsManager secretsManager = new SecretsManager();
+        try(Connector connector = new Connector(httpClient,httpPost,secretsManager)){
             connector.postApex("endpoint", "");
         }
 	}
