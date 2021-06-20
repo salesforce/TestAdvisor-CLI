@@ -28,7 +28,7 @@ public class ProcessorTest{
         testRunSignal.testSuiteName = "testSuite1";
         IAdapter adapter = new TestNGAdapter();
         try(InputStream is = getClass().getClassLoader().getResourceAsStream("xml/testng-results.xml")){
-            testRunSignal = Processor.process(is, testRunSignal,adapter);
+            Processor.process(is, testRunSignal,adapter);
         }
         
         assertEquals(32, testRunSignal.testExecutions.size());
