@@ -23,6 +23,8 @@ import com.salesforce.cqe.helper.ProcessException;
  */
 public class TestNGAdapter implements IAdapter {
 
+    private static final String TESTNG_DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss z";
+
     @Override
     public TestNGRun process(InputStream testResultStream) throws ProcessException{
         JAXBContext context;
@@ -69,7 +71,7 @@ public class TestNGAdapter implements IAdapter {
     }
 
     private ZonedDateTime getDatetime(String timestamp) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss z");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TESTNG_DATEFORMAT);
         return ZonedDateTime.parse(timestamp,formatter);
     }
     

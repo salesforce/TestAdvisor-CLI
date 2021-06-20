@@ -12,8 +12,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.crypto.BadPaddingException;
-
 import com.salesforce.cqe.adapter.TestNGAdapter;
 import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.helper.DrillbitCipherException;
@@ -39,6 +37,8 @@ public class CLI {
 
     private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
 
+    private static final String PORTAL_UPLOAD_ENDPOINT_V1 = "services/apexrest/v1/BSTRun/";
+
     private String command; //drillbit cli command, expect to be upper case
     public String getCommand(){
         return this.command;
@@ -54,12 +54,12 @@ public class CLI {
         return force;
     }
 
-    private Registry registry = new Registry();
-    private Connector connector;
-    private SecretsManager secretsManager;
+    private Registry registry = new Registry(); //drillbit registry to handle all registry request
+    private Connector connector; //connector handle all Protoal communictation
+    private SecretsManager secretsManager; // secrets manager handles encryption, decryption and screts storage
 
     public static void main(String[] args) throws Exception{
-        LOGGER.log(Level.INFO, "CLI Started here.");
+        LOGGER.log(Level.INFO, "CLI Starts...");
         CLI cli = new CLI(args);
         if (cli.getCommand()==null) return;
         switch (cli.getCommand()){
@@ -73,14 +73,15 @@ public class CLI {
                 cli.upload();
                 break;
             default:
-                LOGGER.log(Level.WARNING, "Unknow command:"+cli.getCommand());
+                LOGGER.log(Level.WARNING, "Unknow command:{0}",cli.getCommand());
         }
-        LOGGER.log(Level.INFO, "CLI Completed here.");
+        LOGGER.log(Level.INFO, "CLI Completed.");
     }
 
     /**
      * Process command line
-     * @param args command line args
+     * @param args 
+     * command line args
      * @throws ParseException
      * @throws DrillbitCipherException
      * @throws IOException
@@ -107,7 +108,7 @@ public class CLI {
             return;
         }
         if (cmd.hasOption("version")){
-            System.out.println("version:"+CLI.class.getClass().getPackage().getImplementationVersion());
+            LOGGER.log(Level.INFO,"version:{0}",CLI.class.getClass().getPackage().getImplementationVersion());
             return;
         }
 
@@ -126,13 +127,13 @@ public class CLI {
     }
     /**
      * Setup Drillbit registry and Portal connectiion
+     * @throws NoSuchAlgorithmException
      * @throws DrillbitCipherException
      * @throws InterruptedException
      * @throws DrillbitPortalException
      * @throws IOException
-     * @throws BadPaddingException
      */
-    public void setup() throws NoSuchAlgorithmException, IOException, DrillbitPortalException, InterruptedException, DrillbitCipherException{
+    public void setup() throws NoSuchAlgorithmException, IOException, DrillbitPortalException, InterruptedException, DrillbitCipherException {
         //drillbit registry setup and connect to portal
         if (secretsManager.isSetupRequired())
             connector.setupConnectionWithPortal();
@@ -191,7 +192,7 @@ public class CLI {
         //upload test run signals to portal
         connector.connectToPortal();    
         for(Path path : registry.getReadyToUploadTestRunList()){
-            String response = connector.postApex("services/apexrest/v1/BSTRun/", Files.readString(path));
+            String response = connector.postApex(PORTAL_UPLOAD_ENDPOINT_V1, Files.readString(path));
             registry.savePortalResponse(path, response);
         }
     }

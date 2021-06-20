@@ -2,18 +2,12 @@ package com.salesforce.cqe.drillbit;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.security.InvalidKeyException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -23,7 +17,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -80,15 +73,11 @@ public class Connector {
 	 * OAuth 2.0 Device Flow</a>.
 	 * @throws IOException
 	 * @throws DrillbitPortalException
+	 * throw in case of problems during authorization and response conversion; any HTTP status code other than
+	 * {@link HttpStatus#SC_OK} will also trigger an exception
 	 * @throws InterruptedException
-	 * @throws BadPaddingException
-	 * @throws IllegalBlockSizeException
-	 * @throws InvalidKeyException
 	 * @throws DrillbitCipherException
-	 * 
-	 * @throws Exception in case of problems during authorization and response
-	 *                   conversion; any HTTP status code other than
-	 *                   {@link HttpStatus#SC_OK} will also trigger an exception
+	 * throw in case of any cipher related failure
 	 */
 	public void setupConnectionWithPortal() throws IOException, DrillbitPortalException, InterruptedException, 
 										 DrillbitCipherException {
@@ -116,15 +105,15 @@ public class Connector {
 			String verificationURI = jsonObject.getString("verification_uri");
 			int pollingWaitTime = jsonObject.getInt("interval");
 
-			System.out.println("\nFor the authorization to succeed, please log out of any Salesforce org!\n");
-			System.out.println("Now open the following URL in your browser:");
-			System.out.println(verificationURI + "?user_code=" + userCode);
-			System.out.println(
+			LOGGER.log(Level.INFO,"\nFor the authorization to succeed, please log out of any Salesforce org!\n");
+			LOGGER.log(Level.INFO,"Now open the following URL in your browser:");
+			LOGGER.log(Level.INFO,verificationURI + "?user_code=" + userCode);
+			LOGGER.log(Level.INFO,
 					"To authenticate yourself, log in into DrillBit Portal using the API credentials provided to you.");
-			System.out.println("If the authentication was successful, you will see the message \"You're Connected\".");
-			System.out.println("When connection is confirmed, press ENTER to continue...");
+			LOGGER.log(Level.INFO,"If the authentication was successful, you will see the message \"You're Connected\".");
+			LOGGER.log(Level.INFO,"When connection is confirmed, press ENTER to continue...");
 			new Scanner(System.in).nextLine();
-			System.out.println("Waiting for device code confirmation!");
+			LOGGER.log(Level.INFO,"Waiting for device code confirmation!");
 
 			// give a few secs to perform the connect confirmation before polling
 			Thread.sleep(pollingWaitTime);
@@ -142,7 +131,7 @@ public class Connector {
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK)
 					throw new DrillbitPortalException("Device code was not confirmed!");
-				System.out.println("Device code has been confirmed!");
+				LOGGER.log(Level.INFO,"Device code has been confirmed!");
 
 				result = EntityUtils.toString(response.getEntity());
 			}
@@ -150,25 +139,21 @@ public class Connector {
 
 			secretsManager.setAccessToken(jsonObject.getString("access_token"));
 			secretsManager.setRefreshToken(jsonObject.getString("refresh_token"));
-			registry.saveRegistryProperty("portal.url", jsonObject.getString("instance_url"));
+			registry.saveRegistryProperty(BASE_URL_PROPERTY, jsonObject.getString("instance_url"));
 
-			System.out.println("Authorization successful!");
+			LOGGER.log(Level.INFO,"Authorization successful!");
 		}//close http client
 	}
 
 	/**
 	 * Refreshes the access token issued for this system.
-	 * @throws BadPaddingException
-	 * @throws IllegalBlockSizeException
-	 * @throws InvalidKeyException
 	 * @throws IOException
-	 * @throws ClientProtocolException
+	 * throws when fail to contact portal
 	 * @throws DrillbitPortalException
+	 * throws in case of problems during authorization and response conversion; any HTTP status code other than
+	 * {@link HttpStatus#SC_OK} will also trigger an exception
 	 * @throws DrillbitCipherException
-	 * 
-	 * @throws Exception in case of problems during authorization and response
-	 *                   conversion; any HTTP status code other than
-	 *                   {@link HttpStatus#SC_OK} will also trigger an exception
+	 * throws in case of any cipher related failure
 	 */
 	public void connectToPortal() throws IOException, DrillbitPortalException, DrillbitCipherException {
 		String refreshTokenFromCredentials = secretsManager.getRefreshToken();
@@ -199,17 +184,21 @@ public class Connector {
 	/**
 	 * Post to an apex endpoint to send the payload and get the response
 	 * 
-	 * @param endpoint	The Apex endpoint 
-	 * @param payload	The pay load to upload
-	 * @return JSON object response from the Apex endpoint
+	 * @param endpoint	
+	 * The Apex upload endpoint 
+	 * @param payload	
+	 * The pay load to upload
+	 * @return 
+	 * String response from the Apex endpoint
 	 * @throws DrillbitPortalException
+	 * throws when portal rejects the payload
 	 * @throws IOException
-	 * @throws JSONException
-	 * @throws ParseException
+	 * throws when fail to contact portal
 	 * @throws DrillbitCipherException
+	 * throws for any cipher related failure
 	 */
 	public String postApex(String endpoint, String payload) 
-			throws ParseException, JSONException, IOException, DrillbitPortalException, DrillbitCipherException {
+			throws IOException, DrillbitPortalException, DrillbitCipherException {
 		String fullUrl = (endpoint.startsWith("/")) ? this.baseURL + endpoint : this.baseURL + "/" + endpoint;
 		
 		try (CloseableHttpClient httpClient = getHttpClient()){
@@ -233,7 +222,6 @@ public class Connector {
 						String.format("Post unsuccessfull, Status:%d%nMessage%n%s%n", statusCode,responseString));
 				}
 				return responseString;
-				//return new JSONObject(responseString);	
 			}
 		}	
 	 }
@@ -252,9 +240,8 @@ public class Connector {
 	/**
 	 * 
 	 * @return
+	 * HTTP auth header
 	 * @throws DrillbitPortalException
-	 * @throws IOException
-	 * @throws DrillbitCipherException
 	 */
 	private Header getOAuthHeader() throws DrillbitCipherException{
 		return new BasicHeader("Authorization", "OAuth " + secretsManager.getAccessToken());
