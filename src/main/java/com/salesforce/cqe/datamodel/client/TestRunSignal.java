@@ -3,6 +3,7 @@ package com.salesforce.cqe.datamodel.client;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -12,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TestRunSignal {
     
+    @JsonIgnore
+    public String   testRunId; //test run id set by registry, format TestRun-yyyyMMdd-HHmmss
     //Datetime format https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT
     //Salesforce SQQL date format 
     //https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_dateformats.htm
