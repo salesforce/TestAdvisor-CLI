@@ -27,13 +27,16 @@ public class Processor {
 
     /**
      * 
-     * @param inputStream stream to access test result file
-     * @param testRunSignal test run signals
-     * @param adapter adapter to convert test result to data model CLI can use
-     * @return test run signals with test results
-     * @throws ProcessException when any process error happened
+     * @param inputStream 
+     * stream to access test result file
+     * @param testRunSignal 
+     * test run signals
+     * @param adapter 
+     * adapter to convert test result to data model CLI can use
+     * @throws ProcessException 
+     * when any process error happened
      */
-    public static TestRunSignal process(InputStream inputStream, TestRunSignal testRunSignal,IAdapter adapter) 
+    public static void process(InputStream inputStream, TestRunSignal testRunSignal,IAdapter adapter) 
                             throws ProcessException{
         ITestRun testRun = adapter.process(inputStream);
         testRunSignal.buildStartTime = testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
@@ -57,7 +60,6 @@ public class Processor {
             }
             testRunSignal.testExecutions.add(testExection);
         } 
-        return testRunSignal;
     }
 
 }
