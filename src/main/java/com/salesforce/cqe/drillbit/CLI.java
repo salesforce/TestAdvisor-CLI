@@ -192,7 +192,7 @@ public class CLI {
         //upload test run signals to portal
         connector.connectToPortal();    
         for(Path path : registry.getReadyToUploadTestRunList()){
-            String response = connector.postApex(PORTAL_UPLOAD_ENDPOINT_V1, Files.readString(path));
+            String response = connector.postApex(PORTAL_UPLOAD_ENDPOINT_V1, new String(Files.readAllBytes(path)));
             registry.savePortalResponse(path, response);
         }
     }

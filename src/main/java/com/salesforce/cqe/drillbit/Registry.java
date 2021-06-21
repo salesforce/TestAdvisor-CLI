@@ -34,10 +34,11 @@ public class Registry {
     
     private static final String SIGNAL_FILENAME = "test-signal.json";
     private static final String PORTAL_RECORD_FILENAME = "test-result.record";
-    private static final String DRILLBIT_TESTRUN_PREFIX = "TestRun";
+    private static final String DRILLBIT_TESTRUN_PREFIX = "TestRun-";
+    private static final String DRILLBIT_TESTRUN_PATTERN_STRING = "yyyyMMdd-HHmmss";
     private static final String DRILLBIT_PROPERTIES_FILENAME = "drillbit.properties";
-    private static final String DRILLBIT_DEFAULT_REGISGRY = ".drillbit";
-    
+    private static final String DRILLBIT_DEFAULT_REGISGRY = ".drillbit"; //TODO: what about different platform
+     
     private Properties registryConfig = new Properties();
     private Path registryRoot;
     public Path getRegistryRoot(){
@@ -216,8 +217,8 @@ public class Registry {
      * based on current local time
      */
     public String getTestRunId(String path){
-        DateTimeFormatter drillbitDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
-        String testRunId = "TestRun-" + drillbitDateFormatter.format(OffsetDateTime.now( ZoneOffset.UTC ));
+        DateTimeFormatter drillbitDateFormatter = DateTimeFormatter.ofPattern(DRILLBIT_TESTRUN_PATTERN_STRING);
+        String testRunId = DRILLBIT_TESTRUN_PREFIX + drillbitDateFormatter.format(OffsetDateTime.now( ZoneOffset.UTC ));
         Pattern pattern = Pattern.compile(".*(TestRun-\\d{8}-\\d{6}).*");
         Matcher matcher = pattern.matcher(path);
         return matcher.find( ) ? matcher.group(0) : testRunId;
