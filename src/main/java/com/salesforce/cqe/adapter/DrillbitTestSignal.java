@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
  * @author Yibing Tao
  * ITestSignal interface define how to get signal for a single test case
  */
-public interface ITestSignal {
+public interface DrillbitTestSignal {
     public String getTestSignalName();
     public String getTestSignalValue();
     public ZonedDateTime getTestSignalTime();

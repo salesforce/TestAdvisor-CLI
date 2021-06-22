@@ -4,15 +4,15 @@ import java.time.ZonedDateTime;
 
 /**
  * @auther Yibing TAo
- * TestNG test case signal
+ * Base class for test case signal
  */
-public class TestNGSignal implements ITestSignal{
+public class TestSignalBase implements DrillbitTestSignal{
 
     private String signalName;
     private String signalValue;
     private ZonedDateTime signalTime;
 
-    public TestNGSignal(String name, String value, ZonedDateTime time){
+    public TestSignalBase(String name, String value, ZonedDateTime time){
         signalName = name;
         signalValue = value;
         signalTime = time;

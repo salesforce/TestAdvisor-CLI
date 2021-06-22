@@ -5,17 +5,17 @@ import java.util.List;
 
 /**
  * @author Yibing Tao
- * TestNG test run result
+ * Base class for test run result
  */
-public class TestNGRun implements ITestRun {
+public class TestRunBase implements DrillbitTestRun {
     private String testSuiteName="";
     private String testSuiteInfo="";
     private ZonedDateTime testSuiteStartTime;
     private ZonedDateTime testSuiteEndTime;
-    private List<ITestCase> testCaseList;
+    private List<DrillbitTestCase> testCaseList;
   
-    public TestNGRun(String name, String info, ZonedDateTime start, 
-                    ZonedDateTime end, List<ITestCase> caseList){
+    public TestRunBase(String name, String info, ZonedDateTime start, 
+                    ZonedDateTime end, List<DrillbitTestCase> caseList){
         testSuiteName = name;
         testSuiteInfo = info;
         testSuiteStartTime = start;
@@ -44,7 +44,7 @@ public class TestNGRun implements ITestRun {
     }
 
     @Override
-    public List<ITestCase> getTestCaseList() {
+    public List<DrillbitTestCase> getTestCaseList() {
         return testCaseList;
     }
 

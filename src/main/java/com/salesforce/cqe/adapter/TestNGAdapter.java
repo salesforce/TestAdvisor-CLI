@@ -21,12 +21,12 @@ import com.salesforce.cqe.helper.ProcessException;
  * @author
  * TestNG test result adapter class
  */
-public class TestNGAdapter implements IAdapter {
+public class TestNGAdapter implements DrillbitAdapter {
 
     private static final String TESTNG_DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss z";
 
     @Override
-    public TestNGRun process(InputStream testResultStream) throws ProcessException{
+    public TestRunBase process(InputStream testResultStream) throws ProcessException{
         JAXBContext context;
         TestngResults testResults;
         try {
@@ -40,7 +40,7 @@ public class TestNGAdapter implements IAdapter {
         ZonedDateTime suiteEnd = ZonedDateTime.now().minusYears(100); //last test suite end time
         String testSuiteName="";
 
-        List<ITestCase> testCaseList = new ArrayList<>();
+        List<DrillbitTestCase> testCaseList = new ArrayList<>();
         for(Suite suite : testResults.getSuite()){
             testSuiteName = suite.getName();
             suiteStart = suiteStart.isBefore(getDatetime(suite.getStartedAt())) 
@@ -53,12 +53,12 @@ public class TestNGAdapter implements IAdapter {
                         ZonedDateTime startTime = getDatetime(method.getStartedAt());
                         ZonedDateTime endTime = getDatetime(method.getFinishedAt());
                         String testCaseName = cls.getName() + "." + method.getName();
-                        List<ITestSignal> testSignalList = new ArrayList<>();
-                        TestNGCase testCase = new TestNGCase(testCaseName,startTime,endTime,
+                        List<DrillbitTestSignal> testSignalList = new ArrayList<>();
+                        TestCaseBase testCase = new TestCaseBase(testCaseName,startTime,endTime,
                                                         method.getStatus(),testSignalList);
                         testCaseList.add(testCase); 
                         if (method.getException() == null) continue;
-                        TestNGSignal signal = new TestNGSignal(TestSignalEnum.AUTOMATION.toString(),
+                        TestSignalBase signal = new TestSignalBase(TestSignalEnum.AUTOMATION.toString(),
                                                                 method.getException().getClazz(),
                                                                 endTime);
                         testSignalList.add(signal);  
@@ -67,7 +67,7 @@ public class TestNGAdapter implements IAdapter {
                 }
             }
         }
-        return new TestNGRun(testSuiteName,"",suiteStart,suiteEnd,testCaseList);
+        return new TestRunBase(testSuiteName,"",suiteStart,suiteEnd,testCaseList);
     }
 
     private ZonedDateTime getDatetime(String timestamp) {

@@ -5,18 +5,18 @@ import java.util.List;
 
 /**
  * @author Yibing Tao
- * TestNG test case result
+ * Base class for test case result
  */
-public class TestNGCase implements ITestCase {
+public class TestCaseBase implements DrillbitTestCase {
 
     private String testCaseFullName;
     private ZonedDateTime testCaseStartTime;
     private ZonedDateTime testCaseEndTime;
     private String  testCaseStatus;
-    private List<ITestSignal> testCaseSignalList;
+    private List<DrillbitTestSignal> testCaseSignalList;
 
-    public TestNGCase(String name, ZonedDateTime start, ZonedDateTime end, 
-                    String status, List<ITestSignal> signalList){
+    public TestCaseBase(String name, ZonedDateTime start, ZonedDateTime end, 
+                    String status, List<DrillbitTestSignal> signalList){
         testCaseFullName = name;
         testCaseStartTime = start;
         testCaseEndTime = end;
@@ -45,7 +45,7 @@ public class TestNGCase implements ITestCase {
     }
 
     @Override
-    public List<ITestSignal> getTestSignalList() {
+    public List<DrillbitTestSignal> getTestSignalList() {
         return testCaseSignalList;
     }
     
