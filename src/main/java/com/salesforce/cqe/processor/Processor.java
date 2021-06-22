@@ -1,79 +1,65 @@
 package com.salesforce.cqe.processor;
 
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
+import com.salesforce.cqe.adapter.DrillbitAdapter;
+import com.salesforce.cqe.adapter.DrillbitTestCase;
+import com.salesforce.cqe.adapter.DrillbitTestRun;
+import com.salesforce.cqe.adapter.DrillbitTestSignal;
 import com.salesforce.cqe.datamodel.client.TestExecution;
 import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.datamodel.client.TestSignal;
 import com.salesforce.cqe.datamodel.client.TestSignalEnum;
 import com.salesforce.cqe.datamodel.client.TestStatus;
-import com.salesforce.cqe.datamodel.testng.Class;
-import com.salesforce.cqe.datamodel.testng.Suite;
-import com.salesforce.cqe.datamodel.testng.Test;
-import com.salesforce.cqe.datamodel.testng.TestMethod;
-import com.salesforce.cqe.datamodel.testng.TestngResults;
+import com.salesforce.cqe.helper.ProcessException;
 
-
+/**
+ * @author Yibing Tao
+ * This class provide method to process test result with the provided adapter
+ */
 public class Processor {
 
     private Processor(){
-        //To hide default constructor and ensure on intance allowed
+        //empty private constructor to hide default one and prevent instance
     }
 
-    public static TestRunSignal processTestNGSignal(InputStream inputStream, TestRunSignal testRunSignal) 
-                                throws JAXBException{
-        JAXBContext context = JAXBContext.newInstance(TestngResults.class);
-        TestngResults testResults = (TestngResults) context.createUnmarshaller().unmarshal(inputStream);
-
+    /**
+     * 
+     * @param inputStream 
+     * stream to access test result file
+     * @param testRunSignal 
+     * test run signals
+     * @param adapter 
+     * adapter to convert test result to data model CLI can use
+     * @throws ProcessException 
+     * when any process error happened
+     */
+    public static void process(InputStream inputStream, TestRunSignal testRunSignal,DrillbitAdapter adapter) 
+                            throws ProcessException{
+        DrillbitTestRun testRun = adapter.process(inputStream);
+        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime().format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
+        testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
         testRunSignal.testExecutions = new ArrayList<>();
-        ZonedDateTime suiteStart = ZonedDateTime.now().plusYears(100); //first test suite start time
-        ZonedDateTime suiteEnd = ZonedDateTime.now().minusYears(100); //last test suite end time
-
-        for(Suite suite : testResults.getSuite()){
-            suiteStart = suiteStart.isBefore(getDatetime(suite.getStartedAt())) 
-                            ?  suiteStart : getDatetime(suite.getStartedAt());
-            suiteEnd = suiteEnd.isAfter(getDatetime(suite.getFinishedAt())) 
-                            ?  suiteEnd : getDatetime(suite.getFinishedAt());
-            for(Test test : suite.getTest()){
-                for(Class cls : test.getClazz()){
-                    for(TestMethod method : cls.getTestMethod()){
-                        TestExecution testExecution = new TestExecution();
-                        testExecution.startTime = getDatetime(method.getStartedAt()).format(DateTimeFormatter.ISO_INSTANT);
-                        testExecution.endTime = getDatetime(method.getFinishedAt()).format(DateTimeFormatter.ISO_INSTANT);
-                        testExecution.status = TestStatus.valueOf(method.getStatus());
-                        testExecution.testCaseName = cls.getName() + "." + method.getName();
-                        if (method.getException() != null)
-                        {
-                            testExecution.testSignals = new ArrayList<>();
-                            TestSignal signal = new TestSignal();
-                            signal.signalName = TestSignalEnum.AUTOMATION;
-                            signal.signalValue = method.getException().getClazz();
-                            signal.signalTime = testExecution.endTime;
-                            testExecution.testSignals.add(signal);
-                        }    
-                        testRunSignal.testExecutions.add(testExecution);   
-                    }
-                }
+        for(DrillbitTestCase testCase : testRun.getTestCaseList()){
+            TestExecution testExection = new TestExecution();
+            testExection.testCaseName = testCase.getTestCaseFullName();
+            testExection.startTime = testCase.getTestCaseStartTime().format(DateTimeFormatter.ISO_INSTANT);
+            testExection.endTime = testCase.getTestCaseEndTime().format(DateTimeFormatter.ISO_INSTANT);
+            testExection.status = TestStatus.valueOf(testCase.getTestCaseStatus());
+            testExection.testSignals = new ArrayList<>();
+            for(DrillbitTestSignal signal : testCase.getTestSignalList()){
+                TestSignal testSignal = new TestSignal();
+                testSignal.signalName = TestSignalEnum.valueOf(signal.getTestSignalName());
+                testSignal.signalValue = signal.getTestSignalValue();
+                testSignal.signalTime = signal.getTestSignalTime().format(DateTimeFormatter.ISO_INSTANT);
+                testExection.testSignals.add(testSignal);
             }
-        }
-        testRunSignal.buildEndTime = suiteEnd.format(DateTimeFormatter.ISO_INSTANT);
-        testRunSignal.buildStartTime = suiteStart.format(DateTimeFormatter.ISO_INSTANT);
-        return testRunSignal;
+            testRunSignal.testExecutions.add(testExection);
+        } 
     }
-  
-    private static ZonedDateTime getDatetime(String timestamp) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss z");
-        return ZonedDateTime.parse(timestamp,formatter);
-    }
+
 }
