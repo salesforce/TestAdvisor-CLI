@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import com.salesforce.cqe.adapter.IAdapter;
-import com.salesforce.cqe.adapter.ITestCase;
-import com.salesforce.cqe.adapter.ITestRun;
-import com.salesforce.cqe.adapter.ITestSignal;
+import com.salesforce.cqe.adapter.DrillbitAdapter;
+import com.salesforce.cqe.adapter.DrillbitTestCase;
+import com.salesforce.cqe.adapter.DrillbitTestRun;
+import com.salesforce.cqe.adapter.DrillbitTestSignal;
 import com.salesforce.cqe.datamodel.client.TestExecution;
 import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.datamodel.client.TestSignal;
@@ -36,22 +36,22 @@ public class Processor {
      * @throws ProcessException 
      * when any process error happened
      */
-    public static void process(InputStream inputStream, TestRunSignal testRunSignal,IAdapter adapter) 
+    public static void process(InputStream inputStream, TestRunSignal testRunSignal,DrillbitAdapter adapter) 
                             throws ProcessException{
-        ITestRun testRun = adapter.process(inputStream);
+        DrillbitTestRun testRun = adapter.process(inputStream);
         testRunSignal.buildStartTime = testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
         testRunSignal.buildEndTime = testRun.getTestSuiteEndTime().format(DateTimeFormatter.ISO_INSTANT);
         testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
         testRunSignal.testExecutions = new ArrayList<>();
-        for(ITestCase testCase : testRun.getTestCaseList()){
+        for(DrillbitTestCase testCase : testRun.getTestCaseList()){
             TestExecution testExection = new TestExecution();
             testExection.testCaseName = testCase.getTestCaseFullName();
             testExection.startTime = testCase.getTestCaseStartTime().format(DateTimeFormatter.ISO_INSTANT);
             testExection.endTime = testCase.getTestCaseEndTime().format(DateTimeFormatter.ISO_INSTANT);
             testExection.status = TestStatus.valueOf(testCase.getTestCaseStatus());
             testExection.testSignals = new ArrayList<>();
-            for(ITestSignal signal : testCase.getTestSignalList()){
+            for(DrillbitTestSignal signal : testCase.getTestSignalList()){
                 TestSignal testSignal = new TestSignal();
                 testSignal.signalName = TestSignalEnum.valueOf(signal.getTestSignalName());
                 testSignal.signalValue = signal.getTestSignalValue();
