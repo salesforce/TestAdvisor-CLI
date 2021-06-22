@@ -27,7 +27,7 @@ import net.east301.keyring.PasswordSaveException;
 import net.east301.keyring.util.LockException;
 
 /**
- * This class providing support for handling pass phrase and access token required
+ * This class provides support for handling pass phrase and access token required
  * to connect the client to the portal.
  * 
  * @author gneumann
