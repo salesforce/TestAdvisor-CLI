@@ -12,7 +12,7 @@
   "testExecutions" : [ {
     "startTime" : "2021-05-25T03:36:13.420563Z",
     "endTime" : "2021-05-25T03:36:18.420563Z",
-    "status" : "FAIL",
+    "status" : "Failed",
     "testCaseName" : "testcase1",
     "testSignals" : [ {
       "signalName" : "AUTOMATION",

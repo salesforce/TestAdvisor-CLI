@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.salesforce.cqe.helper.DrillbitPortalException;
-import com.salesforce.cqe.helper.SecretsManager;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
