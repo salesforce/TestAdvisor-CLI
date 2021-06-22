@@ -92,7 +92,7 @@ public class CLI {
         options.addOption(Option.builder("h").longOpt("help").desc("Show Drillbit-CLI usage.").build());
         options.addOption(Option.builder("v").longOpt("version").desc("Show Drillbit-CLI version.").build());
         options.addOption(Option.builder("n").longOpt("name").hasArg().argName("result file name")
-                                .desc("test result file name.\n Default will be Drillbit registry root.").build());
+                                .desc("Test result file name.").build());
         options.addOption(Option.builder("c").longOpt("cmd").hasArg().argName("COMMAND")
                                 .desc("Drillbit-CLI command, Setup|Process|Upload|Download|Clean.").build());
         options.addOption(Option.builder("f").longOpt("force")
