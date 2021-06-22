@@ -44,10 +44,10 @@ public class CLITest {
         
         try(ByteArrayOutputStream os = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(os)){
-            System.setOut(ps);
+            System.setErr(ps);
             CLI cli = new CLI(args);
             assertNull(cli.getCommand());
-            assertTrue(os.toString().startsWith("version:"));
+            assertTrue(os.toString().contains("version:"));
         }
     }
 

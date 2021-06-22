@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import com.salesforce.cqe.adapter.IAdapter;
+import com.salesforce.cqe.adapter.DrillbitAdapter;
 import com.salesforce.cqe.adapter.TestNGAdapter;
 import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.helper.ProcessException;
@@ -26,7 +26,7 @@ public class ProcessorTest{
         testRunSignal.sandboxOrgId = "00D9A0000009IsD";
         testRunSignal.sandboxOrgName = "bst";
         testRunSignal.testSuiteName = "testSuite1";
-        IAdapter adapter = new TestNGAdapter();
+        DrillbitAdapter adapter = new TestNGAdapter();
         try(InputStream is = getClass().getClassLoader().getResourceAsStream("xml/testng-results.xml")){
             Processor.process(is, testRunSignal,adapter);
         }
