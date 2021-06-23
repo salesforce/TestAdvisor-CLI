@@ -71,10 +71,12 @@ public class Connector {
 	 * <a href="https://help.salesforce.com/articleView?id=sf.remoteaccess_oauth_device_flow.htm&type=5">
 	 * OAuth 2.0 Device Flow</a>.
 	 * @throws IOException
+	 * This exception is thrown when it failed to access registry properties
 	 * @throws DrillbitPortalException
 	 * throw in case of problems during authorization and response conversion; any HTTP status code other than
 	 * {@link HttpStatus#SC_OK} will also trigger an exception
 	 * @throws InterruptedException
+	 * This exception is thrown when current thread failed to sleep
 	 * @throws DrillbitCipherException
 	 * throw in case of any cipher related failure
 	 */

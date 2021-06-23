@@ -66,6 +66,7 @@ public class Registry {
      * @return
      * drillbit registry configruation properties
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public Properties getRegistryProperties() throws IOException{
         try(InputStream input = Files.newInputStream(registryRoot.resolve(DRILLBIT_PROPERTIES_FILENAME))){
@@ -81,6 +82,7 @@ public class Registry {
      * @param value
      * Property value
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public void saveRegistryProperty(String key, String value) throws IOException{
         registryConfig.setProperty(key, value);
@@ -90,6 +92,7 @@ public class Registry {
     /**
      * Save the drillbit registry configruation properties
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public void saveRegistryProperties() throws IOException{
         try(OutputStream output = Files.newOutputStream(registryRoot.resolve(DRILLBIT_PROPERTIES_FILENAME))){
@@ -104,6 +107,7 @@ public class Registry {
      * @return
      * test signal file name in registry
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public String saveTestRunSignal(TestRunSignal testRunSignal) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -122,6 +126,7 @@ public class Registry {
      * @return
      * List of Path object represent test runs haven't process yet
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getUnprocessedTestRunList() throws IOException{
         
@@ -144,7 +149,9 @@ public class Registry {
     /**
      * Get a list of test run as Path in drillbit registry which is ready to upload
      * @return
+     * list of test run which is ready for upload
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getReadyToUploadTestRunList() throws IOException{
         List<Path> allTestRunList;
@@ -170,8 +177,11 @@ public class Registry {
      * @return
      * Test run singal object
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      * @throws JsonMappingException
+     * This exception is thrown when it failed to parse test result json 
      * @throws JsonParseException
+     * This exception is thrown when it failed to parse test result json
      */
     public TestRunSignal getTestRunSignal(Path path) throws IOException{
         String fileName = path.getParent().resolve(SIGNAL_FILENAME).toAbsolutePath().toString();
@@ -188,6 +198,7 @@ public class Registry {
      * @param response
      * Portal response for signal upload
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public void savePortalResponse(Path path, String response) throws IOException{
         String filename = path.getParent().resolve(PORTAL_RECORD_FILENAME).toAbsolutePath().toString();
