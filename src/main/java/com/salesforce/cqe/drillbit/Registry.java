@@ -154,20 +154,31 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getReadyToUploadTestRunList() throws IOException{
+        // get all test run from regitster
         List<Path> allTestRunList;
         try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
             allTestRunList =  pathStream.filter(Files::isDirectory)
                                         .filter(path -> path.toString().contains(DRILLBIT_TESTRUN_PREFIX))
                                         .collect(Collectors.toList());
         }
+        // filter test run with signal file
         List<Path> readyList = new ArrayList<>();
         for(Path testRun : allTestRunList){
             try(Stream<Path> pathStream = Files.walk(testRun, 1)){
                 if (pathStream.anyMatch(name -> name.endsWith(SIGNAL_FILENAME)))
-                    readyList.add(testRun.resolve(SIGNAL_FILENAME));
+                    readyList.add(testRun);
             }
         }
-        return readyList;
+        // filter test run without record file (not upload yet)
+        List<Path> uploadList = new ArrayList<>();
+        for(Path testRun : readyList){
+            try(Stream<Path> pathStream = Files.walk(testRun, 1)){
+                if (pathStream.noneMatch(name -> name.endsWith(PORTAL_RECORD_FILENAME)))
+                    uploadList.add(testRun.resolve(SIGNAL_FILENAME));
+            }
+        }
+
+        return uploadList;
     }
 
     /**
