@@ -22,7 +22,6 @@ import org.json.JSONTokener;
 
 import com.salesforce.cqe.helper.DrillbitCipherException;
 import com.salesforce.cqe.helper.DrillbitPortalException;
-import com.salesforce.cqe.helper.SecretsManager;
 
 /**
  * Connector class providing support for REST calls from client to portal.

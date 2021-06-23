@@ -17,8 +17,6 @@ import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.helper.DrillbitCipherException;
 import com.salesforce.cqe.helper.DrillbitPortalException;
 import com.salesforce.cqe.helper.ProcessException;
-import com.salesforce.cqe.helper.SecretsManager;
-import com.salesforce.cqe.processor.Processor;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;

@@ -1,4 +1,4 @@
-package com.salesforce.cqe.helper;
+package com.salesforce.cqe.drillbit;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import javax.crypto.spec.DESedeKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 import com.google.common.base.Strings;
-import com.salesforce.cqe.drillbit.Registry;
+import com.salesforce.cqe.helper.DrillbitCipherException;
 
 import net.east301.keyring.BackendNotSupportedException;
 import net.east301.keyring.Keyring;

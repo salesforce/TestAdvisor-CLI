@@ -136,7 +136,7 @@
         <version>${jacoco-maven-plugin.version}</version>
         <configuration>
           <excludes>
-            <exclude>**/datamodel/junit/*</exclude>
+            <exclude>**/datamodel/junit/surefire/*</exclude>
             <exclude>**/datamodel/testng/*</exclude>
         </excludes>
         </configuration>
@@ -156,7 +156,86 @@
             </execution>
         </executions>
       </plugin>
-    </plugins>
+      <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<bottom>Copyright (c) 2017, Salesforce.com, Inc. All rights
+						reserved. Licensed under
+						the BSD 3-Clause license. For full license
+						text, see the LICENSE.txt
+						file in the
+						repository.
+					</bottom>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Nexus deploy settings: disable standard plugin and use the nexus-staging 
+				plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.8</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skipStaging>true</skipStaging>
+				</configuration>
+			</plugin>
 
+			<!-- Nexus release settings -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<useReleaseProfile>false</useReleaseProfile>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<goals>deploy</goals>
+					<localCheckout>true</localCheckout>
+					<pushChanges>false</pushChanges>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<arguments>-B</arguments>
+				</configuration>
+			</plugin>
+    </plugins>
   </build>
+
+  <scm>
+		<developerConnection>scm:git:git@git.soma.salesforce.com:cqe/DrillBit-CLI.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<url>https://nexus.soma.salesforce.com/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus</id>
+			<url>https://nexus.soma.salesforce.com/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
