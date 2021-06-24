@@ -38,5 +38,22 @@ Download command will download all un-downloaded test execution server signal fr
 ### Clean
 Clean command will clean up local Drillbit registry
 
-
+## How to publish to Nexus
+1. mvn clean package
+    This will ensure your module build and package correctly.
+2. mvn release:prepare
+    This will prepare the release, more doc here:
+    http://maven.apache.org/maven-release/maven-release-plugin/examples/prepare-release.html
+    You may choose your release version, the default will only a minor version upgrade.
+3. mvn release:perform
+    This step will build/publish to nexus and also tag release on git repository, more doc here
+    (http://maven.apache.org/maven-release/maven-release-plugin/examples/perform-release.html)
+4. mvn release:clean
+    Cleans up your local env
+    
+### Documenting a new release version
+1. Go to the Releases [section](https://git.soma.salesforce.com/cqe/DrillBit-Lib/releases)
+2. Click on the "Draft a new release" button
+3. Enter the "tag version" and "Release title" value as drillbit-cli-v0.0.\<new-version\>
+4. Write one or more sentences about the changes pushed ([example](https://git.soma.salesforce.com/cqe/DrillBit-Lib/releases/tag/drillbit-lib-v0.0.53)) and publish the release.
 

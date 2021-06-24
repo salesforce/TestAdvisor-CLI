@@ -3,7 +3,7 @@ package com.salesforce.cqe.adapter;
 import java.time.ZonedDateTime;
 
 /**
- * @auther Yibing TAo
+ * @author Yibing TAo
  * Base class for test case signal
  */
 public class TestSignalBase implements DrillbitTestSignal{

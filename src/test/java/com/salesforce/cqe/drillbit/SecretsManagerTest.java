@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.salesforce.cqe.helper.DrillbitCipherException;
-import com.salesforce.cqe.helper.SecretsManager;
 
 import org.junit.Test;
 

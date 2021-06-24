@@ -1,4 +1,4 @@
-package com.salesforce.cqe.helper;
+package com.salesforce.cqe.drillbit;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import javax.crypto.spec.DESedeKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 import com.google.common.base.Strings;
-import com.salesforce.cqe.drillbit.Registry;
+import com.salesforce.cqe.helper.DrillbitCipherException;
 
 import net.east301.keyring.BackendNotSupportedException;
 import net.east301.keyring.Keyring;
@@ -92,8 +92,9 @@ public class SecretsManager {
 	 * @param accessToken 
 	 * access token obtained during authorization; to be stored in encrypted way
 	 * @throws IOException
+	 * Failed to access registry properties
 	 * @throws DrillbitCipherException 
-	 * if accessing credentials file or encryption failed for any reason
+	 * Encryption failed for any reason
 	 */
 	public void setAccessToken(String accessToken) throws IOException, DrillbitCipherException{
 		if (Strings.isNullOrEmpty(accessToken))
@@ -122,8 +123,9 @@ public class SecretsManager {
 	 * @param refreshToken 
 	 * refresh token obtained during authorization; to be stored in encrypted way
 	 * @throws IOException
+	 * Failed to access registry properties
 	 * @throws DrillbitCipherException 
-	 * if accessing credentials file or encryption failed for any reason
+	 * Encryption failed for any reason
 	 */
 	public void setRefreshToken(String refreshToken) throws IOException, DrillbitCipherException {
 		if (Strings.isNullOrEmpty(refreshToken))
@@ -156,7 +158,9 @@ public class SecretsManager {
 	 * @return 
 	 * true if setup, meaning authentication and authorization, is required
 	 * @throws IOException
+	 * Failed to access registry properties
 	 * @throws NoSuchAlgorithmException
+	 * This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment. 
 	 */
 	public boolean isSetupRequired() throws IOException, NoSuchAlgorithmException {
 	    Keyring keyring = null;

@@ -17,8 +17,6 @@ import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.helper.DrillbitCipherException;
 import com.salesforce.cqe.helper.DrillbitPortalException;
 import com.salesforce.cqe.helper.ProcessException;
-import com.salesforce.cqe.helper.SecretsManager;
-import com.salesforce.cqe.processor.Processor;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -83,8 +81,11 @@ public class CLI {
      * @param args 
      * command line args
      * @throws ParseException
+     * This exception is thrown for parsing command line arguments
      * @throws DrillbitCipherException
+     * This exception is thrown for any chipher related failure
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public CLI(String[] args) throws IOException, DrillbitCipherException, ParseException{
         Options options = new Options();
@@ -128,10 +129,15 @@ public class CLI {
     /**
      * Setup Drillbit registry and Portal connectiion
      * @throws NoSuchAlgorithmException
+     * This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment.
      * @throws DrillbitCipherException
+     * This exception is thrown for any chipher related failure
      * @throws InterruptedException
+     * This exception is thrown when current thread fails to sleep
      * @throws DrillbitPortalException
+     * This exception is thrown when drillbit portal rejects cli payload
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      */
     public void setup() throws NoSuchAlgorithmException, IOException, DrillbitPortalException, InterruptedException, DrillbitCipherException {
         //drillbit registry setup and connect to portal
@@ -142,7 +148,9 @@ public class CLI {
     /**
      * Process test results
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      * @throws ProcessException
+     * This exception is thrown when it fails to process test result
      */
     public void process() throws IOException, ProcessException {
         //process test results and save the signal file
@@ -173,8 +181,11 @@ public class CLI {
      * @param file
      * file name to the test result file
      * @param testRunSignal
+     * test run signal object contains test result
      * @throws FileNotFoundException
+     * This exception is thrown when it failed to access test result file
      * @throws ProcessException
+     * This exception is thrown when it fails to process test result
      */
     private void processFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException {
         try(InputStream is = new FileInputStream(file)){
@@ -185,8 +196,11 @@ public class CLI {
     /**
      * Upload test run signals
      * @throws DrillbitPortalException
+     * This exception is thrown when drillbit portal rejects cli payload.
      * @throws IOException
+     * This exception is thrown when it failed to access registry properties
      * @throws DrillbitCipherException
+     * This exception is thrown for any chipher related failure
      */
     public void upload() throws IOException, DrillbitPortalException, DrillbitCipherException {
         //upload test run signals to portal

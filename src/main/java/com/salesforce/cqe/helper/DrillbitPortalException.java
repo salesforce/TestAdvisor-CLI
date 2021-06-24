@@ -1,7 +1,7 @@
 package com.salesforce.cqe.helper;
 
 /**
- * @auther Yibing Tao
+ * @author Yibing Tao
  * DrillbitPortalException will throw when CLI request was rejected by
  * drillbit portal. The message will be the portal response.
  */
