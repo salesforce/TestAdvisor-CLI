@@ -141,7 +141,7 @@ public class CLI {
      */
     public void setup() throws NoSuchAlgorithmException, IOException, DrillbitPortalException, InterruptedException, DrillbitCipherException {
         //drillbit registry setup and connect to portal
-        if (secretsManager.isSetupRequired())
+        //if (secretsManager.isSetupRequired())
             connector.setupConnectionWithPortal();
     }
 
@@ -161,7 +161,8 @@ public class CLI {
         testRunSignal.sandboxOrgName = prop.getProperty("SandboxOrgName");
         testRunSignal.clientRegistryGuid =  UUID.fromString(prop.getProperty("ClientRegistryGuid"));
         testRunSignal.testSuiteName = prop.getProperty("TestSuiteName");
-        testRunSignal.clientBuildId = System.getenv("CLIENT_BUILD_ID");
+        String clientBuildId = System.getenv("CLIENT_BUILD_ID");
+        testRunSignal.clientBuildId =  clientBuildId == null ? System.getProperty("CLIENT_BUILD_ID") : clientBuildId;
         
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){
