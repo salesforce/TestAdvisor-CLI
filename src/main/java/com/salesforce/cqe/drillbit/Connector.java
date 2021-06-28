@@ -80,7 +80,7 @@ public class Connector {
 	 * @throws DrillbitCipherException
 	 * throw in case of any cipher related failure
 	 */
-	public void setupConnectionWithPortal() throws IOException, DrillbitPortalException, InterruptedException, 
+	public void  setupConnectionWithPortal() throws IOException, DrillbitPortalException, InterruptedException, 
 										 DrillbitCipherException {
 		//skip setup if already had a refresh token
 		if (secretsManager.getRefreshToken().length() > 0) return;
@@ -235,7 +235,7 @@ public class Connector {
 	 * To use TLS 1.3 it is required to use JDK 11 or newer!
 	 */
 	private CloseableHttpClient getHttpClient() {
-		return HttpClients.custom().setSSLSocketFactory(connectionSocketFactory).build();
+		return HttpClients.custom().setSSLSocketFactory(connectionSocketFactory).useSystemProperties().build();
 	}
 
 	/**
