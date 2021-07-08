@@ -1,6 +1,8 @@
 package com.salesforce.cqe.drillbit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -45,6 +47,16 @@ public class RegistryTest {
         assertEquals("00D9A0000009HXt", regProperties.getProperty("SandboxOrgId"));
         assertEquals("PleaseKeep", regProperties.getProperty("SandboxOrgName"));
         assertEquals("Schneider-Sales-Clone", regProperties.getProperty("TestSuiteName"));
+    }
+
+    @Test
+    public void createRegistryPropertiesTest() throws IOException {
+        Registry registry = new Registry(root);
+        registry.createRegistryProperties();
+        Properties regProperties = registry.getRegistryProperties();    
+        assertNotNull(regProperties.getProperty("ClientRegistryGuid"));
+        assertEquals("no", regProperties.getProperty("portal.token.encrypted"));
+        assertTrue(regProperties.getProperty("portal.refreshtoken").isEmpty());
     }
 
     @After

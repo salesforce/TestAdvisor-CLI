@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -246,4 +247,25 @@ public class Registry {
         return matcher.find( ) ? matcher.group(0) : testRunId;
     }
 
+    /**
+     * create a new set of empty registry properties and save it
+     * @throws IOException
+     * This exception is thrown when it failed to access registry properties
+     */
+    public void createRegistryProperties() throws IOException{
+        registryConfig.clear();
+        registryConfig.put("ClientRegistryGuid", UUID.randomUUID().toString());
+        registryConfig.put("SandboxInstance", "");
+        registryConfig.put("SandboxOrgName", "");
+        registryConfig.put("SandboxOrgId", "");
+        registryConfig.put("TestSuiteName", "");
+        registryConfig.put("auth.url", "");
+        registryConfig.put("portal.clientid", "");
+        registryConfig.put("portal.url", "");
+        registryConfig.put("portal.token.encrypted", "no");
+        registryConfig.put("portal.accesstoken", "");
+        registryConfig.put("portal.refreshtoken", "");
+
+        saveRegistryProperties();
+    }
 }

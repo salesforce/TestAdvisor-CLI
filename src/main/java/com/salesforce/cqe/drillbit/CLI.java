@@ -140,9 +140,10 @@ public class CLI {
      * This exception is thrown when it failed to access registry properties
      */
     public void setup() throws NoSuchAlgorithmException, IOException, DrillbitPortalException, InterruptedException, DrillbitCipherException {
-        //drillbit registry setup and connect to portal
-        //if (secretsManager.isSetupRequired())
-            connector.setupConnectionWithPortal();
+        //create empty drillbit registry properties
+        registry.createRegistryProperties();
+        //connect to portal
+        connector.setupConnectionWithPortal();
     }
 
     /**
