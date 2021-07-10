@@ -251,7 +251,8 @@ public class Registry {
 
     /**
      * Get the drillbit test result file in registry
-     * @param path
+     * @param testRun
+     * Path to test run
      * @return
      * Path object of drillbit test result file
      * or null if no test result file found
@@ -266,7 +267,7 @@ public class Registry {
                             .orElse(null);                                     
         }
     }
-    
+
     /**
      * create a new set of empty registry properties and save it
      * @throws IOException
