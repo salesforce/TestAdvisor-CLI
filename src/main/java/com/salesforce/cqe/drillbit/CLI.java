@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.salesforce.cqe.adapter.DrillbitResultAdapter;
 import com.salesforce.cqe.adapter.TestNGAdapter;
 import com.salesforce.cqe.datamodel.client.TestRunSignal;
 import com.salesforce.cqe.helper.DrillbitCipherException;
@@ -113,8 +114,6 @@ public class CLI {
             return;
         }
 
-        // The default location for test result file will be drillbit registry or current folder
-        this.resultFileName = System.getProperty("DRILLBIT_REGISTRY",System.getProperty("user.dir"));
         if (cmd.hasOption("name")){
             resultFileName = cmd.getOptionValue("name");
         }
@@ -168,7 +167,7 @@ public class CLI {
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){
                 testRunSignal.testRunId = registry.getTestRunId(path);
-                processFile(path.toString(),testRunSignal);
+                processDrillbitFile(registry.getDrillbitTestResultFile(path).toString(),testRunSignal);
                 registry.saveTestRunSignal(testRunSignal);
             }
         }else{
@@ -179,7 +178,7 @@ public class CLI {
     }
 
     /**
-     * Process a single test result file
+     * Process a single TestNG test result file
      * @param file
      * file name to the test result file
      * @param testRunSignal
@@ -192,6 +191,23 @@ public class CLI {
     private void processFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException {
         try(InputStream is = new FileInputStream(file)){
             Processor.process(is, testRunSignal, new TestNGAdapter());
+        }
+    }
+
+    /**
+     * Process a single Drillbit lib test result file
+     * @param file
+     * file name to the test result file
+     * @param testRunSignal
+     * test run signal object contains test result
+     * @throws FileNotFoundException
+     * This exception is thrown when it failed to access test result file
+     * @throws ProcessException
+     * This exception is thrown when it fails to process test result
+     */
+    private void processDrillbitFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException{
+        try(InputStream is = new FileInputStream(file)){
+            Processor.process(is, testRunSignal, new DrillbitResultAdapter());
         }
     }
 

@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +40,7 @@ public class Registry {
     private static final String DRILLBIT_TESTRUN_PATTERN_STRING = "yyyyMMdd-HHmmss";
     private static final String DRILLBIT_PROPERTIES_FILENAME = "drillbit.properties";
     private static final String DRILLBIT_DEFAULT_REGISGRY = ".drillbit"; //TODO: what about different platform
+    private static final String DRILLBIT_TEST_RESULT = "test-result.json";
      
     private Properties registryConfig = new Properties();
     private Path registryRoot;
@@ -247,6 +249,24 @@ public class Registry {
         return matcher.find( ) ? matcher.group(0) : testRunId;
     }
 
+    /**
+     * Get the drillbit test result file in registry
+     * @param path
+     * @return
+     * Path object of drillbit test result file
+     * or null if no test result file found
+     * @throws IOException
+     * Throws IOException when failed to access test run folder or files
+     */
+    public Path getDrillbitTestResultFile(Path testRun) throws IOException{
+        try(Stream<Path> pathStream = Files.walk(testRun,1)){
+            return pathStream.filter(Files::isRegularFile)
+                            .filter(path -> path.toString().endsWith(DRILLBIT_TEST_RESULT))
+                            .findFirst()
+                            .orElse(null);                                     
+        }
+    }
+    
     /**
      * create a new set of empty registry properties and save it
      * @throws IOException

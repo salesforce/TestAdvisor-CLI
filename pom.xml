@@ -95,6 +95,11 @@
       <version>3.11.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+			<groupId>com.salesforce.cqe</groupId>
+			<artifactId>drillbit-lib</artifactId>
+			<version>[0.0.5,)</version>
+		</dependency>
   </dependencies>
 
   <build>

@@ -39,8 +39,8 @@ public class Processor {
     public static void process(InputStream inputStream, TestRunSignal testRunSignal,DrillbitAdapter adapter) 
                             throws ProcessException{
         DrillbitTestRun testRun = adapter.process(inputStream);
-        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
-        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime().format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime() == null ? null : testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime() == null ? null : testRun.getTestSuiteEndTime().format(DateTimeFormatter.ISO_INSTANT);
         testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
         testRunSignal.testExecutions = new ArrayList<>();
@@ -49,17 +49,26 @@ public class Processor {
             testExection.testCaseName = testCase.getTestCaseFullName();
             testExection.startTime = testCase.getTestCaseStartTime().format(DateTimeFormatter.ISO_INSTANT);
             testExection.endTime = testCase.getTestCaseEndTime().format(DateTimeFormatter.ISO_INSTANT);
-            testExection.status = TestStatus.valueOf(testCase.getTestCaseStatus());
+            testExection.status = enumPartialMatch(TestStatus.class, testCase.getTestCaseStatus());
             testExection.testSignals = new ArrayList<>();
             for(DrillbitTestSignal signal : testCase.getTestSignalList()){
                 TestSignal testSignal = new TestSignal();
-                testSignal.signalName = TestSignalEnum.valueOf(signal.getTestSignalName());
+                testSignal.signalName = signal.getTestSignalName();
                 testSignal.signalValue = signal.getTestSignalValue();
                 testSignal.signalTime = signal.getTestSignalTime().format(DateTimeFormatter.ISO_INSTANT);
                 testExection.testSignals.add(testSignal);
             }
             testRunSignal.testExecutions.add(testExection);
         } 
+    }
+
+    public static <T extends Enum<?>> T enumPartialMatch(Class<T> enumeration, String search) {
+        for (T each : enumeration.getEnumConstants()) {
+            if (search.toUpperCase().contains(each.name().toUpperCase())) {
+                return each;
+            }
+        }
+        return null;
     }
 
 }

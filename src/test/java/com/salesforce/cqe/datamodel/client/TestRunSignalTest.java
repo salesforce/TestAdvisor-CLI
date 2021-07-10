@@ -50,12 +50,12 @@ public class TestRunSignalTest {
     testExecution.testSignals = new ArrayList<>();
 
     TestSignal signal = new TestSignal();
-    signal.signalName = TestSignalEnum.AUTOMATION;
+    signal.signalName = "AUTOMATION";
     signal.signalValue = "org.testng.Assert.assertEquals";
     signal.signalTime = now.plusSeconds(1).format(DateTimeFormatter.ISO_INSTANT);
     testExecution.testSignals.add(signal);
     signal = new TestSignal();
-    signal.signalName = TestSignalEnum.SELENIUM;
+    signal.signalName = "SELENIUM";
     signal.signalValue = "org.openqa.selenium.NoSuchElementException";
     signal.signalTime = now.plusSeconds(2).format(DateTimeFormatter.ISO_INSTANT);
     testExecution.testSignals.add(signal);
@@ -117,10 +117,10 @@ public class TestRunSignalTest {
     assertEquals("2021-05-25T03:36:18.420563Z",  testRunSignal.testExecutions.get(0).endTime);
     assertEquals(TestStatus.FAIL, testRunSignal.testExecutions.get(0).status);
     assertEquals(2, testRunSignal.testExecutions.get(0).testSignals.size());
-    assertEquals(TestSignalEnum.AUTOMATION, testRunSignal.testExecutions.get(0).testSignals.get(0).signalName);
+    assertEquals("AUTOMATION", testRunSignal.testExecutions.get(0).testSignals.get(0).signalName);
     assertEquals("org.testng.Assert.assertEquals", testRunSignal.testExecutions.get(0).testSignals.get(0).signalValue);
     assertEquals("2021-05-25T03:36:14.420563Z", testRunSignal.testExecutions.get(0).testSignals.get(0).signalTime);
-    assertEquals(TestSignalEnum.SELENIUM, testRunSignal.testExecutions.get(0).testSignals.get(1).signalName);
+    assertEquals("SELENIUM", testRunSignal.testExecutions.get(0).testSignals.get(1).signalName);
     assertEquals("org.openqa.selenium.NoSuchElementException", testRunSignal.testExecutions.get(0).testSignals.get(1).signalValue);
     assertEquals("2021-05-25T03:36:15.420563Z", testRunSignal.testExecutions.get(0).testSignals.get(1).signalTime);
   }
