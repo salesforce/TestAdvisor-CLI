@@ -11,9 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TestSignal {
     
     @JsonProperty
-    public TestSignalEnum  signalName;    
+    public String   signalName;    
     @JsonProperty
-    public String    signalValue;    // Regex "[a-zA-Z0-9\-\._]{1,1000}"
+    public String   signalValue;    // Regex "[a-zA-Z0-9\-\._]{1,1000}"
     @JsonProperty
-    public String    signalTime;
+    public String   signalTime;
 }
