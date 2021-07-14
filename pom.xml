@@ -3,7 +3,7 @@
 
   <groupId>com.salesforce.cqe</groupId>
   <artifactId>drillbit-cli</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>drillbit-cli</name>
@@ -230,7 +230,7 @@
 
   <scm>
 		<developerConnection>scm:git:git@git.soma.salesforce.com:cqe/DrillBit-CLI.git</developerConnection>
-		<tag>v0.0.4</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
