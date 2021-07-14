@@ -58,12 +58,13 @@ public class Connector {
 
 		//load properties
 		baseURL = this.registry.getRegistryProperties().getProperty(BASE_URL_PROPERTY, "");
-		if (baseURL.length() == 0)
-			throw new IllegalArgumentException("Base URL not available; authentication is required!");
 		authURL=this.registry.getRegistryProperties().getProperty(AUTHURL_PROPERTY, "");
 
 		clientId = this.registry.getRegistryProperties().getProperty(CLIENT_ID_PROPERTY, "");
-		clientId = (clientId.length() == 0) ? clientId : URLEncoder.encode(clientId, ENCODING);	
+		if (clientId.isEmpty()){
+			throw new IllegalArgumentException("Client ID not available; Please add Client Id property!");
+		}
+		clientId = URLEncoder.encode(clientId, ENCODING);	
 	}
 
 	/**
@@ -82,9 +83,6 @@ public class Connector {
 	 */
 	public void  setupConnectionWithPortal() throws IOException, DrillbitPortalException, InterruptedException, 
 										 DrillbitCipherException {
-		//skip setup if already had a refresh token
-		if (secretsManager.getRefreshToken().length() > 0) return;
-
 		//Send Device Request
 		String deviceRequestAuthorizationURL = authURL + DEVICE_REQUEST + "&client_id=" + clientId;
 		try (CloseableHttpClient httpClient = getHttpClient()){
@@ -106,15 +104,15 @@ public class Connector {
 			String verificationURI = jsonObject.getString("verification_uri");
 			int pollingWaitTime = jsonObject.getInt("interval");
 
-			LOGGER.log(Level.INFO,"\nFor the authorization to succeed, please log out of any Salesforce org!\n");
-			LOGGER.log(Level.INFO,"Now open the following URL in your browser:");
-			LOGGER.log(Level.INFO,verificationURI + "?user_code=" + userCode);
-			LOGGER.log(Level.INFO,
+			System.out.println("\nFor the authorization to succeed, please log out of any Salesforce org!\n");
+			System.out.println("Now open the following URL in your browser:");
+			System.out.println(verificationURI + "?user_code=" + userCode);
+			System.out.println(
 					"To authenticate yourself, log in into DrillBit Portal using the API credentials provided to you.");
-			LOGGER.log(Level.INFO,"If the authentication was successful, you will see the message \"You're Connected\".");
-			LOGGER.log(Level.INFO,"When connection is confirmed, press ENTER to continue...");
+			System.out.println("If the authentication was successful, you will see the message \"You're Connected\".");
+			System.out.println("When connection is confirmed, press ENTER to continue...");
 			new Scanner(System.in).nextLine();
-			LOGGER.log(Level.INFO,"Waiting for device code confirmation!");
+			System.out.println("Waiting for device code confirmation!");
 
 			// give a few secs to perform the connect confirmation before polling
 			Thread.sleep(pollingWaitTime);
@@ -132,7 +130,7 @@ public class Connector {
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK)
 					throw new DrillbitPortalException("Device code was not confirmed!");
-				LOGGER.log(Level.INFO,"Device code has been confirmed!");
+				System.out.println("Device code has been confirmed!");
 
 				result = EntityUtils.toString(response.getEntity());
 			}
@@ -142,7 +140,7 @@ public class Connector {
 			secretsManager.setRefreshToken(jsonObject.getString("refresh_token"));
 			registry.saveRegistryProperty(BASE_URL_PROPERTY, jsonObject.getString("instance_url"));
 
-			LOGGER.log(Level.INFO,"Authorization successful!");
+			System.out.println("Authorization successful!");
 		}//close http client
 	}
 

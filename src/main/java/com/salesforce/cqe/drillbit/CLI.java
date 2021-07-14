@@ -139,9 +139,8 @@ public class CLI {
      * This exception is thrown when it failed to access registry properties
      */
     public void setup() throws NoSuchAlgorithmException, IOException, DrillbitPortalException, InterruptedException, DrillbitCipherException {
-        //create empty drillbit registry properties
-        registry.createRegistryProperties();
         //connect to portal
+        LOGGER.log(Level.INFO,"Setup connection with Portal");
         connector.setupConnectionWithPortal();
     }
 
@@ -154,6 +153,7 @@ public class CLI {
      */
     public void process() throws IOException, ProcessException {
         //process test results and save the signal file
+        LOGGER.log(Level.INFO,"Process test result");
         TestRunSignal testRunSignal = new TestRunSignal();
         Properties prop = registry.getRegistryProperties();
         testRunSignal.sandboxInstance = prop.getProperty("SandboxInstance");
@@ -166,11 +166,13 @@ public class CLI {
         
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){
+                LOGGER.log(Level.INFO,"Processing {0}", path);
                 testRunSignal.testRunId = registry.getTestRunId(path);
                 processDrillbitFile(registry.getDrillbitTestResultFile(path).toString(),testRunSignal);
                 registry.saveTestRunSignal(testRunSignal);
             }
         }else{
+            LOGGER.log(Level.INFO,"Processing {0}", resultFileName);
             testRunSignal.testRunId = registry.getTestRunId(resultFileName);
             processFile(resultFileName, testRunSignal);
             registry.saveTestRunSignal(testRunSignal);
@@ -222,8 +224,10 @@ public class CLI {
      */
     public void upload() throws IOException, DrillbitPortalException, DrillbitCipherException {
         //upload test run signals to portal
+        LOGGER.log(Level.INFO,"Upload test signals");
         connector.connectToPortal();    
         for(Path path : registry.getReadyToUploadTestRunList()){
+            LOGGER.log(Level.INFO,"Uploading {0}", path);
             String response = connector.postApex(PORTAL_UPLOAD_ENDPOINT_V1, new String(Files.readAllBytes(path)));
             registry.savePortalResponse(path, response);
         }
