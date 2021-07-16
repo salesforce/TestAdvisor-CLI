@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,37 +21,45 @@ public class RegistryTest {
     @Before
     public void setup() throws IOException {
         root = Files.createTempDirectory("drillbit");
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("drillbit.properties").toFile()))){
-            writer.write("portal.token.encrypted=no\n");
-            writer.write("portal.accesstoken=\n");
-            writer.write("portal.refreshtoken=\n");
-            writer.write("portal.clientid=\n");
-            writer.write("portal.url=\n");
-            writer.write("ClientRegistryGuid=02957862-f1d9-475a-8ce0-d7ec128ccf42\n");
-            writer.write("TestSuiteName=Schneider-Sales-Clone\n");
-            writer.write("SandboxInstance=CS46\n");
-            writer.write("SandboxOrgName=PleaseKeep\n");
-            writer.write("SandboxOrgId=00D9A0000009HXt\n");
-            writer.write("auth.url=\n");
-        }
     }
 
     @Test
     public void registryPropertiesTest() throws IOException{      
         Registry registry = new Registry(root);
-        Properties regProperties = registry.getRegistryProperties();        
+        Properties regProperties = registry.getRegistryProperties();   
+        regProperties.setProperty("ClientRegistryGuid", "02957862-f1d9-475a-8ce0-d7ec128ccf42");     
+        regProperties.setProperty("SandboxInstance", "CS46");
+        regProperties.setProperty("SandboxOrgId", "00D9A0000009HXt");
+        regProperties.setProperty("SandboxOrgName", "Pleasekeep");
+        regProperties.setProperty("TestSuiteName", "Schneider-Sales-Clone");
 
         assertEquals("02957862-f1d9-475a-8ce0-d7ec128ccf42", regProperties.getProperty("ClientRegistryGuid"));
         assertEquals("CS46", regProperties.getProperty("SandboxInstance"));
         assertEquals("00D9A0000009HXt", regProperties.getProperty("SandboxOrgId"));
-        assertEquals("PleaseKeep", regProperties.getProperty("SandboxOrgName"));
+        assertEquals("Pleasekeep", regProperties.getProperty("SandboxOrgName"));
+        assertEquals("Schneider-Sales-Clone", regProperties.getProperty("TestSuiteName"));
+    }
+
+    @Test
+    public void registryPropertiesSaveTest() throws IOException{
+        Registry registry = new Registry(root);
+        registry.saveRegistryProperty("ClientRegistryGuid", "02957862-f1d9-475a-8ce0-d7ec128ccf42");     
+        registry.saveRegistryProperty("SandboxInstance", "CS46");
+        registry.saveRegistryProperty("SandboxOrgId", "00D9A0000009HXt");
+        registry.saveRegistryProperty("SandboxOrgName", "Pleasekeep");
+        registry.saveRegistryProperty("TestSuiteName", "Schneider-Sales-Clone");
+
+        Properties regProperties = registry.getRegistryProperties();   
+        assertEquals("02957862-f1d9-475a-8ce0-d7ec128ccf42", regProperties.getProperty("ClientRegistryGuid"));
+        assertEquals("CS46", regProperties.getProperty("SandboxInstance"));
+        assertEquals("00D9A0000009HXt", regProperties.getProperty("SandboxOrgId"));
+        assertEquals("Pleasekeep", regProperties.getProperty("SandboxOrgName"));
         assertEquals("Schneider-Sales-Clone", regProperties.getProperty("TestSuiteName"));
     }
 
     @Test
     public void createRegistryPropertiesTest() throws IOException {
-        Registry registry = new Registry(root);
-        registry.createRegistryProperties();
+        Registry registry = new Registry(root.resolve("subfolder").resolve("other"));
         Properties regProperties = registry.getRegistryProperties();    
         assertNotNull(regProperties.getProperty("ClientRegistryGuid"));
         assertEquals("no", regProperties.getProperty("portal.token.encrypted"));
@@ -61,8 +68,20 @@ public class RegistryTest {
 
     @After
     public void teardown() throws IOException{
-        Files.deleteIfExists(root.resolve("drillbit.properties"));
-        Files.deleteIfExists(root);
+        removeDirectory(root.toFile());
     }
-    
+
+    private void removeDirectory(File dir) {
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null && files.length > 0) {
+                for (File aFile : files) {
+                    removeDirectory(aFile);
+                }
+            }
+            dir.delete();
+        } else {
+            dir.delete();
+        }
+    }
 }

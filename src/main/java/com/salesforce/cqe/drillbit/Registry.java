@@ -14,7 +14,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +40,7 @@ public class Registry {
     private static final String DRILLBIT_PROPERTIES_FILENAME = "drillbit.properties";
     private static final String DRILLBIT_DEFAULT_REGISGRY = ".drillbit"; //TODO: what about different platform
     private static final String DRILLBIT_TEST_RESULT = "test-result.json";
+    private static final String DRILLBIT_PROPERTY_CLIENT_GUID = "ClientRegistryGuid";
      
     private Properties registryConfig = new Properties();
     private Path registryRoot;
@@ -48,7 +48,7 @@ public class Registry {
         return registryRoot;
     }
 
-    public Registry(){
+    public Registry() throws IOException{
         //get registry root
         if (System.getenv("DRILLBIT_REGISTRY") == null){
             //env not set
@@ -58,10 +58,27 @@ public class Registry {
         }
         else
             registryRoot = Paths.get(System.getenv("DRILLBIT_REGISTRY"));
+        initRegistry();
     }
 
-    public Registry(Path root){
+    public Registry(Path root) throws IOException{
         registryRoot = root;
+        initRegistry();
+    }
+
+    /**
+     * Init Registry
+     * @throws IOException
+     * This exception will be thrown when it fails to access registry configruation file
+     */
+    private void initRegistry() throws IOException {
+        //create registry root folder first
+        if (!registryRoot.toFile().exists())
+            registryRoot.toFile().mkdirs();
+
+        //create property file if necessary
+        if (!registryRoot.resolve(DRILLBIT_PROPERTIES_FILENAME).toFile().exists())
+            createRegistryProperties();
     }
 
     /**
@@ -98,6 +115,12 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public void saveRegistryProperties() throws IOException{
+        //Generate a random UUID if not present yet
+        String guid = registryConfig.getProperty(DRILLBIT_PROPERTY_CLIENT_GUID,"");
+        if ( guid.isEmpty())
+            registryConfig.setProperty(DRILLBIT_PROPERTY_CLIENT_GUID, UUID.randomUUID().toString());
+
+        //Save all properites
         try(OutputStream output = Files.newOutputStream(registryRoot.resolve(DRILLBIT_PROPERTIES_FILENAME))){
 			registryConfig.store(output, null);
 		}
@@ -273,14 +296,13 @@ public class Registry {
      * @throws IOException
      * This exception is thrown when it failed to access registry properties
      */
-    public void createRegistryProperties() throws IOException{
+    private void createRegistryProperties() throws IOException{
         registryConfig.clear();
-        registryConfig.put("ClientRegistryGuid", UUID.randomUUID().toString());
         registryConfig.put("SandboxInstance", "");
         registryConfig.put("SandboxOrgName", "");
         registryConfig.put("SandboxOrgId", "");
         registryConfig.put("TestSuiteName", "");
-        registryConfig.put("auth.url", "");
+        registryConfig.put("auth.url", "https://test.salesforce.com");
         registryConfig.put("portal.clientid", "");
         registryConfig.put("portal.url", "");
         registryConfig.put("portal.token.encrypted", "no");
