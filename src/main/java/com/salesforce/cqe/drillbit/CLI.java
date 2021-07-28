@@ -110,7 +110,7 @@ public class CLI {
             return;
         }
         if (cmd.hasOption("version")){
-            LOGGER.log(Level.INFO,"version:{0}",CLI.class.getClass().getPackage().getImplementationVersion());
+            System.out.println(String.format("version:%s",CLI.class.getClass().getPackage().getImplementationVersion()));
             return;
         }
 
