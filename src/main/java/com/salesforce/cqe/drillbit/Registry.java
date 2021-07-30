@@ -33,14 +33,14 @@ import com.salesforce.cqe.datamodel.client.TestRunSignal;
  */
 public class Registry {
     
-    private static final String SIGNAL_FILENAME = "test-signal.json";
-    private static final String PORTAL_RECORD_FILENAME = "test-result.record";
-    private static final String DRILLBIT_TESTRUN_PREFIX = "TestRun-";
-    private static final String DRILLBIT_TESTRUN_PATTERN_STRING = "yyyyMMdd-HHmmss";
-    private static final String DRILLBIT_PROPERTIES_FILENAME = "drillbit.properties";
-    private static final String DRILLBIT_DEFAULT_REGISGRY = ".drillbit"; //TODO: what about different platform
-    private static final String DRILLBIT_TEST_RESULT = "test-result.json";
-    private static final String DRILLBIT_PROPERTY_CLIENT_GUID = "ClientRegistryGuid";
+    public static final String SIGNAL_FILENAME = "test-signal.json";
+    public static final String PORTAL_RECORD_FILENAME = "test-result.record";
+    public static final String DRILLBIT_TESTRUN_PREFIX = "TestRun-";
+    public static final String DRILLBIT_TESTRUN_PATTERN_STRING = "yyyyMMdd-HHmmss";
+    public static final String DRILLBIT_PROPERTIES_FILENAME = "drillbit.properties";
+    public static final String DRILLBIT_DEFAULT_REGISGRY = ".drillbit"; //TODO: what about different platform
+    public static final String DRILLBIT_TEST_RESULT = "test-result.json";
+    public static final String DRILLBIT_PROPERTY_CLIENT_GUID = "ClientRegistryGuid";
      
     private Properties registryConfig = new Properties();
     private Path registryRoot;

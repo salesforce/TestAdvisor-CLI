@@ -44,7 +44,7 @@ public class CLITest {
         
         try(ByteArrayOutputStream os = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(os)){
-            System.setErr(ps);
+            System.setOut(ps);
             CLI cli = new CLI(args);
             assertNull(cli.getCommand());
             assertTrue(os.toString().contains("version:"));
@@ -92,4 +92,5 @@ public class CLITest {
         CLI cli = new CLI(args);
         assertEquals("UNSUPPORTED",cli.getCommand());
     }
+
 }

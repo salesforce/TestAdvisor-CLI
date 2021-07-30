@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.ssl.SSLContexts;
@@ -43,6 +44,7 @@ public class Connector {
 	private static final String AUTHURL_PROPERTY = "auth.url";
 	private static final String BASE_URL_PROPERTY = "portal.url";
 
+	private HttpClientBuilder builder;
 	private Registry registry; //registry properties contain all settings
 	private SecretsManager secretsManager; //secrets manager do encrypt/decrypt
 	// TODO replace getDefaultHostnameVerifier() with a more specific verifier
@@ -226,6 +228,15 @@ public class Connector {
 	 }
 
 	/**
+	 * set a new http client builder
+	 * @param builder
+	 * http client builder should use
+	 */
+	public void setBuilder(HttpClientBuilder builder){
+		this.builder = builder;
+	}
+
+	/**
 	 * Creates a closable HTTP client, using SSL Connection Socket factory with the
 	 * highest available TLS version supported by the JDK used as runtime
 	 * environment.
@@ -233,7 +244,8 @@ public class Connector {
 	 * To use TLS 1.3 it is required to use JDK 11 or newer!
 	 */
 	private CloseableHttpClient getHttpClient() {
-		return HttpClients.custom().setSSLSocketFactory(connectionSocketFactory).useSystemProperties().build();
+		return builder == null ? HttpClients.custom().setSSLSocketFactory(connectionSocketFactory).useSystemProperties().build()
+				: this.builder.build();
 	}
 
 	/**

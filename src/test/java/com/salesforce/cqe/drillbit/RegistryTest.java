@@ -8,7 +8,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
+
+import com.salesforce.cqe.datamodel.client.TestRunSignal;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,6 +43,7 @@ public class RegistryTest {
         regProperties.setProperty("SandboxOrgName", "Pleasekeep");
         regProperties.setProperty("TestSuiteName", "Schneider-Sales-Clone");
 
+        assertEquals(root,registry.getRegistryRoot());
         assertEquals("02957862-f1d9-475a-8ce0-d7ec128ccf42", regProperties.getProperty("ClientRegistryGuid"));
         assertEquals("CS46", regProperties.getProperty("SandboxInstance"));
         assertEquals("00D9A0000009HXt", regProperties.getProperty("SandboxOrgId"));
@@ -66,6 +77,94 @@ public class RegistryTest {
         assertTrue(regProperties.getProperty("portal.refreshtoken").isEmpty());
     }
 
+    @Test
+    public void testGetUnprocessedList() throws IOException{
+        //setup
+        Path testrun = createTestRun(0);
+        Files.createFile(testrun.resolve(Registry.SIGNAL_FILENAME));
+        Path testrun2 = createTestRun(2);
+
+        //test
+        Registry registry = new Registry(root);
+        List<Path> list = registry.getUnprocessedTestRunList();
+        assertEquals(1, list.size());
+        assertEquals(0,list.get(0).compareTo(testrun2));
+    }
+
+    @Test
+    public void testGetReadyToUploadList() throws IOException{
+        //setup
+        Path testrun = createTestRun(0);
+        Files.createFile(testrun.resolve(Registry.SIGNAL_FILENAME));
+        Path testrun2 = createTestRun(2);
+        Files.createFile(testrun2.resolve(Registry.PORTAL_RECORD_FILENAME));
+
+        //test
+        Registry registry = new Registry(root);
+        List<Path> list = registry.getReadyToUploadTestRunList();
+        assertEquals(1, list.size());
+        assertEquals(0,list.get(0).toAbsolutePath()
+            .compareTo(testrun.resolve(Registry.SIGNAL_FILENAME).toAbsolutePath()));
+    }
+
+    @Test
+    public void testSaveTestRunSignal() throws IOException{
+        Registry registry = new Registry(root);
+
+        Path testrun = createTestRun(0);
+        String testrunId = registry.getTestRunId(testrun);
+
+        TestRunSignal testRunSignal = new TestRunSignal();
+        ZonedDateTime now = ZonedDateTime.now();
+        testRunSignal.buildStartTime = now.format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.buildEndTime = now.plusSeconds(5).format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.clientBuildId = "123";
+        testRunSignal.clientCliVersion = "1.0.1";
+        testRunSignal.clientLibraryVersion = "1.0.1";
+        testRunSignal.clientRegistryGuid = UUID.randomUUID();
+        testRunSignal.sandboxInstance = "CS997";
+        testRunSignal.sandboxOrgId = "00D9A0000009IsD";
+        testRunSignal.sandboxOrgName = "bst";
+        testRunSignal.testSuiteName = "testSuite1";
+        testRunSignal.testExecutions = new ArrayList<>();
+        testRunSignal.testRunId = testrunId;
+
+        String filename = registry.saveTestRunSignal(testRunSignal);
+
+        TestRunSignal testRunSignal2 = registry.getTestRunSignal(Paths.get(filename));
+
+        assertEquals(testRunSignal.clientRegistryGuid, testRunSignal2.clientRegistryGuid);
+    }
+
+    @Test
+    public void testSaveResponse() throws IOException{
+        Registry registry = new Registry(root);
+        Path testrun = createTestRun(0);
+
+        String text = "some response";
+        registry.savePortalResponse(testrun.resolve(Registry.DRILLBIT_TEST_RESULT), text);
+
+        List<String> responses = Files.readAllLines(testrun.resolve(Registry.PORTAL_RECORD_FILENAME));
+        
+        assertEquals(1, responses.size());
+        assertEquals(text, responses.get(0));
+
+    }
+
+    @Test
+    public void testGetTestResultList() throws IOException{
+        //setup
+        Path testrun = createTestRun(0);
+        Files.createFile(testrun.resolve(Registry.DRILLBIT_TEST_RESULT));
+        Files.createFile(testrun.resolve(Registry.PORTAL_RECORD_FILENAME));
+
+        //test
+        Registry registry = new Registry(root);
+        Path path = registry.getDrillbitTestResultFile(testrun);
+        assertEquals(0,path.toAbsolutePath()
+            .compareTo(testrun.resolve(Registry.DRILLBIT_TEST_RESULT).toAbsolutePath()));
+    }
+
     @After
     public void teardown() throws IOException{
         removeDirectory(root.toFile());
@@ -84,4 +183,15 @@ public class RegistryTest {
             dir.delete();
         }
     }
+
+    private Path createTestRun(int plusSeconds){
+        DateTimeFormatter drillbitDateFormatter = DateTimeFormatter.ofPattern(Registry.DRILLBIT_TESTRUN_PATTERN_STRING);
+        String testRunId = Registry.DRILLBIT_TESTRUN_PREFIX + drillbitDateFormatter.format(
+            OffsetDateTime.now( ZoneOffset.UTC ).plusSeconds(plusSeconds));
+        Path testrun = root.resolve(testRunId);
+        testrun.toFile().mkdirs();
+
+        return testrun;
+    }
+
 }
