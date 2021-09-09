@@ -39,13 +39,15 @@ public class ConnectorTest {
     
     @Before
     public void setup() throws IOException, TestAdvisorCipherException {
-        root = Files.createTempDirectory("drillbit");
+        root = Files.createTempDirectory("testadvisor");
         registry = new Registry(root);
         secretsManager = new SecretsManager(registry);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmptyClientId() throws IOException, TestAdvisorCipherException{
+        registry.getRegistryProperties().setProperty("portal.clientid", "");
+        registry.saveRegistryProperties();
         new Connector(registry, secretsManager);
     }
 

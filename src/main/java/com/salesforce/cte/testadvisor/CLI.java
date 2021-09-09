@@ -134,7 +134,7 @@ public class CLI {
         this.force = cmd.hasOption("force");
         this.command = cmd.hasOption("cmd") ? cmd.getOptionValue("cmd").toUpperCase() : "UNKNOWN";
     }
-    
+
     /**
      * Setup TestAdvisor registry and Portal connectiion
      * @throws NoSuchAlgorithmException

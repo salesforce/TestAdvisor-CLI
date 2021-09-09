@@ -16,8 +16,8 @@ public class SecretsManagerTest {
     
     @Test
     public void noEncryptTest() throws IOException, TestAdvisorCipherException {
-        Path root = Files.createTempDirectory("drillbit");
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("drillbit.properties").toFile()))){
+        Path root = Files.createTempDirectory("testadvisor");
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=no\n");
             writer.write("portal.accesstoken=\n");
             writer.write("portal.refreshtoken=\n");
@@ -32,7 +32,7 @@ public class SecretsManagerTest {
         manager.setRefreshToken(refreshToken);
         assertEquals(refreshToken,manager.getRefreshToken());
 
-        Files.deleteIfExists(root.resolve("drillbit.properties"));
+        Files.deleteIfExists(root.resolve("testadvisor.properties"));
         Files.deleteIfExists(root);
     }
 }

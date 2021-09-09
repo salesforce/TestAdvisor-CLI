@@ -37,7 +37,7 @@ public class ProcessorTest{
     }
 
     @Test
-    public void testProcessDrillbitResult() throws IOException, ProcessException{
+    public void testProcessTestAdvisorResult() throws IOException, ProcessException{
         TestRunSignal testRunSignal = new TestRunSignal();
         testRunSignal.clientBuildId = "123";
         testRunSignal.clientCliVersion = "1.0.1";

@@ -30,7 +30,7 @@ public class RegistryTest {
     
     @Before
     public void setup() throws IOException {
-        root = Files.createTempDirectory("drillbit");
+        root = Files.createTempDirectory("testadvisor");
     }
 
     @Test
