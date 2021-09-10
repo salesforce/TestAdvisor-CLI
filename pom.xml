@@ -172,7 +172,7 @@
 						file in the
 						repository.
 					</bottom>
-          <excludePackageNames>com.salesforce.cqe.datamodel.junit.surefire:com.salesforce.cqe.datamodel.testng</excludePackageNames>
+          <excludePackageNames>com.salesforce.cte.datamodel.junit.surefire:com.salesforce.cte.datamodel.testng</excludePackageNames>
 				</configuration>
 				<executions>
 					<execution>
