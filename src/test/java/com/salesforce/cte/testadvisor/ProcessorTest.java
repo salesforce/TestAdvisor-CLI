@@ -41,7 +41,6 @@ public class ProcessorTest{
         TestRunSignal testRunSignal = new TestRunSignal();
         testRunSignal.clientBuildId = "123";
         testRunSignal.clientCliVersion = "1.0.1";
-        testRunSignal.clientLibraryVersion = "1.0.1";
         testRunSignal.clientRegistryGuid = UUID.randomUUID();
         testRunSignal.sandboxInstance = "CS997";
         testRunSignal.sandboxOrgId = "00D9A0000009IsD";
@@ -55,6 +54,8 @@ public class ProcessorTest{
         assertEquals(12, testRunSignal.testExecutions.size());
         assertEquals(TestStatus.FAIL, testRunSignal.testExecutions.get(0).status);
         assertEquals(TestStatus.PASS, testRunSignal.testExecutions.get(1).status);
+        assertEquals("1.1.1", testRunSignal.clientLibraryVersion);
+        assertEquals("1.0.1", testRunSignal.clientCliVersion);
     }
 
 }

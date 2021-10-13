@@ -67,7 +67,7 @@ public class TestNGAdapter implements TestAdvisorAdapter {
                 }
             }
         }
-        return new TestRunBase(testSuiteName,"",suiteStart,suiteEnd,testCaseList);
+        return new TestRunBase(testSuiteName,"","",suiteStart,suiteEnd,testCaseList);
     }
 
     private ZonedDateTime getDatetime(String timestamp) {

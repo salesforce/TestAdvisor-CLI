@@ -10,14 +10,16 @@ import java.util.List;
 public class TestRunBase implements TestAdvisorTestRun {
     private String testSuiteName="";
     private String testSuiteInfo="";
+    private String testAdvisorVersion="";
     private ZonedDateTime testSuiteStartTime;
     private ZonedDateTime testSuiteEndTime;
     private List<TestAdvisorTestCase> testCaseList;
   
-    public TestRunBase(String name, String info, ZonedDateTime start, 
+    public TestRunBase(String name, String info, String version, ZonedDateTime start, 
                     ZonedDateTime end, List<TestAdvisorTestCase> caseList){
         testSuiteName = name;
         testSuiteInfo = info;
+        testAdvisorVersion = version;
         testSuiteStartTime = start;
         testSuiteEndTime = end;
         testCaseList = caseList;
@@ -46,6 +48,11 @@ public class TestRunBase implements TestAdvisorTestRun {
     @Override
     public List<TestAdvisorTestCase> getTestCaseList() {
         return testCaseList;
+    }
+
+    @Override
+    public String getTestAdvisorVersion() {
+        return testAdvisorVersion;
     }
 
     

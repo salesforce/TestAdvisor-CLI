@@ -10,6 +10,7 @@ import java.util.List;
 public interface TestAdvisorTestRun {
     public String getTestSuiteName(); 
     public String getTestsSuiteInfo(); 
+    public String getTestAdvisorVersion();
     public ZonedDateTime getTestSuiteStartTime(); 
     public ZonedDateTime getTestSuiteEndTime();  
     public List<TestAdvisorTestCase> getTestCaseList();

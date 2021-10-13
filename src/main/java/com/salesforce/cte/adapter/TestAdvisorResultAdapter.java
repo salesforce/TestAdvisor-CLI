@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.common.TestCaseExecution;
 import com.salesforce.cte.common.TestEvent;
 import com.salesforce.cte.helper.ProcessException;
@@ -18,16 +19,15 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
     @Override
     public TestAdvisorTestRun process(InputStream input) throws ProcessException {
         
-        List<TestCaseExecution> testCaseExecutionList;
+        TestAdvisorResult testAdvisorResult;
         try {
-            testCaseExecutionList = new ObjectMapper()
-                    .readValue(input,new TypeReference<List<TestCaseExecution>>(){});
+            testAdvisorResult = new ObjectMapper().readValue(input, new TypeReference<TestAdvisorResult>(){});
         } catch (IOException e) {
             throw new ProcessException(e);
         }
         
         List<TestAdvisorTestCase> testCaseList = new ArrayList<>();
-        for(TestCaseExecution testExecution : testCaseExecutionList){
+        for(TestCaseExecution testExecution : testAdvisorResult.payloadList){
             List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
             for(TestEvent event : testExecution.eventList){
                 if(event.eventLevel.equals("SEVERE") || event.eventLevel.equals("WARNING")){
@@ -43,7 +43,9 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
                             testExecution.getTestStatus().toString(),testSignalList));
         }
 
-        return new TestRunBase("","",ZonedDateTime.now(),ZonedDateTime.now(),testCaseList);
+        ZonedDateTime buildStartTime = getDatetime(testAdvisorResult.buildStartTime);
+        ZonedDateTime buildEndTime = getDatetime(testAdvisorResult.buildEndTime);
+        return new TestRunBase("","",testAdvisorResult.version,buildStartTime,buildEndTime,testCaseList);
     }
 
     private ZonedDateTime getDatetime(String timestamp) {
