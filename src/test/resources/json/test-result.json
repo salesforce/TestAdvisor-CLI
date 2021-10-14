@@ -1,4 +1,5 @@
-[ {
+{
+  "payloadList" :[ {
     "testName" : "com.dev401.test.CanaryTest.createCase",
     "eventList" : [ {
       "eventName" : "setup",
@@ -394,4 +395,8 @@
     "testStatus" : "PASSED",
     "startTime" : "2021-07-10T01:26:04.463Z",
     "endTime" : "2021-07-10T01:26:58.202Z"
-  } ]
+  } ],
+  "version" : "1.1.1",
+  "buildStartTime" : "2021-10-12T04:03:24.214537Z",
+  "buildEndTime" : "2021-10-12T04:03:29.214565Z"
+}
