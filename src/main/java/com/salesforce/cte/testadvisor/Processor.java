@@ -42,6 +42,7 @@ public class Processor {
         testRunSignal.buildStartTime = testRun.getTestSuiteStartTime() == null ? null : testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
         testRunSignal.buildEndTime = testRun.getTestSuiteEndTime() == null ? null : testRun.getTestSuiteEndTime().format(DateTimeFormatter.ISO_INSTANT);
         testRunSignal.clientLibraryVersion = testRun.getTestAdvisorVersion();
+        testRunSignal.clientCliVersion = CLI.class.getClass().getPackage().getImplementationVersion();;
         testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
         testRunSignal.testExecutions = new ArrayList<>();

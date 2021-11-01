@@ -2,6 +2,7 @@ package com.salesforce.cte.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,13 +28,13 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         }
         
         List<TestAdvisorTestCase> testCaseList = new ArrayList<>();
-        for(TestCaseExecution testExecution : testAdvisorResult.payloadList){
+        for(TestCaseExecution testExecution : testAdvisorResult.testCaseExecutionList){
             List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
             for(TestEvent event : testExecution.eventList){
-                if(event.eventLevel.equals("SEVERE") || event.eventLevel.equals("WARNING")){
+                if(event.getEventLevel().equals("SEVERE") || event.getEventLevel().equals("WARNING")){
                     //only collect severe and waring event
-                    testSignalList.add(new TestSignalBase(event.getEventName(),
-                                event.getEventContent(),getDatetime(event.startTime)));
+                    testSignalList.add(new TestSignalBase(event.getEventContent(),
+                                event.getEventContent(),event.getEventTime().atZone(ZoneOffset.UTC)));
                 }
             }
             

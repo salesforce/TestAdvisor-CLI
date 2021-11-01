@@ -19,5 +19,11 @@ public class TestExecution {
     @JsonProperty
     public String  testCaseName; // Regex "[a-zA-Z0-9\-_]{1,80}"
     @JsonProperty
+    public String   baselineBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
+    @JsonProperty
+    public String   baselineBuildIdStartTime; 
+    @JsonProperty
+    public String   baselineSalesforceBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
+    @JsonProperty
     public List<TestSignal> testSignals;
 }

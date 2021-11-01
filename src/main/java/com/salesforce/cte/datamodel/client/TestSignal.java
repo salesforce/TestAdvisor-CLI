@@ -16,4 +16,17 @@ public class TestSignal {
     public String   signalValue;    // Regex "[a-zA-Z0-9\-\._]{1,1000}"
     @JsonProperty
     public String   signalTime;
+    @JsonProperty
+    public String   previousSignalTime;
+    @JsonProperty
+    public String   seleniumCmd;
+    @JsonProperty
+    public String   locatorHash;
+    @JsonProperty
+    public int   screenshotRecorderNumber;
+    @JsonProperty
+    public int   baselinScreenshotRecorderNumber;
+    @JsonProperty
+    public String   errorMessage;
+
 }
