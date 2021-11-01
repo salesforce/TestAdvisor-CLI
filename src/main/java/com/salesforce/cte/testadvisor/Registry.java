@@ -24,6 +24,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 
 /**
@@ -208,6 +209,46 @@ public class Registry {
     }
 
     /**
+     * Get all list of test runs from registry, the output list will be 
+     * sorted by test run time stamp. Lastest test run on top.
+     * @return Sorted list of all test runs in registry
+     * @throws IOException
+     */
+    public List<Path> getAllTestRuns() throws IOException{
+        // get all test run from regitster
+        List<Path> allTestRunList;
+        try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
+            allTestRunList =  pathStream.filter(Files::isDirectory)
+                                        .filter(path -> path.toString().contains(TESTADVISOR_TESTRUN_PREFIX))
+                                        .collect(Collectors.toList());
+        }
+
+        allTestRunList.sort(null);
+        return allTestRunList;
+    }
+
+    /**
+     * Get baseline test run from all test run list for current test execution in current test run
+     * The baseline run will be test run contains last known good (LKG) test execution.
+     * If no LKG was found, the last test run will be pick
+     * @param allTestRunList
+     * @param currentTestRun
+     * @return Baseline test run path. null if no baseline was found.
+     */
+    public Path getBaselineTestRun(List<Path> allTestRunList, Path currentTestRun, TestExecution test){
+      return null;
+    }
+
+    /**
+     * Get baseline data for current test run
+     * @param currentTestRun
+     * @param test
+     */
+    public void fillTestExecutionBaseline(Path currentTestRun, TestExecution test){
+        
+    }
+    
+    /**
      * Get test run signal object for current test run from registry
      * @param path
      * Path to current test run
@@ -311,4 +352,6 @@ public class Registry {
 
         saveRegistryProperties();
     }
+
+
 }
