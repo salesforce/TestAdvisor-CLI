@@ -1,6 +1,6 @@
 package com.salesforce.cte.adapter;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 /**
  * @author Yibing TAo
@@ -10,9 +10,9 @@ public class TestSignalBase implements TestAdvisorTestSignal{
 
     private String signalName;
     private String signalValue;
-    private ZonedDateTime signalTime;
+    private Instant signalTime;
 
-    public TestSignalBase(String name, String value, ZonedDateTime time){
+    public TestSignalBase(String name, String value, Instant time){
         signalName = name;
         signalValue = value;
         signalTime = time;
@@ -29,7 +29,7 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     }
 
     @Override
-    public ZonedDateTime getTestSignalTime() {
+    public Instant getTestSignalTime() {
         return signalTime;
     }
     

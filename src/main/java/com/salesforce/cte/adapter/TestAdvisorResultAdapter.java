@@ -2,14 +2,13 @@ package com.salesforce.cte.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.common.TestCaseExecution;
 import com.salesforce.cte.common.TestEvent;
@@ -22,7 +21,9 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         
         TestAdvisorResult testAdvisorResult;
         try {
-            testAdvisorResult = new ObjectMapper().readValue(input, new TypeReference<TestAdvisorResult>(){});
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+                                      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            testAdvisorResult = objectMapper.readValue(input, new TypeReference<TestAdvisorResult>(){});
         } catch (IOException e) {
             throw new ProcessException(e);
         }
@@ -33,24 +34,17 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
             for(TestEvent event : testExecution.eventList){
                 if(event.getEventLevel().equals("SEVERE") || event.getEventLevel().equals("WARNING")){
                     //only collect severe and waring event
-                    testSignalList.add(new TestSignalBase(event.getEventContent(),
-                                event.getEventContent(),event.getEventTime().atZone(ZoneOffset.UTC)));
+                    testSignalList.add(new TestSignalBase(event.getEventSource(),
+                                event.getEventContent(),event.getEventTime()));
                 }
             }
             
-            ZonedDateTime startTime = getDatetime(testExecution.startTime);
-            ZonedDateTime endTime = getDatetime(testExecution.endTime);
-            testCaseList.add(new TestCaseBase(testExecution.getTestName(),startTime,endTime,
+            testCaseList.add(new TestCaseBase(testExecution.getTestName(),testExecution.startTime,testExecution.endTime,
                             testExecution.getTestStatus().toString(),testSignalList));
         }
 
-        ZonedDateTime buildStartTime = getDatetime(testAdvisorResult.buildStartTime);
-        ZonedDateTime buildEndTime = getDatetime(testAdvisorResult.buildEndTime);
-        return new TestRunBase("","",testAdvisorResult.version,buildStartTime,buildEndTime,testCaseList);
+        return new TestRunBase("","",testAdvisorResult.version,testAdvisorResult.buildStartTime,testAdvisorResult.buildEndTime,testCaseList);
     }
 
-    private ZonedDateTime getDatetime(String timestamp) {
-        return ZonedDateTime.parse(timestamp,DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
     
 }

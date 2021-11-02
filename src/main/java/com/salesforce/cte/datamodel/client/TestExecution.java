@@ -1,5 +1,6 @@
 package com.salesforce.cte.datamodel.client;
 
+import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +12,9 @@ public class TestExecution {
     //https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_dateformats.htm
     //example 2011-12-03T10:15:30Z
     @JsonProperty
-    public String    startTime; 
+    public Instant    startTime; 
     @JsonProperty
-    public String    endTime;    
+    public Instant    endTime;    
     @JsonProperty
     public TestStatus status;
     @JsonProperty
@@ -21,9 +22,11 @@ public class TestExecution {
     @JsonProperty
     public String   baselineBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
     @JsonProperty
-    public String   baselineBuildIdStartTime; 
+    public Instant   baselineBuildIdStartTime; 
     @JsonProperty
     public String   baselineSalesforceBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
+    @JsonProperty
+    public int  similarity; //0-100
     @JsonProperty
     public List<TestSignal> testSignals;
 }

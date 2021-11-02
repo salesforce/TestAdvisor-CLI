@@ -1,6 +1,6 @@
 package com.salesforce.cte.adapter;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface TestAdvisorTestCase {
     public String getTestCaseFullName(); 
-    public ZonedDateTime getTestCaseStartTime();
-    public ZonedDateTime getTestCaseEndTime();
+    public Instant getTestCaseStartTime();
+    public Instant getTestCaseEndTime();
     public String getTestCaseStatus();
     public List<TestAdvisorTestSignal> getTestSignalList();
 }

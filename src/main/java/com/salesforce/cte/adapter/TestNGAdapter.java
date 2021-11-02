@@ -54,20 +54,20 @@ public class TestNGAdapter implements TestAdvisorAdapter {
                         ZonedDateTime endTime = getDatetime(method.getFinishedAt());
                         String testCaseName = cls.getName() + "." + method.getName();
                         List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
-                        TestCaseBase testCase = new TestCaseBase(testCaseName,startTime,endTime,
+                        TestCaseBase testCase = new TestCaseBase(testCaseName,startTime.toInstant(),endTime.toInstant(),
                                                         method.getStatus(),testSignalList);
                         testCaseList.add(testCase); 
                         if (method.getException() == null) continue;
                         TestSignalBase signal = new TestSignalBase(TestSignalEnum.AUTOMATION.toString(),
                                                                 method.getException().getClazz(),
-                                                                endTime);
+                                                                endTime.toInstant());
                         testSignalList.add(signal);  
                         
                     }
                 }
             }
         }
-        return new TestRunBase(testSuiteName,"","",suiteStart,suiteEnd,testCaseList);
+        return new TestRunBase(testSuiteName,"","",suiteStart.toInstant(),suiteEnd.toInstant(),testCaseList);
     }
 
     private ZonedDateTime getDatetime(String timestamp) {

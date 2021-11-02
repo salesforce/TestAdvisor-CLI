@@ -10,9 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -115,9 +115,9 @@ public class RegistryTest {
         String testrunId = registry.getTestRunId(testrun);
 
         TestRunSignal testRunSignal = new TestRunSignal();
-        ZonedDateTime now = ZonedDateTime.now();
-        testRunSignal.buildStartTime = now.format(DateTimeFormatter.ISO_INSTANT);
-        testRunSignal.buildEndTime = now.plusSeconds(5).format(DateTimeFormatter.ISO_INSTANT);
+        Instant now = Instant.now();
+        testRunSignal.buildStartTime = now;
+        testRunSignal.buildEndTime = now.plusSeconds(5);
         testRunSignal.clientBuildId = "123";
         testRunSignal.clientCliVersion = "1.0.1";
         testRunSignal.clientLibraryVersion = "1.0.1";

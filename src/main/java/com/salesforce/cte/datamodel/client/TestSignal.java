@@ -1,5 +1,7 @@
 package com.salesforce.cte.datamodel.client;
 
+import java.time.Instant;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -15,9 +17,9 @@ public class TestSignal {
     @JsonProperty
     public String   signalValue;    // Regex "[a-zA-Z0-9\-\._]{1,1000}"
     @JsonProperty
-    public String   signalTime;
+    public Instant   signalTime;
     @JsonProperty
-    public String   previousSignalTime;
+    public Instant   previousSignalTime;
     @JsonProperty
     public String   seleniumCmd;
     @JsonProperty

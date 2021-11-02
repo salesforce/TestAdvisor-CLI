@@ -1,7 +1,6 @@
 package com.salesforce.cte.testadvisor;
 
 import java.io.InputStream;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.salesforce.cte.adapter.TestAdvisorAdapter;
@@ -11,7 +10,6 @@ import com.salesforce.cte.adapter.TestAdvisorTestSignal;
 import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 import com.salesforce.cte.datamodel.client.TestSignal;
-import com.salesforce.cte.datamodel.client.TestSignalEnum;
 import com.salesforce.cte.datamodel.client.TestStatus;
 import com.salesforce.cte.helper.ProcessException;
 
@@ -39,25 +37,25 @@ public class Processor {
     public static void process(InputStream inputStream, TestRunSignal testRunSignal,TestAdvisorAdapter adapter) 
                             throws ProcessException{
         TestAdvisorTestRun testRun = adapter.process(inputStream);
-        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime() == null ? null : testRun.getTestSuiteStartTime().format(DateTimeFormatter.ISO_INSTANT);
-        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime() == null ? null : testRun.getTestSuiteEndTime().format(DateTimeFormatter.ISO_INSTANT);
+        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime() == null ? null : testRun.getTestSuiteStartTime();
+        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime() == null ? null : testRun.getTestSuiteEndTime();
         testRunSignal.clientLibraryVersion = testRun.getTestAdvisorVersion();
-        testRunSignal.clientCliVersion = CLI.class.getClass().getPackage().getImplementationVersion();;
+        //testRunSignal.clientCliVersion = CLI.class.getClass().getPackage().getImplementationVersion();
         testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
         testRunSignal.testExecutions = new ArrayList<>();
         for(TestAdvisorTestCase testCase : testRun.getTestCaseList()){
             TestExecution testExection = new TestExecution();
             testExection.testCaseName = testCase.getTestCaseFullName();
-            testExection.startTime = testCase.getTestCaseStartTime().format(DateTimeFormatter.ISO_INSTANT);
-            testExection.endTime = testCase.getTestCaseEndTime().format(DateTimeFormatter.ISO_INSTANT);
+            testExection.startTime = testCase.getTestCaseStartTime();
+            testExection.endTime = testCase.getTestCaseEndTime();
             testExection.status = enumPartialMatch(TestStatus.class, testCase.getTestCaseStatus());
             testExection.testSignals = new ArrayList<>();
             for(TestAdvisorTestSignal signal : testCase.getTestSignalList()){
                 TestSignal testSignal = new TestSignal();
                 testSignal.signalName = signal.getTestSignalName();
                 testSignal.signalValue = signal.getTestSignalValue();
-                testSignal.signalTime = signal.getTestSignalTime().format(DateTimeFormatter.ISO_INSTANT);
+                testSignal.signalTime = signal.getTestSignalTime();
                 testExection.testSignals.add(testSignal);
             }
             testRunSignal.testExecutions.add(testExection);

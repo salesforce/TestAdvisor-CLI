@@ -173,6 +173,7 @@ public class CLI {
         testRunSignal.testSuiteName = prop.getProperty("TestSuiteName");
         String clientBuildId = System.getenv("CLIENT_BUILD_ID");
         testRunSignal.clientBuildId =  clientBuildId == null ? System.getProperty("CLIENT_BUILD_ID") : clientBuildId;
+        testRunSignal.clientCliVersion = CLI.class.getClass().getPackage().getImplementationVersion();
         
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){
