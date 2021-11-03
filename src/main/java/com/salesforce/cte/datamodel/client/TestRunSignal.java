@@ -1,5 +1,6 @@
 package com.salesforce.cte.datamodel.client;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,9 +21,9 @@ public class TestRunSignal {
     //https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_dateformats.htm
     //example 2011-12-03T10:15:30Z
     @JsonProperty
-    public String   buildStartTime; 
+    public Instant   buildStartTime; 
     @JsonProperty
-    public String   buildEndTime;
+    public Instant   buildEndTime;
     @JsonProperty
     public String   clientBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
     @JsonProperty

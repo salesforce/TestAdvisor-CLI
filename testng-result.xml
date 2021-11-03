@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="2" ignored="0" total="12" passed="10">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Surefire suite" duration-ms="678531" started-at="2021-06-25T14:04:34 GMT" finished-at="2021-06-25T14:15:52 GMT">
+    <groups>
+    </groups>
+    <test name="Surefire test" duration-ms="678531" started-at="2021-06-25T14:04:34 GMT" finished-at="2021-06-25T14:15:52 GMT">
+      <class name="com.dev401.test.CanaryTest">
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="23496" started-at="2021-06-25T14:04:34 GMT" finished-at="2021-06-25T14:04:57 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.createCase()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="createCase()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="createCase" duration-ms="22489" started-at="2021-06-25T14:04:57 GMT" finished-at="2021-06-25T14:05:20 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createCase -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="8463" started-at="2021-06-25T14:05:20 GMT" finished-at="2021-06-25T14:05:28 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=createCase status=SUCCESS method=CanaryTest.createCase()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="26606" started-at="2021-06-25T14:05:28 GMT" finished-at="2021-06-25T14:05:55 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.filterSearchByCategoryID()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="filterSearchByCategoryID()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="filterSearchByCategoryID" duration-ms="14124" started-at="2021-06-25T14:05:55 GMT" finished-at="2021-06-25T14:06:09 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterSearchByCategoryID -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="10305" started-at="2021-06-25T14:06:09 GMT" finished-at="2021-06-25T14:06:19 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=filterSearchByCategoryID status=SUCCESS method=CanaryTest.filterSearchByCategoryID()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="28414" started-at="2021-06-25T14:06:19 GMT" finished-at="2021-06-25T14:06:48 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.filterSearchByCategoryName()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="filterSearchByCategoryName()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="filterSearchByCategoryName" duration-ms="15550" started-at="2021-06-25T14:06:48 GMT" finished-at="2021-06-25T14:07:03 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterSearchByCategoryName -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="18522" started-at="2021-06-25T14:07:03 GMT" finished-at="2021-06-25T14:07:22 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=filterSearchByCategoryName status=SUCCESS method=CanaryTest.filterSearchByCategoryName()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="22440" started-at="2021-06-25T14:07:22 GMT" finished-at="2021-06-25T14:07:44 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.gotoAccountAndIterateOverContacts()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="gotoAccountAndIterateOverContacts()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="gotoAccountAndIterateOverContacts" duration-ms="33399" started-at="2021-06-25T14:07:44 GMT" finished-at="2021-06-25T14:08:18 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- gotoAccountAndIterateOverContacts -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="9591" started-at="2021-06-25T14:08:18 GMT" finished-at="2021-06-25T14:08:27 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=gotoAccountAndIterateOverContacts status=SUCCESS method=CanaryTest.gotoAccountAndIterateOverContacts()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="24127" started-at="2021-06-25T14:08:27 GMT" finished-at="2021-06-25T14:08:51 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.gotoSetupAndLoginAsUser()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="gotoSetupAndLoginAsUser()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="gotoSetupAndLoginAsUser" duration-ms="29474" started-at="2021-06-25T14:08:51 GMT" finished-at="2021-06-25T14:09:21 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- gotoSetupAndLoginAsUser -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="12075" started-at="2021-06-25T14:09:21 GMT" finished-at="2021-06-25T14:09:33 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=gotoSetupAndLoginAsUser status=SUCCESS method=CanaryTest.gotoSetupAndLoginAsUser()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="25278" started-at="2021-06-25T14:09:33 GMT" finished-at="2021-06-25T14:09:58 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.searchForAccount()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="searchForAccount()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="searchForAccount" duration-ms="10584" started-at="2021-06-25T14:09:58 GMT" finished-at="2021-06-25T14:10:09 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchForAccount -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="7261" started-at="2021-06-25T14:10:09 GMT" finished-at="2021-06-25T14:10:16 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=searchForAccount status=SUCCESS method=CanaryTest.searchForAccount()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="25912" started-at="2021-06-25T14:10:16 GMT" finished-at="2021-06-25T14:10:42 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.shouldAlwaysGack()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="FAIL" signature="shouldAlwaysGack()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="shouldAlwaysGack" duration-ms="28031" started-at="2021-06-25T14:10:42 GMT" finished-at="2021-06-25T14:11:10 GMT">
+          <exception class="org.openqa.selenium.NoSuchElementException">
+            <message>
+              <![CDATA[no such element: Unable to locate element: {"method":"xpath","selector":"//div[contains(@class, 'flowruntimeDisplayText')]"}
+  (Session info: chrome=91.0.4472.77)
+  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+For documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'cqe-jenkins-node-3.eng.sfdc.net', ip: '10.233.160.143', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-1160.el7.x86_64', java.version: '1.8.0_262'
+Driver info: org.openqa.selenium.remote.RemoteWebDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\Users\ADMINI~1\AppData\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: 2b0bdff27ae241b0aaef01f344e...}
+Session ID: 2b0bdff27ae241b0aaef01f344e8bda3
+*** Element info: {Using=xpath, value=//div[contains(@class, 'flowruntimeDisplayText')]}]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {"method":"xpath","selector":"//div[contains(@class, 'flowruntimeDisplayText')]"}
+  (Session info: chrome=91.0.4472.77)
+  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+For documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'cqe-jenkins-node-3.eng.sfdc.net', ip: '10.233.160.143', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-1160.el7.x86_64', java.version: '1.8.0_262'
+Driver info: org.openqa.selenium.remote.RemoteWebDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\Users\ADMINI~1\AppData\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: 2b0bdff27ae241b0aaef01f344e...}
+Session ID: 2b0bdff27ae241b0aaef01f344e8bda3
+*** Element info: {Using=xpath, value=//div[contains(@class, 'flowruntimeDisplayText')]}
+at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:214)
+at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:166)
+at org.openqa.selenium.remote.http.JsonHttpResponseCodec.reconstructValue(JsonHttpResponseCodec.java:40)
+at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:80)
+at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:44)
+at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:158)
+at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:552)
+at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:323)
+at org.openqa.selenium.remote.RemoteWebDriver.findElementByXPath(RemoteWebDriver.java:428)
+at org.openqa.selenium.By$ByXPath.findElement(By.java:353)
+at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:315)
+at sun.reflect.GeneratedMethodAccessor13.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.lang.reflect.Method.invoke(Method.java:498)
+at com.salesforce.selenium.support.event.EventFiringWebDriver$2.invoke(EventFiringWebDriver.java:148)
+at com.sun.proxy.$Proxy11.findElement(Unknown Source)
+at com.salesforce.selenium.support.event.EventFiringWebDriver.findElement(EventFiringWebDriver.java:246)
+at com.dev401.test.CanaryTest.shouldAlwaysGack(CanaryTest.java:302)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.lang.reflect.Method.invoke(Method.java:498)
+at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:134)
+at org.testng.internal.TestInvoker.invokeMethod(TestInvoker.java:597)
+at org.testng.internal.TestInvoker.invokeTestMethod(TestInvoker.java:173)
+at org.testng.internal.MethodRunner.runInSequence(MethodRunner.java:46)
+at org.testng.internal.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:816)
+at org.testng.internal.TestInvoker.invokeTestMethods(TestInvoker.java:146)
+at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:146)
+at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:128)
+at java.util.ArrayList.forEach(ArrayList.java:1259)
+at org.testng.TestRunner.privateRun(TestRunner.java:766)
+at org.testng.TestRunner.run(TestRunner.java:587)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:384)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:378)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:337)
+at org.testng.SuiteRunner.run(SuiteRunner.java:286)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:96)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1187)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1109)
+at org.testng.TestNG.runSuites(TestNG.java:1039)
+at org.testng.TestNG.run(TestNG.java:1007)
+at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:132)
+at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeSingleClass(TestNGDirectoryTestSuite.java:112)
+at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:99)
+at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:147)
+at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
+at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
+at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.openqa.selenium.NoSuchElementException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldAlwaysGack -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="9263" started-at="2021-06-25T14:11:10 GMT" finished-at="2021-06-25T14:11:19 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=shouldAlwaysGack status=FAILURE method=CanaryTest.shouldAlwaysGack()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="29338" started-at="2021-06-25T14:11:19 GMT" finished-at="2021-06-25T14:11:49 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.shouldGackOnMondayFriday()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="FAIL" signature="shouldGackOnMondayFriday()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="shouldGackOnMondayFriday" duration-ms="32167" started-at="2021-06-25T14:11:49 GMT" finished-at="2021-06-25T14:12:21 GMT">
+          <exception class="org.openqa.selenium.NoSuchElementException">
+            <message>
+              <![CDATA[no such element: Unable to locate element: {"method":"xpath","selector":"//div[contains(@class, 'flowruntimeDisplayText')]"}
+  (Session info: chrome=91.0.4472.77)
+  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+For documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'cqe-jenkins-node-3.eng.sfdc.net', ip: '10.233.160.143', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-1160.el7.x86_64', java.version: '1.8.0_262'
+Driver info: org.openqa.selenium.remote.RemoteWebDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\Users\ADMINI~1\AppData\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: 06a381a0943d4cf8b48cbc2ff96...}
+Session ID: 06a381a0943d4cf8b48cbc2ff960b78c
+*** Element info: {Using=xpath, value=//div[contains(@class, 'flowruntimeDisplayText')]}]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {"method":"xpath","selector":"//div[contains(@class, 'flowruntimeDisplayText')]"}
+  (Session info: chrome=91.0.4472.77)
+  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+For documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'cqe-jenkins-node-3.eng.sfdc.net', ip: '10.233.160.143', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-1160.el7.x86_64', java.version: '1.8.0_262'
+Driver info: org.openqa.selenium.remote.RemoteWebDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\Users\ADMINI~1\AppData\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: 06a381a0943d4cf8b48cbc2ff96...}
+Session ID: 06a381a0943d4cf8b48cbc2ff960b78c
+*** Element info: {Using=xpath, value=//div[contains(@class, 'flowruntimeDisplayText')]}
+at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:214)
+at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:166)
+at org.openqa.selenium.remote.http.JsonHttpResponseCodec.reconstructValue(JsonHttpResponseCodec.java:40)
+at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:80)
+at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:44)
+at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:158)
+at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:552)
+at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:323)
+at org.openqa.selenium.remote.RemoteWebDriver.findElementByXPath(RemoteWebDriver.java:428)
+at org.openqa.selenium.By$ByXPath.findElement(By.java:353)
+at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:315)
+at sun.reflect.GeneratedMethodAccessor13.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.lang.reflect.Method.invoke(Method.java:498)
+at com.salesforce.selenium.support.event.EventFiringWebDriver$2.invoke(EventFiringWebDriver.java:148)
+at com.sun.proxy.$Proxy11.findElement(Unknown Source)
+at com.salesforce.selenium.support.event.EventFiringWebDriver.findElement(EventFiringWebDriver.java:246)
+at com.dev401.test.CanaryTest.shouldGackOnMondayFriday(CanaryTest.java:290)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.lang.reflect.Method.invoke(Method.java:498)
+at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:134)
+at org.testng.internal.TestInvoker.invokeMethod(TestInvoker.java:597)
+at org.testng.internal.TestInvoker.invokeTestMethod(TestInvoker.java:173)
+at org.testng.internal.MethodRunner.runInSequence(MethodRunner.java:46)
+at org.testng.internal.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:816)
+at org.testng.internal.TestInvoker.invokeTestMethods(TestInvoker.java:146)
+at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:146)
+at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:128)
+at java.util.ArrayList.forEach(ArrayList.java:1259)
+at org.testng.TestRunner.privateRun(TestRunner.java:766)
+at org.testng.TestRunner.run(TestRunner.java:587)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:384)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:378)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:337)
+at org.testng.SuiteRunner.run(SuiteRunner.java:286)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:96)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1187)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1109)
+at org.testng.TestNG.runSuites(TestNG.java:1039)
+at org.testng.TestNG.run(TestNG.java:1007)
+at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:132)
+at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeSingleClass(TestNGDirectoryTestSuite.java:112)
+at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:99)
+at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:147)
+at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
+at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
+at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.openqa.selenium.NoSuchElementException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGackOnMondayFriday -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="11806" started-at="2021-06-25T14:12:21 GMT" finished-at="2021-06-25T14:12:33 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=shouldGackOnMondayFriday status=FAILURE method=CanaryTest.shouldGackOnMondayFriday()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="27763" started-at="2021-06-25T14:12:33 GMT" finished-at="2021-06-25T14:13:00 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.shouldNeverGack()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="shouldNeverGack()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="shouldNeverGack" duration-ms="17963" started-at="2021-06-25T14:13:00 GMT" finished-at="2021-06-25T14:13:18 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldNeverGack -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="10010" started-at="2021-06-25T14:13:18 GMT" finished-at="2021-06-25T14:13:28 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=shouldNeverGack status=SUCCESS method=CanaryTest.shouldNeverGack()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="22865" started-at="2021-06-25T14:13:28 GMT" finished-at="2021-06-25T14:13:51 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.switchBetweenMainTabsUsingShadowPathGeneratorCode()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="switchBetweenMainTabsUsingShadowPathGeneratorCode()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="switchBetweenMainTabsUsingShadowPathGeneratorCode" duration-ms="5440" started-at="2021-06-25T14:13:51 GMT" finished-at="2021-06-25T14:13:57 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- switchBetweenMainTabsUsingShadowPathGeneratorCode -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="10238" started-at="2021-06-25T14:13:57 GMT" finished-at="2021-06-25T14:14:07 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=switchBetweenMainTabsUsingShadowPathGeneratorCode status=SUCCESS method=CanaryTest.switchBetweenMainTabsUsingShadowPathGeneratorCode()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="25758" started-at="2021-06-25T14:14:07 GMT" finished-at="2021-06-25T14:14:33 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.switchBetweenMainTabsUsingXPath()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="switchBetweenMainTabsUsingXPath()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="switchBetweenMainTabsUsingXPath" duration-ms="16346" started-at="2021-06-25T14:14:33 GMT" finished-at="2021-06-25T14:14:49 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- switchBetweenMainTabsUsingXPath -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="7150" started-at="2021-06-25T14:14:49 GMT" finished-at="2021-06-25T14:14:56 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=switchBetweenMainTabsUsingXPath status=SUCCESS method=CanaryTest.switchBetweenMainTabsUsingXPath()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+        <test-method status="PASS" signature="setup(java.lang.reflect.Method)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="setup" is-config="true" duration-ms="28798" started-at="2021-06-25T14:14:56 GMT" finished-at="2021-06-25T14:15:25 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.dev401.test.CanaryTest.verifyGlobalSearchFieldPlaceholderText()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="verifyGlobalSearchFieldPlaceholderText()[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="verifyGlobalSearchFieldPlaceholderText" duration-ms="17857" started-at="2021-06-25T14:15:25 GMT" finished-at="2021-06-25T14:15:43 GMT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyGlobalSearchFieldPlaceholderText -->
+        <test-method status="PASS" signature="teardown(org.testng.ITestResult)[pri:0, instance:com.dev401.test.CanaryTest@3108bc]" name="teardown" is-config="true" duration-ms="9579" started-at="2021-06-25T14:15:43 GMT" finished-at="2021-06-25T14:15:52 GMT">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=verifyGlobalSearchFieldPlaceholderText status=SUCCESS method=CanaryTest.verifyGlobalSearchFieldPlaceholderText()[pri:0, instance:com.dev401.test.CanaryTest@3108bc] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+      </class> <!-- com.dev401.test.CanaryTest -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

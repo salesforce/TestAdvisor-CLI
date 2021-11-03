@@ -1,6 +1,6 @@
 package com.salesforce.cte.adapter;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 /**
  * @author Yibing Tao
@@ -9,5 +9,5 @@ import java.time.ZonedDateTime;
 public interface TestAdvisorTestSignal {
     public String getTestSignalName();
     public String getTestSignalValue();
-    public ZonedDateTime getTestSignalTime();
+    public Instant getTestSignalTime();
 }
