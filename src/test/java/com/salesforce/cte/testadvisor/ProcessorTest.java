@@ -51,8 +51,8 @@ public class ProcessorTest{
             Processor.process(is, testRunSignal,adapter);
         }
         
-        assertEquals(12, testRunSignal.testExecutions.size());
-        assertEquals(TestStatus.FAIL, testRunSignal.testExecutions.get(0).status);
+        assertEquals(40, testRunSignal.testExecutions.size());
+        assertEquals(TestStatus.PASS, testRunSignal.testExecutions.get(0).status);
         assertEquals(TestStatus.PASS, testRunSignal.testExecutions.get(1).status);
         assertEquals("1.1.1", testRunSignal.clientLibraryVersion);
         assertEquals("1.0.1", testRunSignal.clientCliVersion);

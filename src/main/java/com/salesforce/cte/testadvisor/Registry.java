@@ -24,6 +24,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 
 /**
@@ -136,7 +138,8 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public String saveTestRunSignal(TestRunSignal testRunSignal) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         String content = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(testRunSignal);
         //create test run folder if necessary
         registryRoot.resolve(testRunSignal.testRunId).toFile().mkdirs();
@@ -224,7 +227,9 @@ public class Registry {
         String fileName = path.getParent().resolve(SIGNAL_FILENAME).toAbsolutePath().toString();
         
         try(InputStream is = new FileInputStream(fileName)){
-            return new ObjectMapper().readValue(is, TestRunSignal.class);
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            return objectMapper.readValue(is, TestRunSignal.class);
         }
     }
 

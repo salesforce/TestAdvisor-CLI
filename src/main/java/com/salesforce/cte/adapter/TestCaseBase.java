@@ -1,6 +1,6 @@
 package com.salesforce.cte.adapter;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -10,12 +10,12 @@ import java.util.List;
 public class TestCaseBase implements TestAdvisorTestCase {
 
     private String testCaseFullName;
-    private ZonedDateTime testCaseStartTime;
-    private ZonedDateTime testCaseEndTime;
+    private Instant testCaseStartTime;
+    private Instant testCaseEndTime;
     private String  testCaseStatus;
     private List<TestAdvisorTestSignal> testCaseSignalList;
 
-    public TestCaseBase(String name, ZonedDateTime start, ZonedDateTime end, 
+    public TestCaseBase(String name, Instant start, Instant end, 
                     String status, List<TestAdvisorTestSignal> signalList){
         testCaseFullName = name;
         testCaseStartTime = start;
@@ -30,12 +30,12 @@ public class TestCaseBase implements TestAdvisorTestCase {
     }
 
     @Override
-    public ZonedDateTime getTestCaseStartTime() {
+    public Instant getTestCaseStartTime() {
         return testCaseStartTime;
     }
 
     @Override
-    public ZonedDateTime getTestCaseEndTime() {
+    public Instant getTestCaseEndTime() {
         return testCaseEndTime;
     }
 
