@@ -25,7 +25,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.datamodel.client.RectangleDeserializer;
+import com.salesforce.cte.datamodel.client.RectangleSerializer;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 
 /**
@@ -140,6 +144,9 @@ public class Registry {
     public String saveTestRunSignal(TestRunSignal testRunSignal) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
                                         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Rectangle.class, new RectangleSerializer());
+        objectMapper.registerModule(module);
         String content = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(testRunSignal);
         //create test run folder if necessary
         registryRoot.resolve(testRunSignal.testRunId).toFile().mkdirs();
@@ -229,6 +236,9 @@ public class Registry {
         try(InputStream is = new FileInputStream(fileName)){
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
                                         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(Rectangle.class, new RectangleDeserializer());
+            objectMapper.registerModule(module);
             return objectMapper.readValue(is, TestRunSignal.class);
         }
     }

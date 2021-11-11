@@ -19,7 +19,9 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.romankh3.image.comparison.model.Rectangle;
 
 /**
  * @author Yibing Tao
@@ -62,29 +64,34 @@ public class TestRunSignalTest {
     signal.signalName = "SELENIUM";
     signal.signalValue = "org.openqa.selenium.NoSuchElementException";
     signal.signalTime = now.plusSeconds(2);
+    signal.errorMessage = "PreDefined";
+    signal.baselinScreenshotRecorderNumber = 1;
+    signal.screenshotRecorderNumber = 1;
+    signal.previousSignalTime = signal.signalTime.minusSeconds(5);
+    signal.locatorHash = "locator";
+    signal.screenshotDiffRatio = 5;
+    signal.seleniumCmd = "click";
+    signal.screenshotDiffAreas = new ArrayList<>();
+    signal.screenshotDiffAreas.add(new Rectangle(0, 0, 100, 100));
     testExecution.testSignals.add(signal);
     testRunSignal.testExecutions.add(testExecution);
 
+    SimpleModule module = new SimpleModule();
+    module.addSerializer(Rectangle.class, new RectangleSerializer());
+    module.addDeserializer(Rectangle.class, new RectangleDeserializer());
+    objectMapper.registerModule(module);
     String content = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(testRunSignal);
-    
-    assertTrue(content.contains("testSignals"));
 
-    try(BufferedWriter writer = new BufferedWriter(new FileWriter("target/sample.json"))){
-      writer.write(content);
-    }
-  }
+    // try(BufferedWriter writer = new BufferedWriter(new FileWriter("target/sample.json"))){
+    //   writer.write(content);
+    // }
 
-
-  @Test
-  public void testCustomerDeserialization() throws IOException {
-    InputStream is = getClass().getClassLoader().getResourceAsStream("json/sample.json");
-    String json = convertInputStreamToString(is);
-    
-    TestRunSignal testRunSignal = objectMapper.readValue(json, TestRunSignal.class);
-    assertEquals("123", testRunSignal.clientBuildId);
-    assertEquals("CS997", testRunSignal.sandboxInstance);
-    assertEquals("00D9A0000009IsD", testRunSignal.sandboxOrgId);
-    assertEquals("bst", testRunSignal.sandboxOrgName);
+    TestRunSignal testRunSignal2 = objectMapper.readValue(content, TestRunSignal.class);
+    assertEquals(testRunSignal.clientBuildId, testRunSignal2.clientBuildId);
+    assertEquals(testRunSignal.sandboxInstance, testRunSignal2.sandboxInstance);
+    assertEquals(testRunSignal.sandboxOrgId, testRunSignal2.sandboxOrgId);
+    assertEquals(testRunSignal.sandboxOrgName, testRunSignal2.sandboxOrgName);
+    assertEquals(testRunSignal.testRunId, testRunSignal2.testRunId);
   }
 
   @Test

@@ -18,7 +18,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
+import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
+import com.salesforce.cte.datamodel.client.TestSignal;
+import com.salesforce.cte.datamodel.client.TestStatus;
 
 import org.junit.After;
 import org.junit.Before;
@@ -116,6 +120,7 @@ public class RegistryTest {
 
         TestRunSignal testRunSignal = new TestRunSignal();
         Instant now = Instant.now();
+        testRunSignal.testRunId = testrunId;
         testRunSignal.buildStartTime = now;
         testRunSignal.buildEndTime = now.plusSeconds(5);
         testRunSignal.clientBuildId = "123";
@@ -127,7 +132,35 @@ public class RegistryTest {
         testRunSignal.sandboxOrgName = "bst";
         testRunSignal.testSuiteName = "testSuite1";
         testRunSignal.testExecutions = new ArrayList<>();
-        testRunSignal.testRunId = testrunId;
+
+        TestExecution testExecution = new TestExecution();
+        testExecution.startTime = now;
+        testExecution.endTime = now.plusSeconds(5);
+        testExecution.status = TestStatus.FAIL;
+        testExecution.testCaseName = "testcase1";
+        testExecution.testSignals = new ArrayList<>();
+        testExecution.similarity = 50;
+
+        TestSignal signal = new TestSignal();
+        signal.signalName = "AUTOMATION";
+        signal.signalValue = "org.testng.Assert.assertEquals";
+        signal.signalTime = now.plusSeconds(1);
+        testExecution.testSignals.add(signal);
+        signal = new TestSignal();
+        signal.signalName = "SELENIUM";
+        signal.signalValue = "org.openqa.selenium.NoSuchElementException";
+        signal.signalTime = now.plusSeconds(2);
+        signal.errorMessage = "PreDefined";
+        signal.baselinScreenshotRecorderNumber = 1;
+        signal.screenshotRecorderNumber = 1;
+        signal.previousSignalTime = signal.signalTime.minusSeconds(5);
+        signal.locatorHash = "locator";
+        signal.screenshotDiffRatio = 5;
+        signal.seleniumCmd = "click";
+        signal.screenshotDiffAreas = new ArrayList<>();
+        signal.screenshotDiffAreas.add(new Rectangle(0, 0, 100, 100));
+        testExecution.testSignals.add(signal);
+        testRunSignal.testExecutions.add(testExecution);
 
         String filename = registry.saveTestRunSignal(testRunSignal);
 

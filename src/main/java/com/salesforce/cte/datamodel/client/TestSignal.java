@@ -1,8 +1,10 @@
 package com.salesforce.cte.datamodel.client;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.romankh3.image.comparison.model.Rectangle;
 
 /**
  * @author Yibing Tao
@@ -28,6 +30,10 @@ public class TestSignal {
     public int   screenshotRecorderNumber;
     @JsonProperty
     public int   baselinScreenshotRecorderNumber;
+    @JsonProperty
+    public int screenshotDiffRatio;
+    @JsonProperty
+    public List<Rectangle> screenshotDiffAreas;
     @JsonProperty
     public String   errorMessage;
 
