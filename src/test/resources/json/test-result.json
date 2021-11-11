@@ -1,402 +1,586 @@
 {
-  "payloadList" :[ {
-    "testName" : "com.dev401.test.CanaryTest.createCase",
+  "testCaseExecutionList" : [ {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.setUpBeforeClass",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.testng.TestListener",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:15:28.072Z",
-      "endTime" : null
+      "eventContent" : "[TestResult name=setUpBeforeClass status=STARTED method=TestEventDispatching.setUpBeforeClass()[pri:0, instance:com.salesforce.cte.test.webdriver.TestEventDispatching@c267ef4] output={null}]",
+      "eventTime" : "2021-11-01T23:44:07.970003Z",
+      "seleniumCmd" : null,
+      "seleniumCmdParam" : null,
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 0,
+      "screenshotPath" : null
     }, {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.testng.TestListener",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:15:58.231Z",
-      "endTime" : null
-    }, {
-      "eventName" : "com.salesforce.cqe.driver.listener.FullLogger.onException",
-      "eventLevel" : "WARNING",
-      "eventContent" : "eventno:17,type:Exception,timestamp:1625879788400 ms,cmd:findElementByWebDriver,param1:Exception Type: org.openqa.selenium.NoSuchElementException, message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//lightning-formatted-text[@title='some text 1625879774507']\"}\n  (Session info: chrome=91.0.4472.77)\n  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'\nSystem info: host: 'ytao-ltm1.internal.salesforce.com', ip: 'fe80:0:0:0:74:3fd4:7190:2269%en0', os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.15.7', java.version: '1.8.0_212'\nDriver info: org.openqa.selenium.remote.RemoteWebDriver\nCapabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\\Users\\ADMINI~1\\AppData\\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: 1a16b25f32e9465c83a94abfd91...}\nSession ID: 1a16b25f32e9465c83a94abfd91041be\n*** Element info: {Using=xpath, value=//lightning-formatted-text[@title='some text 1625879774507']}",
-      "startTime" : "2021-07-10T01:16:28.401Z",
-      "endTime" : null
-    }, {
-      "eventName" : "createCase",
-      "eventLevel" : "SEVERE",
-      "eventContent" : "org.openqa.selenium.NoSuchElementException",
-      "startTime" : "2021-07-10T01:16:28.403Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:16:28.408Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:16:42.343Z",
-      "endTime" : null
-    } ],
-    "testStatus" : "FAILED",
-    "startTime" : "2021-07-10T01:15:28.071Z",
-    "endTime" : "2021-07-10T01:16:42.343Z"
-  }, {
-    "testName" : "com.dev401.test.CanaryTest.filterSearchByCategoryID",
-    "eventList" : [ {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:16:42.343Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:17:05.827Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:17:24.345Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:17:33.928Z",
-      "endTime" : null
+      "eventContent" : "[TestResult name=setUpBeforeClass status=SUCCESS method=TestEventDispatching.setUpBeforeClass()[pri:0, instance:com.salesforce.cte.test.webdriver.TestEventDispatching@c267ef4] output={null}]",
+      "eventTime" : "2021-11-01T23:44:08.065034Z",
+      "seleniumCmd" : null,
+      "seleniumCmdParam" : null,
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 0,
+      "screenshotPath" : null
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:16:42.343Z",
-    "endTime" : "2021-07-10T01:17:33.928Z"
+    "startTime" : "2021-11-01T23:44:07.968208Z",
+    "endTime" : "2021-11-01T23:44:08.065040Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.filterSearchByCategoryName",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testAccept",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:17:33.929Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:18:00.510Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:18:14.070Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:18:25.093Z",
-      "endTime" : null
+      "eventContent" : "eventno:0,type:BeforeAction,timestamp:1635810248129 ms,cmd:accept",
+      "eventTime" : "2021-11-01T23:44:08.141278Z",
+      "seleniumCmd" : "webDriver.manage().window().accept",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 1,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/1"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:17:33.929Z",
-    "endTime" : "2021-07-10T01:18:25.093Z"
+    "startTime" : "2021-11-01T23:44:08.075592Z",
+    "endTime" : "2021-11-01T23:44:08.146367Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.gotoAccountAndIterateOverContacts",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testAddCookie",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.149631Z",
+    "endTime" : "2021-11-01T23:44:08.230095Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testBack",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:18:25.093Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:18:50.058Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:19:19.645Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:19:34.844Z",
-      "endTime" : null
+      "eventContent" : "eventno:2,type:BeforeAction,timestamp:1635810248243 ms,cmd:back,since last action:0 sec 13 ms",
+      "eventTime" : "2021-11-01T23:44:08.249488Z",
+      "seleniumCmd" : "webDriver.navigate().back",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 7,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/7"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:18:25.093Z",
-    "endTime" : "2021-07-10T01:19:34.844Z"
+    "startTime" : "2021-11-01T23:44:08.230753Z",
+    "endTime" : "2021-11-01T23:44:08.257449Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.gotoSetupAndLoginAsUser",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testClear",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:19:34.844Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:19:57.376Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:20:26.032Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:20:54.466Z",
-      "endTime" : null
+      "eventContent" : "eventno:3,type:BeforeAction,timestamp:1635810248267 ms,cmd:clear,since last action:0 sec 13 ms",
+      "eventTime" : "2021-11-01T23:44:08.268420Z",
+      "seleniumCmd" : "webElement.clear",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : "By.id(\"someId\")",
+      "screenshotRecordNumber" : 13,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/13"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:19:34.844Z",
-    "endTime" : "2021-07-10T01:20:54.466Z"
+    "startTime" : "2021-11-01T23:44:08.259103Z",
+    "endTime" : "2021-11-01T23:44:08.276720Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.searchForAccount",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testClick",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:20:54.466Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:21:17.378Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:21:26.535Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:21:36.904Z",
-      "endTime" : null
+      "eventContent" : "eventno:4,type:BeforeAction,timestamp:1635810248285 ms,cmd:clickByElement,since last action:0 sec 16 ms",
+      "eventTime" : "2021-11-01T23:44:08.292245Z",
+      "seleniumCmd" : "webElement.click",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : "By.id(\"someId\")",
+      "screenshotRecordNumber" : 19,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/19"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:20:54.466Z",
-    "endTime" : "2021-07-10T01:21:36.904Z"
+    "startTime" : "2021-11-01T23:44:08.284428Z",
+    "endTime" : "2021-11-01T23:44:08.292832Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.shouldAlwaysGack",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testClickByChildElement",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:21:36.904Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:22:02.116Z",
-      "endTime" : null
-    }, {
-      "eventName" : "com.salesforce.cqe.driver.listener.FullLogger.onException",
-      "eventLevel" : "WARNING",
-      "eventContent" : "eventno:118,type:Exception,timestamp:1625880146241 ms,cmd:findElementByWebDriver,param1:Exception Type: org.openqa.selenium.NoSuchElementException, message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[contains(@class, 'flowruntimeDisplayText')]\"}\n  (Session info: chrome=91.0.4472.77)\n  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'\nSystem info: host: 'ytao-ltm1.internal.salesforce.com', ip: 'fe80:0:0:0:74:3fd4:7190:2269%en0', os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.15.7', java.version: '1.8.0_212'\nDriver info: org.openqa.selenium.remote.RemoteWebDriver\nCapabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\\Users\\ADMINI~1\\AppData\\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: ba1266fd321d47028179cacbdc3...}\nSession ID: ba1266fd321d47028179cacbdc3f0425\n*** Element info: {Using=xpath, value=//div[contains(@class, 'flowruntimeDisplayText')]}",
-      "startTime" : "2021-07-10T01:22:26.241Z",
-      "endTime" : null
-    }, {
-      "eventName" : "shouldAlwaysGack",
-      "eventLevel" : "SEVERE",
-      "eventContent" : "org.openqa.selenium.NoSuchElementException",
-      "startTime" : "2021-07-10T01:22:26.242Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:22:26.243Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:22:38.834Z",
-      "endTime" : null
-    } ],
-    "testStatus" : "FAILED",
-    "startTime" : "2021-07-10T01:21:36.904Z",
-    "endTime" : "2021-07-10T01:22:38.834Z"
-  }, {
-    "testName" : "com.dev401.test.CanaryTest.shouldGackOnMondayFriday",
-    "eventList" : [ {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:22:38.834Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:23:03.203Z",
-      "endTime" : null
-    }, {
-      "eventName" : "com.salesforce.cqe.driver.listener.FullLogger.onException",
-      "eventLevel" : "WARNING",
-      "eventContent" : "eventno:134,type:Exception,timestamp:1625880211067 ms,cmd:findElementByWebDriver,param1:Exception Type: org.openqa.selenium.NoSuchElementException, message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[contains(@class, 'flowruntimeDisplayText')]\"}\n  (Session info: chrome=91.0.4472.77)\n  (Driver info: chromedriver=91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462}),platform=Windows NT 10.0.10586 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: https://www.seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'\nSystem info: host: 'ytao-ltm1.internal.salesforce.com', ip: 'fe80:0:0:0:74:3fd4:7190:2269%en0', os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.15.7', java.version: '1.8.0_212'\nDriver info: org.openqa.selenium.remote.RemoteWebDriver\nCapabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 91.0.4472.101 (af52a90bf870..., userDataDir: C:\\Users\\ADMINI~1\\AppData\\L...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64533}, handlesAlerts: true, hasMetadata: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), rotatable: false, setWindowRect: true, strictFileInteractability: false, takesHeapSnapshot: true, takesScreenshot: true, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unexpectedAlertBehaviour: ignore, unhandledPromptBehavior: ignore, version: 91.0.4472.77, webStorageEnabled: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true, webdriver.remote.sessionid: 3900bf4444824d439eaa0f20e4e...}\nSession ID: 3900bf4444824d439eaa0f20e4e31bc8\n*** Element info: {Using=xpath, value=//div[contains(@class, 'flowruntimeDisplayText')]}",
-      "startTime" : "2021-07-10T01:23:31.068Z",
-      "endTime" : null
-    }, {
-      "eventName" : "shouldGackOnMondayFriday",
-      "eventLevel" : "SEVERE",
-      "eventContent" : "org.openqa.selenium.NoSuchElementException",
-      "startTime" : "2021-07-10T01:23:31.068Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:23:31.069Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:23:44.463Z",
-      "endTime" : null
-    } ],
-    "testStatus" : "FAILED",
-    "startTime" : "2021-07-10T01:22:38.834Z",
-    "endTime" : "2021-07-10T01:23:44.463Z"
-  }, {
-    "testName" : "com.dev401.test.CanaryTest.shouldNeverGack",
-    "eventList" : [ {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:23:44.463Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:24:09.458Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:24:22.972Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:24:38.111Z",
-      "endTime" : null
+      "eventContent" : "eventno:5,type:BeforeAction,timestamp:1635810248299 ms,cmd:clickByElement,since last action:0 sec 6 ms",
+      "eventTime" : "2021-11-01T23:44:08.300747Z",
+      "seleniumCmd" : "webElement.click",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : "By.id(\"someOtherId\")",
+      "screenshotRecordNumber" : 27,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/27"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:23:44.463Z",
-    "endTime" : "2021-07-10T01:24:38.111Z"
+    "startTime" : "2021-11-01T23:44:08.295628Z",
+    "endTime" : "2021-11-01T23:44:08.301152Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.switchBetweenMainTabsUsingShadowPathGeneratorCode",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testClose",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:24:38.111Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:25:00.863Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:25:07.131Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:25:16.712Z",
-      "endTime" : null
+      "eventContent" : "eventno:6,type:BeforeAction,timestamp:1635810248313 ms,cmd:close,since last action:0 sec 12 ms",
+      "eventTime" : "2021-11-01T23:44:08.316125Z",
+      "seleniumCmd" : "webDriver.close",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 31,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/31"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:24:38.111Z",
-    "endTime" : "2021-07-10T01:25:16.712Z"
+    "startTime" : "2021-11-01T23:44:08.302054Z",
+    "endTime" : "2021-11-01T23:44:08.322729Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.switchBetweenMainTabsUsingXPath",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testDeleteAllCookies",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.324311Z",
+    "endTime" : "2021-11-01T23:44:08.326179Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testDeleteCookieNamed",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.327007Z",
+    "endTime" : "2021-11-01T23:44:08.327980Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testDeleteCookies",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.328864Z",
+    "endTime" : "2021-11-01T23:44:08.329713Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testDismiss",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:25:16.712Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:25:40.596Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:25:53.567Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:26:04.462Z",
-      "endTime" : null
+      "eventContent" : "eventno:10,type:BeforeAction,timestamp:1635810248330 ms,cmd:dismiss,since last action:0 sec 1 ms",
+      "eventTime" : "2021-11-01T23:44:08.331959Z",
+      "seleniumCmd" : "webDriver.manage().window().dismiss",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 41,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/41"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:25:16.712Z",
-    "endTime" : "2021-07-10T01:26:04.462Z"
+    "startTime" : "2021-11-01T23:44:08.330236Z",
+    "endTime" : "2021-11-01T23:44:08.333789Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   }, {
-    "testName" : "com.dev401.test.CanaryTest.verifyGlobalSearchFieldPlaceholderText",
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testExecuteAsyncScript",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.334364Z",
+    "endTime" : "2021-11-01T23:44:08.338673Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testExecuteScriptWithScreenshot",
     "eventList" : [ {
-      "eventName" : "setup",
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
       "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:26:04.463Z",
-      "endTime" : null
-    }, {
-      "eventName" : "setup",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:26:29.435Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:26:45.735Z",
-      "endTime" : null
-    }, {
-      "eventName" : "teardown",
-      "eventLevel" : "INFO",
-      "eventContent" : "",
-      "startTime" : "2021-07-10T01:26:58.202Z",
-      "endTime" : null
+      "eventContent" : "eventno:12,type:BeforeAction,timestamp:1635810248340 ms,cmd:executeScript,param1:click,param2:script,args,since last action:0 sec 2 ms",
+      "eventTime" : "2021-11-01T23:44:08.341397Z",
+      "seleniumCmd" : "(JavascriptExecutor) webDriver.executeScript",
+      "seleniumCmdParam" : "clickscript,args",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 47,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/47"
     } ],
     "testStatus" : "PASSED",
-    "startTime" : "2021-07-10T01:26:04.463Z",
-    "endTime" : "2021-07-10T01:26:58.202Z"
+    "startTime" : "2021-11-01T23:44:08.339874Z",
+    "endTime" : "2021-11-01T23:44:08.342405Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testExecuteScriptWithoutScreenshot",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.342951Z",
+    "endTime" : "2021-11-01T23:44:08.343797Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testFindElementByElement",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.344312Z",
+    "endTime" : "2021-11-01T23:44:08.345747Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testFindElementByWebDriver",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.350806Z",
+    "endTime" : "2021-11-01T23:44:08.352732Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testForward",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:14,type:BeforeAction,timestamp:1635810248354 ms,cmd:forward,since last action:0 sec 10 ms",
+      "eventTime" : "2021-11-01T23:44:08.356915Z",
+      "seleniumCmd" : "webDriver.navigate().forward",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 59,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/59"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.353696Z",
+    "endTime" : "2021-11-01T23:44:08.357393Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testGet",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:15,type:BeforeAction,timestamp:1635810248358 ms,cmd:get,param1:https://www.salesforce.com,since last action:0 sec 1 ms",
+      "eventTime" : "2021-11-01T23:44:08.358956Z",
+      "seleniumCmd" : "webDriver.get",
+      "seleniumCmdParam" : "https://www.salesforce.comnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 63,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/63"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.357893Z",
+    "endTime" : "2021-11-01T23:44:08.359316Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testGetCookie",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.359821Z",
+    "endTime" : "2021-11-01T23:44:08.361472Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testGetCookies",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.362703Z",
+    "endTime" : "2021-11-01T23:44:08.364026Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testGetPageSource",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.364763Z",
+    "endTime" : "2021-11-01T23:44:08.365375Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testGetTitle",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.366972Z",
+    "endTime" : "2021-11-01T23:44:08.367718Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testGetURL",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.368492Z",
+    "endTime" : "2021-11-01T23:44:08.370805Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testImplicitlyWait",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.371491Z",
+    "endTime" : "2021-11-01T23:44:08.373505Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testPageLoadTimeout",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.374186Z",
+    "endTime" : "2021-11-01T23:44:08.374804Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testQuit",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:20,type:BeforeAction,timestamp:1635810248375 ms,cmd:quit,since last action:0 sec 1 ms",
+      "eventTime" : "2021-11-01T23:44:08.376473Z",
+      "seleniumCmd" : "webDriver.quit",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 81,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/81"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.375330Z",
+    "endTime" : "2021-11-01T23:44:08.377Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testRefresh",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.378021Z",
+    "endTime" : "2021-11-01T23:44:08.378577Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testScreenshot",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.379176Z",
+    "endTime" : "2021-11-01T23:44:08.380966Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testSendKeysByElement",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:22,type:BeforeAction,timestamp:1635810248382 ms,cmd:sendKeysByElement,param1:[Ljava.lang.CharSequence;@2e2ff723,since last action:0 sec 4 ms",
+      "eventTime" : "2021-11-01T23:44:08.383665Z",
+      "seleniumCmd" : "webElement.sendKeys",
+      "seleniumCmdParam" : "[Ljava.lang.CharSequence;@2e2ff723null",
+      "seleniumLocator" : "By.id(\"someId\")",
+      "screenshotRecordNumber" : 91,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/91"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.381667Z",
+    "endTime" : "2021-11-01T23:44:08.384669Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testSendKeysToAlert",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:23,type:BeforeAction,timestamp:1635810248385 ms,cmd:sendKeysByAlert,param1:some,since last action:0 sec 1 ms",
+      "eventTime" : "2021-11-01T23:44:08.386925Z",
+      "seleniumCmd" : "webDriver.manage().window().sendKeys",
+      "seleniumCmdParam" : "somenull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 95,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/95"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.385138Z",
+    "endTime" : "2021-11-01T23:44:08.387370Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testSetPosition",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.387913Z",
+    "endTime" : "2021-11-01T23:44:08.390307Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testSetSize",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.390821Z",
+    "endTime" : "2021-11-01T23:44:08.391674Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testSetTimeout",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.392136Z",
+    "endTime" : "2021-11-01T23:44:08.392629Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testSubmit",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:27,type:BeforeAction,timestamp:1635810248393 ms,cmd:submit,since last action:0 sec 1 ms",
+      "eventTime" : "2021-11-01T23:44:08.394764Z",
+      "seleniumCmd" : "webElement.submit",
+      "seleniumCmdParam" : "nullnull",
+      "seleniumLocator" : "By.id(\"someId\")",
+      "screenshotRecordNumber" : 107,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/107"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.393195Z",
+    "endTime" : "2021-11-01T23:44:08.395385Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testTakeScreenshots",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.395880Z",
+    "endTime" : "2021-11-01T23:44:08.398461Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testTo",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:28,type:BeforeAction,timestamp:1635810248400 ms,cmd:get,param1:http://somewhere,since last action:0 sec 5 ms",
+      "eventTime" : "2021-11-01T23:44:08.401062Z",
+      "seleniumCmd" : "webDriver.get",
+      "seleniumCmdParam" : "http://somewherenull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 117,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/117"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.399621Z",
+    "endTime" : "2021-11-01T23:44:08.401405Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testToURL",
+    "eventList" : [ {
+      "eventSource" : "com.salesforce.cte.listener.selenium.ScreenshotLogger",
+      "eventLevel" : "INFO",
+      "eventContent" : "eventno:29,type:BeforeAction,timestamp:1635810248493 ms,cmd:get,param1:http://somewhere,since last action:0 sec 92 ms",
+      "eventTime" : "2021-11-01T23:44:08.494220Z",
+      "seleniumCmd" : "webDriver.get",
+      "seleniumCmdParam" : "http://somewherenull",
+      "seleniumLocator" : null,
+      "screenshotRecordNumber" : 121,
+      "screenshotPath" : "/Users/ytao/source/Drillbit-Lib/.testadvisor/TestRun-20211101-164407/Screenshots/121"
+    } ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.430142Z",
+    "endTime" : "2021-11-01T23:44:08.494577Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testWindowHandle",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.496110Z",
+    "endTime" : "2021-11-01T23:44:08.496826Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
+  }, {
+    "testName" : "com.salesforce.cte.test.webdriver.TestEventDispatching.testWriteEventsToDisk",
+    "eventList" : [ ],
+    "testStatus" : "PASSED",
+    "startTime" : "2021-11-01T23:44:08.497228Z",
+    "endTime" : "2021-11-01T23:44:08.587421Z",
+    "browser" : null,
+    "browserVersion" : null,
+    "screenResolution" : null,
+    "screenShotFileList" : [ ]
   } ],
   "version" : "1.1.1",
-  "buildStartTime" : "2021-10-12T04:03:24.214537Z",
-  "buildEndTime" : "2021-10-12T04:03:29.214565Z"
+  "buildStartTime" : "2021-11-01T23:44:07.952587Z",
+  "buildEndTime" : "2021-11-01T23:44:08.592682Z"
 }
