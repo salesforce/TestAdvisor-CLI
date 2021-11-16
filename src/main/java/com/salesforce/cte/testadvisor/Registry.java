@@ -16,6 +16,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -31,11 +32,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.common.TestAdvisorResult;
+import com.salesforce.cte.common.TestCaseExecution;
 import com.salesforce.cte.datamodel.client.RectangleDeserializer;
 import com.salesforce.cte.datamodel.client.RectangleSerializer;
-import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
-import com.salesforce.cte.datamodel.client.TestStatus;
+
 
 import org.openqa.selenium.InvalidArgumentException;
 
@@ -229,6 +231,7 @@ public class Registry {
         }
 
         allTestRunList.sort(this::compareTestRun);
+        Collections.reverse(allTestRunList);
         
         return allTestRunList;
     }
@@ -271,9 +274,9 @@ public class Registry {
      * @throws IOException throws this exception when fails to access test run 
      */
     private boolean containsPassedTest(Path testRun, String testCaseName) throws IOException{
-        TestRunSignal testRunSignal = getTestRunSignal(getTestAdvisorTestResultFile(testRun));
-        for(TestExecution test : testRunSignal.testExecutions){
-            if (test.testCaseName.equals(testCaseName) && test.status.equals(TestStatus.PASS))
+        TestAdvisorResult result = getTestAdvisorResult(testRun);
+        for(TestCaseExecution test : result.testCaseExecutionList){
+            if (test.testName.equals(testCaseName) && test.testStatus.equals(com.salesforce.cte.common.TestStatus.PASSED))
                 return true;
         }
         return false;
@@ -312,7 +315,7 @@ public class Registry {
         ZonedDateTime testRun1Time = getTestRunCreatedTime(testrun1);
         ZonedDateTime testRun2Time = getTestRunCreatedTime(testrun2);
 
-        return testRun2Time.compareTo(testRun1Time);
+        return testRun1Time.compareTo(testRun2Time);
     }
     /**
      * Get test run signal object for current test run from registry
@@ -337,6 +340,22 @@ public class Registry {
             module.addDeserializer(Rectangle.class, new RectangleDeserializer());
             objectMapper.registerModule(module);
             return objectMapper.readValue(is, TestRunSignal.class);
+        }
+    }
+
+    /**
+     * Get test advisor result for the test run
+     * @param testrun current test run
+     * @return TestAdvisorResult
+     * @throws IOException throws this exception when failed to access test advisor result file
+     */
+    public TestAdvisorResult getTestAdvisorResult(Path testrun) throws IOException{
+        String fileName = testrun.resolve(TESTADVISOR_TEST_RESULT).toAbsolutePath().toString();
+        
+        try(InputStream is = new FileInputStream(fileName)){
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            return objectMapper.readValue(is, TestAdvisorResult.class);
         }
     }
 
