@@ -198,6 +198,54 @@ public class RegistryTest {
             .compareTo(testrun.resolve(Registry.TESTADVISOR_TEST_RESULT).toAbsolutePath()));
     }
 
+    @Test
+    public void testGetTestRunId() throws IOException{
+        Path testrun1 = createTestRun(0);
+
+        //test
+        Registry registry = new Registry(root);
+        String testrunId = registry.getTestRunId(testrun1);
+
+        assertEquals(testrun1.getName(testrun1.getNameCount()-1).toString(), testrunId);
+    }
+
+    @Test
+    public void testGetAllTestRunList() throws IOException {
+        Path testrun1 = createTestRun(0);
+        Path testrun2 = createTestRun(1000);
+        Path testrun3 = createTestRun(300);
+        //test
+        Registry registry = new Registry(root);
+        List<Path> allTestRunList = registry.getAllTestRuns();
+
+        assertEquals(3,allTestRunList.size());
+        assertEquals(testrun2.toString(), allTestRunList.get(0).toString());
+        assertEquals(testrun3.toString(), allTestRunList.get(1).toString());
+        assertEquals(testrun1.toString(), allTestRunList.get(2).toString());
+    }
+
+    @Test
+    public void testFindBeforeTestRunList() throws IOException{
+        Path testrun1 = createTestRun(0);
+        Path testrun2 = createTestRun(1000);
+        Path testrun3 = createTestRun(300);
+        //test
+        Registry registry = new Registry(root);
+        List<Path> beforeList = registry.findBeforeTestRunList(testrun2);
+        assertEquals(0,beforeList.size());
+
+        beforeList = registry.findBeforeTestRunList(testrun3);
+        assertEquals(1,beforeList.size());
+        assertEquals(testrun2.toString(), beforeList.get(0).toString());
+
+        beforeList = registry.findBeforeTestRunList(testrun1);
+        assertEquals(2,beforeList.size());
+        assertEquals(testrun2.toString(), beforeList.get(0).toString());
+        assertEquals(testrun3.toString(), beforeList.get(1).toString());
+    }
+
+
+
     @After
     public void teardown() throws IOException{
         removeDirectory(root.toFile());
