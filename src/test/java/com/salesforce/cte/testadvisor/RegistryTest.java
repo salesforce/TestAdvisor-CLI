@@ -18,10 +18,21 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.common.TestAdvisorResult;
+import com.salesforce.cte.common.TestCaseExecution;
+import com.salesforce.cte.common.TestStateMapper.TestState;
 import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 import com.salesforce.cte.datamodel.client.TestSignal;
+import com.salesforce.cte.datamodel.client.TestSignalEnum;
 import com.salesforce.cte.datamodel.client.TestStatus;
 
 import org.junit.After;
@@ -118,49 +129,7 @@ public class RegistryTest {
         Path testrun = createTestRun(0);
         String testrunId = registry.getTestRunId(testrun);
 
-        TestRunSignal testRunSignal = new TestRunSignal();
-        Instant now = Instant.now();
-        testRunSignal.testRunId = testrunId;
-        testRunSignal.buildStartTime = now;
-        testRunSignal.buildEndTime = now.plusSeconds(5);
-        testRunSignal.clientBuildId = "123";
-        testRunSignal.clientCliVersion = "1.0.1";
-        testRunSignal.clientLibraryVersion = "1.0.1";
-        testRunSignal.clientRegistryGuid = UUID.randomUUID();
-        testRunSignal.sandboxInstance = "CS997";
-        testRunSignal.sandboxOrgId = "00D9A0000009IsD";
-        testRunSignal.sandboxOrgName = "bst";
-        testRunSignal.testSuiteName = "testSuite1";
-        testRunSignal.testExecutions = new ArrayList<>();
-
-        TestExecution testExecution = new TestExecution();
-        testExecution.startTime = now;
-        testExecution.endTime = now.plusSeconds(5);
-        testExecution.status = TestStatus.FAIL;
-        testExecution.testCaseName = "testcase1";
-        testExecution.testSignals = new ArrayList<>();
-        testExecution.similarity = 50;
-
-        TestSignal signal = new TestSignal();
-        signal.signalName = "AUTOMATION";
-        signal.signalValue = "org.testng.Assert.assertEquals";
-        signal.signalTime = now.plusSeconds(1);
-        testExecution.testSignals.add(signal);
-        signal = new TestSignal();
-        signal.signalName = "SELENIUM";
-        signal.signalValue = "org.openqa.selenium.NoSuchElementException";
-        signal.signalTime = now.plusSeconds(2);
-        signal.errorMessage = "PreDefined";
-        signal.baselinScreenshotRecorderNumber = 1;
-        signal.screenshotRecorderNumber = 1;
-        signal.previousSignalTime = signal.signalTime.minusSeconds(5);
-        signal.locatorHash = "locator";
-        signal.screenshotDiffRatio = 5;
-        signal.seleniumCmd = "click";
-        signal.screenshotDiffAreas = new ArrayList<>();
-        signal.screenshotDiffAreas.add(new Rectangle(0, 0, 100, 100));
-        testExecution.testSignals.add(signal);
-        testRunSignal.testExecutions.add(testExecution);
+        TestRunSignal testRunSignal = createTestRunSignal(testrunId);
 
         String filename = registry.saveTestRunSignal(testRunSignal);
 
@@ -198,6 +167,67 @@ public class RegistryTest {
             .compareTo(testrun.resolve(Registry.TESTADVISOR_TEST_RESULT).toAbsolutePath()));
     }
 
+    @Test
+    public void testGetTestRunId() throws IOException{
+        Path testrun1 = createTestRun(0);
+
+        //test
+        Registry registry = new Registry(root);
+        String testrunId = registry.getTestRunId(testrun1);
+
+        assertEquals(testrun1.getName(testrun1.getNameCount()-1).toString(), testrunId);
+    }
+
+    @Test
+    public void testGetAllTestRunList() throws IOException {
+        Path testrun1 = createTestRun(0);
+        Path testrun2 = createTestRun(1000);
+        Path testrun3 = createTestRun(300);
+        //test
+        Registry registry = new Registry(root);
+        List<Path> allTestRunList = registry.getAllTestRuns();
+
+        assertEquals(3,allTestRunList.size());
+        assertEquals(testrun2.toString(), allTestRunList.get(0).toString());
+        assertEquals(testrun3.toString(), allTestRunList.get(1).toString());
+        assertEquals(testrun1.toString(), allTestRunList.get(2).toString());
+    }
+
+    @Test
+    public void testFindBeforeTestRunList() throws IOException{
+        Path testrun1 = createTestRun(0);
+        Path testrun2 = createTestRun(1000);
+        Path testrun3 = createTestRun(300);
+        //test
+        Registry registry = new Registry(root);
+        List<Path> beforeList = registry.findBeforeTestRunList(testrun1);
+        assertEquals(0,beforeList.size());
+
+        beforeList = registry.findBeforeTestRunList(testrun3);
+        assertEquals(1,beforeList.size());
+        assertEquals(testrun1.toString(), beforeList.get(0).toString());
+
+        beforeList = registry.findBeforeTestRunList(testrun2);
+        assertEquals(2,beforeList.size());
+        assertEquals(testrun3.toString(), beforeList.get(0).toString());
+        assertEquals(testrun1.toString(), beforeList.get(1).toString());
+    }
+
+    @Test
+    public void testGetBaseline() throws IOException{
+        Registry registry = new Registry(root);
+
+        Path testrun1 = createTestRun(0);
+        saveTestAdvisorResult(testrun1, createTestAdvisorResult());
+
+        Path testrun2 = createTestRun(1000);
+        saveTestAdvisorResult(testrun2, createTestAdvisorResult());
+
+        registry.getAllTestRuns();
+        Path baseline = registry.getBaselineTestRun(testrun2, "testcasePass");
+        assertEquals(testrun1, baseline);
+    }
+
     @After
     public void teardown() throws IOException{
         removeDirectory(root.toFile());
@@ -225,6 +255,99 @@ public class RegistryTest {
         testrun.toFile().mkdirs();
 
         return testrun;
+    }
+
+    private TestRunSignal createTestRunSignal(String testrunId){
+        TestRunSignal testRunSignal = new TestRunSignal();
+        Instant now = Instant.now();
+        testRunSignal.testRunId = testrunId;
+        testRunSignal.buildStartTime = now;
+        testRunSignal.buildEndTime = now.plusSeconds(5);
+        testRunSignal.clientBuildId = "123";
+        testRunSignal.clientCliVersion = "1.0.1";
+        testRunSignal.clientLibraryVersion = "1.0.1";
+        testRunSignal.clientRegistryGuid = UUID.randomUUID();
+        testRunSignal.sandboxInstance = "CS997";
+        testRunSignal.sandboxOrgId = "00D9A0000009IsD";
+        testRunSignal.sandboxOrgName = "bst";
+        testRunSignal.testSuiteName = "testSuite1";
+        testRunSignal.testExecutions = new ArrayList<>();
+
+        TestExecution testExecution = createTestExecution("testcaseFail",TestStatus.FAIL);
+        testExecution.testSignals.add(createTestSignal("Selenium","Exception"));
+        testExecution.testSignals.add(createTestSignal("Automation","Exception"));
+        testRunSignal.testExecutions.add(testExecution);
+
+        testExecution = createTestExecution("testcasePass",TestStatus.PASS);
+        testExecution.testSignals.add(createTestSignal("Selenium","Exception"));
+        testExecution.testSignals.add(createTestSignal("Automation","Exception"));
+        testRunSignal.testExecutions.add(testExecution);
+
+        return testRunSignal;
+    }
+
+    private TestExecution createTestExecution(String name, TestStatus status){
+        Instant now = Instant.now();
+        TestExecution testExecution = new TestExecution();
+        testExecution.startTime = now;
+        testExecution.endTime = now.plusSeconds(5);
+        testExecution.status = status;
+        testExecution.testCaseName = name;
+        testExecution.testSignals = new ArrayList<>();
+        testExecution.similarity = 50;
+        return testExecution;
+    }
+
+    private TestSignal createTestSignal(String signalName, String signalValue){
+        Instant now = Instant.now();
+
+        TestSignal signal = new TestSignal();
+        signal = new TestSignal();
+        signal.signalName = signalName;
+        signal.signalValue = signalValue;
+        signal.signalTime = now.plusSeconds(2);
+        signal.errorMessage = "PreDefined";
+        signal.baselinScreenshotRecorderNumber = 1;
+        signal.screenshotRecorderNumber = 1;
+        signal.previousSignalTime = signal.signalTime.minusSeconds(5);
+        signal.locatorHash = "locator";
+        signal.screenshotDiffRatio = 5;
+        signal.seleniumCmd = "click";
+        signal.screenshotDiffAreas = new ArrayList<>();
+        signal.screenshotDiffAreas.add(new Rectangle(0, 0, 100, 100));
+
+        return signal;
+    }
+
+    private TestAdvisorResult createTestAdvisorResult(){
+        TestAdvisorResult testAdvisorResult = new TestAdvisorResult();
+        testAdvisorResult.version = "1.0.0";
+        testAdvisorResult.buildStartTime = Instant.now();
+        testAdvisorResult.buildEndTime = testAdvisorResult.buildStartTime.plusSeconds(5);
+        testAdvisorResult.testCaseExecutionList = new ArrayList<>();
+
+        TestCaseExecution testCaseExecution = new TestCaseExecution();
+        testCaseExecution.browser = "chrome";
+        testCaseExecution.browserVersion = "89";
+        testCaseExecution.testName = "testcasePass";
+        testCaseExecution.startTime = Instant.now();
+        testCaseExecution.endTime = testCaseExecution.startTime.plusSeconds(5);
+        testCaseExecution.testStatus = com.salesforce.cte.common.TestStatus.PASSED;
+        testCaseExecution.screenResolution = "1920*1080";
+
+        testAdvisorResult.testCaseExecutionList.add(testCaseExecution);
+
+        return testAdvisorResult;
+
+    }
+
+    private void saveTestAdvisorResult(Path testrun, TestAdvisorResult result) throws JsonGenerationException, JsonMappingException, IOException{
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+							.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
+
+        Path outputFilePath = testrun.resolve("test-result.json");
+	    objectWriter.withDefaultPrettyPrinter().writeValue(outputFilePath.toFile(), result);
     }
 
 }
