@@ -222,7 +222,7 @@ public class Registry {
      * @throws IOException throw this exception when fail to find test runs
      */
     public List<Path> getAllTestRuns() throws IOException{
-        // get all test run from regitster
+        // get all test run from registry
         allTestRunList.clear();
         try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
             allTestRunList =  pathStream.filter(Files::isDirectory)
@@ -416,7 +416,7 @@ public class Registry {
         Matcher matcher = pattern.matcher(path.toAbsolutePath().toString());
         if  (matcher.find())
             return LocalDateTime.parse(matcher.group(0),formatter).atZone(ZoneId.of("UTC"));
-        throw new InvalidArgumentException("Path object doesn't conations created time, path="+path.toAbsolutePath().toString()) ;
+        throw new InvalidArgumentException("Path object doesn't contain created time, path="+path.toAbsolutePath().toString()) ;
     }
 
     /**
