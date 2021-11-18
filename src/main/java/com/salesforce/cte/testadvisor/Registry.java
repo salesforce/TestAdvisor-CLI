@@ -12,11 +12,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -36,10 +40,14 @@ import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.github.romankh3.image.comparison.model.Rectangle;
 import com.salesforce.cte.common.TestCaseExecution;
 import com.salesforce.cte.common.TestEvent;
+import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.datamodel.client.RectangleDeserializer;
 import com.salesforce.cte.datamodel.client.RectangleSerializer;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 import com.salesforce.cte.datamodel.client.TestSignal;
+
+
+import org.openqa.selenium.InvalidArgumentException;
 
 /**
  * @author Yibing Tao
@@ -56,7 +64,8 @@ public class Registry {
     public static final String TESTADVISOR_DEFAULT_REGISGRY = ".testadvisor"; //TODO: what about different platform
     public static final String TESTADVISOR_TEST_RESULT = "test-result.json";
     public static final String TESTADVISOR_PROPERTY_CLIENT_GUID = "ClientRegistryGuid";
-     
+    
+    private List<Path> allTestRunList = new ArrayList<>();
     private Properties registryConfig = new Properties();
     private Path registryRoot;
     public Path getRegistryRoot(){
@@ -94,6 +103,8 @@ public class Registry {
         //create property file if necessary
         if (!registryRoot.resolve(TESTADVISOR_PROPERTIES_FILENAME).toFile().exists())
             createRegistryProperties();
+
+        getAllTestRuns();
     }
 
     /**
@@ -174,13 +185,6 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getUnprocessedTestRunList() throws IOException{
-        
-        List<Path> allTestRunList;
-        try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
-            allTestRunList =  pathStream.filter(Files::isDirectory)
-                                        .filter(path -> path.toString().contains(TESTADVISOR_TESTRUN_PREFIX))
-                                        .collect(Collectors.toList());
-        }
         List<Path> unProcessedTestRunList = new ArrayList<>();
         for(Path testRun : allTestRunList){
             try(Stream<Path> pathStream = Files.walk(testRun, 1)){
@@ -199,13 +203,6 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getReadyToUploadTestRunList() throws IOException{
-        // get all test run from regitster
-        List<Path> allTestRunList;
-        try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
-            allTestRunList =  pathStream.filter(Files::isDirectory)
-                                        .filter(path -> path.toString().contains(TESTADVISOR_TESTRUN_PREFIX))
-                                        .collect(Collectors.toList());
-        }
         // filter test run with signal file
         List<Path> readyList = new ArrayList<>();
         for(Path testRun : allTestRunList){
@@ -226,6 +223,108 @@ public class Registry {
         return uploadList;
     }
 
+    /**
+     * Get all list of test runs from registry, the output list will be 
+     * sorted by test run time stamp. Lastest test run on top.
+     * @return Sorted list of all test runs in registry, latest test run first
+     * @throws IOException throw this exception when fail to find test runs
+     */
+    public List<Path> getAllTestRuns() throws IOException{
+        // get all test run from registry
+        allTestRunList.clear();
+        try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
+            allTestRunList =  pathStream.filter(Files::isDirectory)
+                                        .filter(path -> path.toString().contains(TESTADVISOR_TESTRUN_PREFIX))
+                                        .collect(Collectors.toList());
+        }
+
+        allTestRunList.sort(this::compareTestRun);
+        Collections.reverse(allTestRunList);
+        
+        return allTestRunList;
+    }
+
+    /**
+     * Get baseline test run from all test run list for current test execution in current test run
+     * The baseline run will be test run contains last known good (LKG) test execution.
+     * If no LKG was found, the last test run will be pick
+     * @param currentTestRun current test run
+     * @param testCaseName current test case name
+     * @return Baseline test run path. null if no baseline was found.
+     * @throws IOException throws this exception when fails to find baseline test run 
+     */
+    public Path getBaselineTestRun(Path currentTestRun, String testCaseName) throws IOException{
+        List<Path> beforeTestRunList = findBeforeTestRunList(currentTestRun);
+        
+        // no test run found
+        if (beforeTestRunList.isEmpty())
+            return null;
+
+        //all test run before current run should order by create date and latest on top
+        for(Path testrun : beforeTestRunList){
+            if(containsPassedTest(testrun, testCaseName))
+                return testrun;
+        }
+
+        //no LKG run found, return latest run.
+        return beforeTestRunList.get(0);
+    }
+
+    /**
+     * Check whether current test run contains test result for passed test case
+     * @param testRun
+     * current test run path
+     * @param test
+     * current test execution
+     * @return
+     * true -- if current test run contains test result for passed current test case
+     * false -- otherwise
+     * @throws IOException throws this exception when fails to access test run 
+     */
+    private boolean containsPassedTest(Path testRun, String testCaseName) throws IOException{
+        TestAdvisorResult result = getTestAdvisorResult(testRun);
+        for(TestCaseExecution test : result.testCaseExecutionList){
+            if (test.testName.equals(testCaseName) && test.testStatus.equals(com.salesforce.cte.common.TestStatus.PASSED))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get list of test runs from all test run list which is before current test run 
+     * based on test run created time
+     * @param currentTestRun current test run
+     * @return
+     * List of test run path which is created before current test run
+     * returned test run list order by created time, latest first
+     */
+    public List<Path> findBeforeTestRunList(Path currentTestRun) {
+        List<Path> beforeList = new ArrayList<>();
+
+        for(Path testrun : allTestRunList){
+            if(compareTestRun(testrun, currentTestRun)<0){
+                beforeList.add(testrun);
+            }
+        }
+
+        return beforeList;
+    }
+
+    /**
+     * Compare 2 test run based on create time
+     * @param testrun1 testrun1
+     * @param testrun2 testrun2
+     * @return
+     * 1 - test run 1 created after test run 2
+     * -1 - test run 1 created before test run 2
+     * 0 - test run 1 and 2 created at same time
+     */
+    private int compareTestRun(Path testrun1, Path testrun2){
+        ZonedDateTime testRun1Time = getTestRunCreatedTime(testrun1);
+        ZonedDateTime testRun2Time = getTestRunCreatedTime(testrun2);
+
+        return testRun1Time.compareTo(testRun2Time);
+    }
     /**
      * Get test run signal object for current test run from registry
      * @param path
@@ -249,6 +348,22 @@ public class Registry {
             module.addDeserializer(Rectangle.class, new RectangleDeserializer());
             objectMapper.registerModule(module);
             return objectMapper.readValue(is, TestRunSignal.class);
+        }
+    }
+
+    /**
+     * Get test advisor result for the test run
+     * @param testrun current test run
+     * @return TestAdvisorResult
+     * @throws IOException throws this exception when failed to access test advisor result file
+     */
+    public TestAdvisorResult getTestAdvisorResult(Path testrun) throws IOException{
+        String fileName = testrun.resolve(TESTADVISOR_TEST_RESULT).toAbsolutePath().toString();
+        
+        try(InputStream is = new FileInputStream(fileName)){
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            return objectMapper.readValue(is, TestAdvisorResult.class);
         }
     }
 
@@ -291,9 +406,25 @@ public class Registry {
     public String getTestRunId(String path){
         DateTimeFormatter taDateFormatter = DateTimeFormatter.ofPattern(TESTADVISOR_TESTRUN_PATTERN_STRING);
         String testRunId = TESTADVISOR_TESTRUN_PREFIX + taDateFormatter.format(OffsetDateTime.now( ZoneOffset.UTC ));
-        Pattern pattern = Pattern.compile(".*(TestRun-\\d{8}-\\d{6}).*");
+        Pattern pattern = Pattern.compile("(TestRun-\\d{8}-\\d{6})");
         Matcher matcher = pattern.matcher(path);
         return matcher.find( ) ? matcher.group(0) : testRunId;
+    }
+
+    /**
+     * Get test run created time stamp
+     * @param path
+     * Path to the test run
+     * @return
+     * Test run created time
+     */
+    private ZonedDateTime getTestRunCreatedTime(Path path){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TESTADVISOR_TESTRUN_PATTERN_STRING);    
+        Pattern pattern = Pattern.compile("(\\d{8}-\\d{6})");
+        Matcher matcher = pattern.matcher(path.toAbsolutePath().toString());
+        if  (matcher.find())
+            return LocalDateTime.parse(matcher.group(0),formatter).atZone(ZoneId.of("UTC"));
+        throw new InvalidArgumentException("Path object doesn't contain created time, path="+path.toAbsolutePath().toString()) ;
     }
 
     /**
