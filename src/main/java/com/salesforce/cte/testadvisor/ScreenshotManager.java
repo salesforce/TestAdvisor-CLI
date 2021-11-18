@@ -36,6 +36,19 @@ public class ScreenshotManager {
     }
 
     /**
+     * Compare 2 screenshots
+     * @param baseline 
+     * baseline screenshot
+     * @param current
+     * current screenshot
+     * @return
+     * image comparison result, including difference percentiage and list of diff area
+     */
+    public static ImageComparisonResult screenshotsComparison(String baseline, String current){
+        return screenshotsComparison(new File(baseline), new File(current));
+    }
+
+    /**
      * Compare 2 screenshots and saved the result image
      * @param baseline 
      * baseline screenshot
