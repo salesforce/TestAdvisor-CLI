@@ -27,6 +27,8 @@ public class TestSignal {
     @JsonProperty
     public String   locatorHash;
     @JsonProperty
+    public String   locator;
+    @JsonProperty
     public int   screenshotRecorderNumber;
     @JsonProperty
     public int   baselinScreenshotRecorderNumber;

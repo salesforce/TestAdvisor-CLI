@@ -1,7 +1,6 @@
 package com.salesforce.cte.testadvisor;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,8 +9,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -19,7 +16,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -35,16 +31,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.romankh3.image.comparison.model.ImageComparisonResult;
-import com.github.romankh3.image.comparison.model.ImageComparisonState;
+
 import com.github.romankh3.image.comparison.model.Rectangle;
 import com.salesforce.cte.common.TestCaseExecution;
-import com.salesforce.cte.common.TestEvent;
 import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.datamodel.client.RectangleDeserializer;
 import com.salesforce.cte.datamodel.client.RectangleSerializer;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
-import com.salesforce.cte.datamodel.client.TestSignal;
 
 
 import org.openqa.selenium.InvalidArgumentException;
@@ -185,6 +178,7 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getUnprocessedTestRunList() throws IOException{
+        getAllTestRuns();
         List<Path> unProcessedTestRunList = new ArrayList<>();
         for(Path testRun : allTestRunList){
             try(Stream<Path> pathStream = Files.walk(testRun, 1)){
@@ -203,6 +197,7 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getReadyToUploadTestRunList() throws IOException{
+        getAllTestRuns();
         // filter test run with signal file
         List<Path> readyList = new ArrayList<>();
         for(Path testRun : allTestRunList){
@@ -392,6 +387,7 @@ public class Registry {
      * string
      */
     public String getTestRunId(Path path){
+        if (path == null) return "";
         return getTestRunId(path.toAbsolutePath().toString());
     }
 
@@ -404,11 +400,25 @@ public class Registry {
      * based on current local time
      */
     public String getTestRunId(String path){
+        if (path == null || path.isEmpty()) return "";
         DateTimeFormatter taDateFormatter = DateTimeFormatter.ofPattern(TESTADVISOR_TESTRUN_PATTERN_STRING);
         String testRunId = TESTADVISOR_TESTRUN_PREFIX + taDateFormatter.format(OffsetDateTime.now( ZoneOffset.UTC ));
         Pattern pattern = Pattern.compile("(TestRun-\\d{8}-\\d{6})");
         Matcher matcher = pattern.matcher(path);
         return matcher.find( ) ? matcher.group(0) : testRunId;
+    }
+
+    /**
+     * Get test run path from test run id
+     * @param testRunId
+     * @return test run path, or null if can't find the match path
+     */
+    public Path getTestRunPath(String testRunId){
+        for(Path path : allTestRunList){
+            if (path.endsWith(testRunId))
+                return path;
+        }
+        return null;
     }
 
     /**
@@ -467,137 +477,5 @@ public class Registry {
         saveRegistryProperties();
     }
 
-    /**
-     * Compare test advisor test case execution result based on screenshots and collect signals
-     * @param baseline baseline test case execution
-     * @param current current test case execution
-     * @return
-     */
-    public int compareTestAdvisorTestCaseExecution(TestCaseExecution baseline, TestCaseExecution current, List<TestSignal> signalList){
-        signalList.clear();
-        // sort event list by event time, oldest first
-        Comparator<TestEvent> compareByEventTime = Comparator.comparing(TestEvent::getEventTime);
-        baseline.eventList.sort(compareByEventTime);
-        current.eventList.sort(compareByEventTime);
-
-        // get test step list by unique screenshots
-        List<TestEvent> baselineSteps = getTestStepListByUniqueScreenshots(baseline.eventList);
-        List<TestEvent> currentSteps = getTestStepListByUniqueScreenshots(current.eventList);
-
-        int i=0; //current test step index
-        int j=0; //baseline test step index
-        int matchCount=0;
-        
-        List<TestSignal> subSignalList = new ArrayList<>();
-        TestEvent prevStep = null;
-        //for every event in current test
-        for(TestEvent event : current.eventList){
-            TestEvent baselineStep = baselineSteps.get(j);
-            TestEvent currentStep = currentSteps.get(i);
-            
-            if (event == currentStep){
-                //current event is a test step
-                if(isMatchScreenshotEvent(currentStep, baselineStep)){
-                    // find a match baseline step
-                    matchCount++;
-                    ImageComparisonResult result = ScreenshotManager.screenshotsComparison(
-                        baselineStep.getScreenshotPath(),currentStep.getScreenshotPath());
-                    
-                    if (result.getImageComparisonState() == ImageComparisonState.MISMATCH 
-                        || result.getDifferencePercent() > 25.0f ){
-                        //image comparison found diff
-                        TestSignal signal = createTestSignalFromEvent(event);
-                        signal.subSignalList = subSignalList;
-                        signal.screenshotDiffRatio = (int) result.getDifferencePercent();
-                        signal.baselinScreenshotRecorderNumber = baselineStep.getScreenshotRecordNumber();
-                        signal.screenshotDiffAreas = result.getRectangles();
-                        signal.previousSignalTime = prevStep == null ?  null : prevStep.getEventTime();
-                        signalList.add(signal);
-                    }
-                    prevStep = currentStep;
-                    subSignalList = new ArrayList<>();
-                    i++;
-                }
-                // looking for next baseline step
-                j++;
-            }
-            else{
-                subSignalList.add(createTestSignalFromEvent(event));
-            }
-        }
-
-        return  (int)(((float)matchCount)/currentSteps.size() * 100);
-    }
-
-    private TestSignal createTestSignalFromEvent(TestEvent event){
-        TestSignal signal = new TestSignal();
-        signal.signalName = event.getEventSource();
-        signal.signalValue = event.getEventContent();
-        signal.signalTime = event.getEventTime();
-        signal.screenshotRecorderNumber = event.getScreenshotRecordNumber();
-        signal.locatorHash = getMD5Hash(event.getSeleniumLocator());
-        signal.seleniumCmd = event.getSeleniumCmd();
-        return signal;
-    }
-    /**
-     * Get list of screenshot events for event list which represent the test steps
-     * add all other events as 
-     * @param testEventList list of test events order by event time
-     * @return list of screenshot events
-     */
-    private List<TestEvent> getTestStepListByUniqueScreenshots(List<TestEvent> testEventList){
-        List<TestEvent> testSteps = new ArrayList<>();
-        TestEvent prevStep = null;
-        for(TestEvent event : testEventList){
-            if (event.screenshotPath == null 
-                || event.screenshotPath.isEmpty()
-                || isSameTypeScreenshotEvent(event, prevStep)) continue;
-            testSteps.add(event);
-            prevStep=event;
-        }
-        return testSteps;
-    }   
-
-    /**
-     * Check whether 2 screenshot event consider same type
-     * @param event1 first event
-     * @param event2 second event
-     * @return
-     * true if both event consider same type
-     * false otherwise
-     */
-    private boolean isSameTypeScreenshotEvent(TestEvent event1, TestEvent event2){
-        // null event always consider different
-        if(event1 == null || event2 == null)
-             return false;
-
-        return event1.getEventSource().equals(event2.getEventSource()) 
-                && event1.getEventLevel().equals(event2.getEventLevel())
-                && event1.getSeleniumCmd().equals(event2.getSeleniumCmd())
-                && event1.getSeleniumCmdParam().equals(event2.getSeleniumCmdParam())
-                && event1.getSeleniumLocator().equals(event2.getSeleniumLocator());
-    }
-
-    private boolean isMatchScreenshotEvent(TestEvent event1, TestEvent event2){
-        if(event1 == null || event2 == null)
-             return false;
-        return event1.getSeleniumCmd().equals(event2.getSeleniumCmd())
-                && event1.getSeleniumCmdParam().equals(event2.getSeleniumCmdParam())
-                && event1.getSeleniumLocator().equals(event2.getSeleniumLocator());
-    }
-
-    private String getMD5Hash(String s) {
-        if (s==null || s.isEmpty()) 
-            return "";
-
-        MessageDigest messageDigest;
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return "";
-        }
-        messageDigest.update(s.getBytes());
-        return new String(messageDigest.digest());
-    }
+    
 }

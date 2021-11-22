@@ -32,7 +32,9 @@ public class ScreenshotManager {
         BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(current.getAbsolutePath());
 
         //Create ImageComparison object and compare the images.
-        return new ImageComparison(expectedImage, actualImage).compareImages();
+        ImageComparison imc =  new ImageComparison(expectedImage, actualImage);
+        imc.setMinimalRectangleSize(10);
+        return  imc.compareImages();
     }
 
     /**
