@@ -410,7 +410,7 @@ public class Registry {
 
     /**
      * Get test run path from test run id
-     * @param testRunId
+     * @param testRunId test run id
      * @return test run path, or null if can't find the match path
      */
     public Path getTestRunPath(String testRunId){

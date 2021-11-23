@@ -38,6 +38,4 @@ public class TestSignal {
     public List<Rectangle> screenshotDiffAreas;
     @JsonProperty
     public String   errorMessage;
-    @JsonProperty
-    public List<TestSignal> subSignalList;  //List of related test signals between current screenshot and previous screenshot
 }

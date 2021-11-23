@@ -1,6 +1,9 @@
 package com.salesforce.cte.adapter;
 
 import java.time.Instant;
+import java.util.List;
+
+import com.github.romankh3.image.comparison.model.Rectangle;
 
 /**
  * @author Yibing TAo
@@ -17,6 +20,7 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     private String seleniumLocator;
     private int screenshotRecorderNumber;
     private String screenshotPath;
+    private List<Rectangle> excludedAreas;
 
     public TestSignalBase(String name, String value, Instant time){
         signalName = name == null ? "" : name;
@@ -37,12 +41,12 @@ public class TestSignalBase implements TestAdvisorTestSignal{
 
     @Override
     public String getTestSignalName() {
-        return signalName;
+        return signalName == null ? "" : signalName;
     }
 
     @Override
     public String getTestSignalValue() {
-        return signalValue;
+        return signalValue == null ? "" : signalValue;
     }
 
     @Override
@@ -52,22 +56,22 @@ public class TestSignalBase implements TestAdvisorTestSignal{
 
     @Override
     public String getTestSignalLevel() {
-        return signalLevel;
+        return signalLevel == null ? "" : signalLevel;
     }
 
     @Override
     public String getTestSignalSeleniumCmd() {
-        return seleniumCmd;
+        return seleniumCmd == null ? "" : seleniumCmd;
     }
 
     @Override
     public String getTestSignalSeleniumParam() {
-        return seleniumParam;
+        return seleniumParam == null ? "" : seleniumParam;
     }
 
     @Override
     public String getTestSignalSeleniumLocator() {
-        return seleniumLocator;
+        return seleniumLocator == null ? "" : seleniumLocator;
     }
 
     @Override
@@ -77,7 +81,17 @@ public class TestSignalBase implements TestAdvisorTestSignal{
 
     @Override
     public String getTestSignalScreenshotPath() {
-        return screenshotPath;
+        return screenshotPath == null ? "" : screenshotPath;
     }
     
+    @Override
+    public List<Rectangle> getExcludedAreas() {
+        return excludedAreas;
+    }
+
+    @Override
+    public void setExcludedAreas(List<Rectangle> excludedAreas){
+        this.excludedAreas = excludedAreas;
+    }
 }
+

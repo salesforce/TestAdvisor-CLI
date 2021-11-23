@@ -74,18 +74,6 @@ public class ProcessorTest{
         assertEquals("1.0.1", testRunSignal.clientCliVersion);
     }
 
-    @Test
-    private void testCompareTestCaseExecution(){
-
-        Path run1 = RegistryHelper.createTestRun(registry, 0);
-        Path run2 = RegistryHelper.createTestRun(registry, 1000);
-
-       
-
-
-        //processor.compareTestCaseExecution(baseline, current, signalList)
-    }
-
     @After
     public void teardown() throws IOException{
         removeDirectory(root.toFile());
