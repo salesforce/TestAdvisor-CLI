@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.ImageComparisonState;
-import com.github.romankh3.image.comparison.model.Rectangle;
 import com.salesforce.cte.adapter.TestAdvisorAdapter;
 import com.salesforce.cte.adapter.TestAdvisorResultAdapter;
 import com.salesforce.cte.adapter.TestAdvisorTestCase;
@@ -71,7 +71,7 @@ public class Processor {
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
         testRunSignal.testExecutions = new ArrayList<>();
         for(TestAdvisorTestCase testCase : testRun.getTestCaseList()){
-            LOGGER.info("Processing test case:"+testCase.getTestCaseFullName());
+            LOGGER.log(Level.INFO,"Processing test case {0}", testCase.getTestCaseFullName());
             //find baseline test run
             Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());
             TestExecution testExection = new TestExecution();
@@ -124,8 +124,9 @@ public class Processor {
         // get test step list by unique screenshots
         List<TestAdvisorTestSignal> baselineSteps = getTestStepListByUniqueScreenshots(baselineEventList);
         List<TestAdvisorTestSignal> currentSteps = getTestStepListByUniqueScreenshots(currentEventList);
-        LOGGER.info("baselineSteps count:"+baselineSteps.size());
-        LOGGER.info("currentSteps count:"+currentSteps.size());
+        LOGGER.log(Level.INFO, "baselineSteps count:{0}",baselineSteps.size());
+        LOGGER.log(Level.INFO, "currentSteps count {0}",currentSteps.size());
+    
 
         int i=0; //current test step index
         int j=0; //baseline test step index
@@ -149,11 +150,9 @@ public class Processor {
             if(j<baselineSteps.size()){
                 // find a match baseline step
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
-                //LOGGER.info("Found a match currentStep:"+currentStep.getTestSignalScreenshotPath());
-                //LOGGER.info("Found a match baselineStep::"+baselineStep.getTestSignalScreenshotPath());
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
-                File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+"compareresult.png").toFile();
+                File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
                 ImageComparisonResult result = ScreenshotManager.screenshotsComparison(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
                 
@@ -175,27 +174,6 @@ public class Processor {
         }
 
         return  (int)(((float)matchCount)/currentSteps.size() * 100);
-    }
-
-    private void compareImage(TestAdvisorTestSignal baselineStep, TestAdvisorTestSignal currentStep, 
-        TestAdvisorTestSignal prevStep, TestSignal signal){
-        LOGGER.info("Found a match currentStep:"+currentStep.getTestSignalScreenshotPath());
-        LOGGER.info("Found a match baselineStep::"+baselineStep.getTestSignalScreenshotPath());
-        // image comparison
-        Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
-        File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+"compareresult.png").toFile();
-        ImageComparisonResult result = ScreenshotManager.screenshotsComparison(
-            new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
-        
-        if (result.getImageComparisonState() == ImageComparisonState.MISMATCH){
-            //image comparison found diff
-            LOGGER.info("Found diff from screenshot comparison, ratio:"+result.getDifferencePercent());
-            signal.screenshotDiffRatio = (int) result.getDifferencePercent();
-            signal.baselinScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
-            signal.screenshotDiffAreas = result.getRectangles();
-            signal.previousSignalTime = prevStep == null ?  null : prevStep.getTestSignalTime();
-        }
-
     }
 
     private TestSignal createTestSignalFromEvent(TestAdvisorTestSignal event){
@@ -252,7 +230,7 @@ public class Processor {
         try {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.toString());
             return "";
         }
         messageDigest.update(s.getBytes());
@@ -298,7 +276,7 @@ public class Processor {
      * @throws ProcessException
      */
     private void getExcludedAreas(Path testrun, TestAdvisorTestCase current) throws IOException, ProcessException{
-        //LOGGER.info(String.format("Start getExcludedAreas for test run:%s, test case:%s", testrun.toString(),current.getTestCaseFullName()));
+        LOGGER.log(Level.INFO,"Start getExcludedAreas for test {0}",current.getTestCaseFullName());
 
         Path baselineRun = registry.getBaselineTestRun(testrun, current.getTestCaseFullName());
         TestAdvisorTestCase baseline = getTestCaseFromTestRun(baselineRun,current.getTestCaseFullName());
@@ -325,11 +303,9 @@ public class Processor {
             if(j<baselineSteps.size()){
                 // find a match baseline step
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
-                //LOGGER.info("Found a match,baseline step:"+baselineStep.getTestSignalScreenshotRecorderNumber());
-                //LOGGER.info("Found a match,current step:"+currentStep.getTestSignalScreenshotRecorderNumber());
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
-                File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+"excluderesult.png").toFile();
+                File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".ignoredareas.png").toFile();
                 ImageComparisonResult result = ScreenshotManager.screenshotsComparison(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
                 
