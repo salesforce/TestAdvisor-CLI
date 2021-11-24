@@ -32,11 +32,10 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         for(TestCaseExecution testExecution : testAdvisorResult.testCaseExecutionList){
             List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
             for(TestEvent event : testExecution.eventList){
-                if(event.getEventLevel().equals("SEVERE") || event.getEventLevel().equals("WARNING")){
-                    //only collect severe and waring event
-                    testSignalList.add(new TestSignalBase(event.getEventSource(),
-                                event.getEventContent(),event.getEventTime()));
-                }
+                testSignalList.add(new TestSignalBase(event.getEventSource(),
+                            event.getEventContent(),event.getEventTime(), event.getEventLevel(), event.getSeleniumCmd(),
+                            event.getSeleniumCmdParam(),event.getSeleniumLocator(), event.getScreenshotRecordNumber(),
+                            event.getScreenshotPath()));
             }
             
             testCaseList.add(new TestCaseBase(testExecution.getTestName(),testExecution.startTime,testExecution.endTime,

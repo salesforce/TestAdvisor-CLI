@@ -56,6 +56,7 @@ public class CLI {
     private Registry registry = new Registry(); //testadvisor registry to handle all registry request
     private Connector connector; //connector handle all Protoal communictation
     private SecretsManager secretsManager; // secrets manager handles encryption, decryption and screts storage
+    private Processor processor = new Processor(registry);
 
     public static void main(String[] args) throws Exception{
         LOGGER.log(Level.INFO, "CLI Starts...");
@@ -203,7 +204,7 @@ public class CLI {
      */
     private void processFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException {
         try(InputStream is = new FileInputStream(file)){
-            Processor.process(is, testRunSignal, new TestNGAdapter());
+            processor.process(is, testRunSignal, new TestNGAdapter());
         }
     }
 
@@ -220,7 +221,7 @@ public class CLI {
      */
     private void processTestAdvisorFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException{
         try(InputStream is = new FileInputStream(file)){
-            Processor.process(is, testRunSignal, new TestAdvisorResultAdapter());
+            processor.process(is, testRunSignal, new TestAdvisorResultAdapter());
         }
     }
 

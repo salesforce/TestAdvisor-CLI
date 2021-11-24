@@ -45,7 +45,7 @@ public class ScreenshotManagerTest {
         File baselineFile = new File(baselineUrl.toURI());
         File currentFile = new File(currentUrl.toURI());
         File resultFile = new File("result.png");
-        ImageComparisonResult result =  ScreenshotManager.screenshotsComparison(baselineFile, currentFile,resultFile.getAbsolutePath());
+        ImageComparisonResult result =  ScreenshotManager.screenshotsComparison(baselineFile, currentFile,resultFile);
         assertEquals(ImageComparisonState.MISMATCH, result.getImageComparisonState());
         assertTrue(Files.exists(resultFile.toPath()));
         Files.delete(resultFile.toPath());

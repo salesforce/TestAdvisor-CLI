@@ -27,6 +27,8 @@ public class TestSignal {
     @JsonProperty
     public String   locatorHash;
     @JsonProperty
+    public String   locator;
+    @JsonProperty
     public int   screenshotRecorderNumber;
     @JsonProperty
     public int   baselinScreenshotRecorderNumber;
@@ -36,5 +38,4 @@ public class TestSignal {
     public List<Rectangle> screenshotDiffAreas;
     @JsonProperty
     public String   errorMessage;
-
 }

@@ -31,9 +31,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import com.github.romankh3.image.comparison.model.Rectangle;
-import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.common.TestCaseExecution;
+import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.datamodel.client.RectangleDeserializer;
 import com.salesforce.cte.datamodel.client.RectangleSerializer;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
@@ -177,6 +178,7 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getUnprocessedTestRunList() throws IOException{
+        getAllTestRuns();
         List<Path> unProcessedTestRunList = new ArrayList<>();
         for(Path testRun : allTestRunList){
             try(Stream<Path> pathStream = Files.walk(testRun, 1)){
@@ -195,6 +197,7 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public List<Path> getReadyToUploadTestRunList() throws IOException{
+        getAllTestRuns();
         // filter test run with signal file
         List<Path> readyList = new ArrayList<>();
         for(Path testRun : allTestRunList){
@@ -384,6 +387,7 @@ public class Registry {
      * string
      */
     public String getTestRunId(Path path){
+        if (path == null) return "";
         return getTestRunId(path.toAbsolutePath().toString());
     }
 
@@ -396,11 +400,25 @@ public class Registry {
      * based on current local time
      */
     public String getTestRunId(String path){
+        if (path == null || path.isEmpty()) return "";
         DateTimeFormatter taDateFormatter = DateTimeFormatter.ofPattern(TESTADVISOR_TESTRUN_PATTERN_STRING);
         String testRunId = TESTADVISOR_TESTRUN_PREFIX + taDateFormatter.format(OffsetDateTime.now( ZoneOffset.UTC ));
         Pattern pattern = Pattern.compile("(TestRun-\\d{8}-\\d{6})");
         Matcher matcher = pattern.matcher(path);
         return matcher.find( ) ? matcher.group(0) : testRunId;
+    }
+
+    /**
+     * Get test run path from test run id
+     * @param testRunId test run id
+     * @return test run path, or null if can't find the match path
+     */
+    public Path getTestRunPath(String testRunId){
+        for(Path path : allTestRunList){
+            if (path.endsWith(testRunId))
+                return path;
+        }
+        return null;
     }
 
     /**
@@ -459,5 +477,5 @@ public class Registry {
         saveRegistryProperties();
     }
 
-
+    
 }
