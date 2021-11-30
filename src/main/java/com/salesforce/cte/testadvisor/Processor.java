@@ -263,6 +263,8 @@ public class Processor {
 
     private String getSalesforceId(Path testRun) throws JSONException, FileNotFoundException{
         if (testRun==null) return "";
+        if (!testRun.resolve(Registry.PORTAL_RECORD_FILENAME).toFile().exists()
+            || !testRun.resolve(Registry.PORTAL_RECORD_FILENAME).toFile().canRead()) return "";
         JSONObject jsonObject = (JSONObject) new JSONTokener(new FileReader(
             testRun.resolve(Registry.PORTAL_RECORD_FILENAME).toFile())).nextValue();
 		return jsonObject.getString("Id");
@@ -279,6 +281,9 @@ public class Processor {
         LOGGER.log(Level.INFO,"Start getExcludedAreas for test {0}",current.getTestCaseFullName());
 
         Path baselineRun = registry.getBaselineTestRun(testrun, current.getTestCaseFullName());
+        if (baselineRun == null) // failed to find a baseline run
+            return;
+
         TestAdvisorTestCase baseline = getTestCaseFromTestRun(baselineRun,current.getTestCaseFullName());
 
         // sort event list by event time, oldest first
