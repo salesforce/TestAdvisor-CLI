@@ -120,7 +120,7 @@ public class CLI {
         if (cmd.getOptions().length == 0 || cmd.hasOption("help")){
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("TestAdvisor-CLI", "A command line tool to process test results and manage TestAdvisor registry"
-                                ,options,"\nPlease report all issue to cqe-us@salesforce.com",true);
+                                ,options,"\nPlease report all issue to cte-tech@salesforce.com",true);
             return;
         }
         if (cmd.hasOption("version")){

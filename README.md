@@ -42,10 +42,6 @@ Process command will find all un-processed test result file recursively from the
 
 Upload command will upload all un-processed test signal files and saved record id if upload succeed.
 
-### Download
-
-Download command will download all un-downloaded test execution server signal from portal and saved to server signal file.
-
 ### Clean
 
 Clean command will clean up local TestAdvisor registry
