@@ -44,9 +44,11 @@ public class Processor {
     private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
     
     private Registry registry;
+    private ScreenshotManager screenshotManager;
 
     public Processor(Registry registry){
         this.registry = registry;
+        this.screenshotManager = new ScreenshotManager(20);
     }
     /**
      * 
@@ -153,7 +155,7 @@ public class Processor {
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
                 File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
-                ImageComparisonResult result = ScreenshotManager.screenshotsComparison(
+                ImageComparisonResult result = screenshotManager.screenshotsComparison(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
                 
                 if (result.getImageComparisonState() == ImageComparisonState.MISMATCH){
@@ -311,7 +313,7 @@ public class Processor {
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
                 File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".ignoredareas.png").toFile();
-                ImageComparisonResult result = ScreenshotManager.screenshotsComparison(
+                ImageComparisonResult result = screenshotManager.screenshotsComparison(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
                 
                 currentStep.setExcludedAreas(result.getRectangles());

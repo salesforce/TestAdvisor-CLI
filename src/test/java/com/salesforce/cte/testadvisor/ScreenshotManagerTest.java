@@ -16,13 +16,14 @@ import org.junit.Test;
 
 public class ScreenshotManagerTest {
 
+    private ScreenshotManager screenshotManager = new ScreenshotManager(20);
     @Test
     public void testScreenshotComparisonSame() throws URISyntaxException{
         URL baselineUrl = getClass().getClassLoader().getResource("image/login.png");
         URL currentUrl = getClass().getClassLoader().getResource("image/login.png");
         File baselineFile = new File(baselineUrl.toURI());
         File currentFile = new File(currentUrl.toURI());
-        ImageComparisonResult result =  ScreenshotManager.screenshotsComparison(baselineFile, currentFile);
+        ImageComparisonResult result =  screenshotManager.screenshotsComparison(baselineFile, currentFile);
         assertEquals(ImageComparisonState.MATCH, result.getImageComparisonState());
     }
 
@@ -32,7 +33,7 @@ public class ScreenshotManagerTest {
         URL currentUrl = getClass().getClassLoader().getResource("image/login2.png");
         File baselineFile = new File(baselineUrl.toURI());
         File currentFile = new File(currentUrl.toURI());
-        ImageComparisonResult result =  ScreenshotManager.screenshotsComparison(baselineFile, currentFile);
+        ImageComparisonResult result =  screenshotManager.screenshotsComparison(baselineFile, currentFile);
         assertEquals(ImageComparisonState.MISMATCH, result.getImageComparisonState());
         assertTrue(result.getDifferencePercent()>0);
         assertEquals(1, result.getRectangles().size());
@@ -45,7 +46,7 @@ public class ScreenshotManagerTest {
         File baselineFile = new File(baselineUrl.toURI());
         File currentFile = new File(currentUrl.toURI());
         File resultFile = new File("result.png");
-        ImageComparisonResult result =  ScreenshotManager.screenshotsComparison(baselineFile, currentFile,resultFile);
+        ImageComparisonResult result =  screenshotManager.screenshotsComparison(baselineFile, currentFile,resultFile);
         assertEquals(ImageComparisonState.MISMATCH, result.getImageComparisonState());
         assertTrue(Files.exists(resultFile.toPath()));
         Files.delete(resultFile.toPath());

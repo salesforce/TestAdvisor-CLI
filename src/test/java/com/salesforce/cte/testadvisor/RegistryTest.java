@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
+import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 
 import org.junit.After;
@@ -208,6 +209,16 @@ public class RegistryTest {
         registry.getAllTestRuns();
         Path baseline = registry.getBaselineTestRun(testrun2, "testcasePass");
         assertEquals(testrun1, baseline);
+    }
+
+    @Test
+    public void testGetNotExistTestResult() throws IOException{
+        Registry registry = new Registry(root);
+
+        Path testrun1 = RegistryHelper.createTestRun(registry,0);
+        TestAdvisorResult result = registry.getTestAdvisorResult(testrun1);
+        assertEquals(0, result.testCaseExecutionList.size());
+
     }
 
     @After

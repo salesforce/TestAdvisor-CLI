@@ -353,9 +353,13 @@ public class Registry {
      * @throws IOException throws this exception when failed to access test advisor result file
      */
     public TestAdvisorResult getTestAdvisorResult(Path testrun) throws IOException{
-        String fileName = testrun.resolve(TESTADVISOR_TEST_RESULT).toAbsolutePath().toString();
+        Path testResultFilePath = testrun.resolve(TESTADVISOR_TEST_RESULT).toAbsolutePath();
         
-        try(InputStream is = new FileInputStream(fileName)){
+        if (!Files.exists(testResultFilePath) || !Files.isReadable(testResultFilePath)){
+            return new TestAdvisorResult();
+        }
+
+        try(InputStream is = new FileInputStream(testResultFilePath.toString())){
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
                                         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             return objectMapper.readValue(is, TestAdvisorResult.class);

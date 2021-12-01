@@ -15,8 +15,9 @@ import com.github.romankh3.image.comparison.model.Rectangle;
  */
 public class ScreenshotManager {
 
-    private ScreenshotManager(){
-        //empty private constructor to hide default one and prevent instance
+    private int minimalRectangleSize;
+    public ScreenshotManager(int minimalRectangleSize){
+        this.minimalRectangleSize = minimalRectangleSize;
     }
 
     /**
@@ -28,14 +29,14 @@ public class ScreenshotManager {
      * @return
      * image comparison result, including difference percentiage and list of diff area
      */
-    public static ImageComparisonResult screenshotsComparison(File baseline, File current){
+    public ImageComparisonResult screenshotsComparison(File baseline, File current){
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(baseline.getAbsolutePath());
         BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(current.getAbsolutePath());
 
         //Create ImageComparison object and compare the images.
         ImageComparison imc =  new ImageComparison(expectedImage, actualImage);
-        imc.setMinimalRectangleSize(5);
+        imc.setMinimalRectangleSize(minimalRectangleSize);
         return  imc.compareImages();
     }
 
@@ -50,7 +51,7 @@ public class ScreenshotManager {
      * @return
      * image comparison result, including difference percentiage and list of diff area
      */
-    public static ImageComparisonResult screenshotsComparisonWithExcludedAreas(File baseline, File current, 
+    public ImageComparisonResult screenshotsComparisonWithExcludedAreas(File baseline, File current, 
             List<Rectangle> excludedAreas){
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(baseline.getAbsolutePath());
@@ -59,7 +60,7 @@ public class ScreenshotManager {
         //Create ImageComparison object and compare the images.
         ImageComparison imc =  new ImageComparison(expectedImage, actualImage);
         imc.setExcludedAreas(excludedAreas);
-        imc.setMinimalRectangleSize(5);
+        imc.setMinimalRectangleSize(minimalRectangleSize);
         return  imc.compareImages();
     }
 
@@ -72,7 +73,7 @@ public class ScreenshotManager {
      * @return
      * image comparison result, including difference percentiage and list of diff area
      */
-    public static ImageComparisonResult screenshotsComparison(String baseline, String current){
+    public ImageComparisonResult screenshotsComparison(String baseline, String current){
         return screenshotsComparison(new File(baseline), new File(current));
     }
 
@@ -87,14 +88,14 @@ public class ScreenshotManager {
      * @return
      * image comparison result, including difference percentiage and list of diff area
      */
-    public static ImageComparisonResult screenshotsComparison(File baseline, File current, File resultFile){
+    public ImageComparisonResult screenshotsComparison(File baseline, File current, File resultFile){
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(baseline.getAbsolutePath());
         BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(current.getAbsolutePath());
     
         //Create ImageComparison object and compare the images.
         ImageComparison imc = new ImageComparison(expectedImage, actualImage,resultFile);
-        imc.setMinimalRectangleSize(5);
+        imc.setMinimalRectangleSize(minimalRectangleSize);
         return imc.compareImages();
     }
 
@@ -111,7 +112,7 @@ public class ScreenshotManager {
      * @return
      * image comparison result, including difference percentiage and list of diff area
      */
-    public static ImageComparisonResult screenshotsComparisonWithExcludedAreas(File baseline, File current, 
+    public ImageComparisonResult screenshotsComparisonWithExcludedAreas(File baseline, File current, 
         File resultFile, List<Rectangle> excludedAreas){
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(baseline.getAbsolutePath());
@@ -120,7 +121,7 @@ public class ScreenshotManager {
         //Create ImageComparison object and compare the images.
         ImageComparison imc = new ImageComparison(expectedImage, actualImage,resultFile);
         imc.setExcludedAreas(excludedAreas);
-        imc.setMinimalRectangleSize(5);
+        imc.setMinimalRectangleSize(minimalRectangleSize);
         return imc.compareImages();
     }
 
