@@ -68,6 +68,7 @@ public class ScreenshotManager {
         ImageComparison imc =  new ImageComparison(expectedImage, actualImage);
         imc.setExcludedAreas(excludedAreas);
         imc.setMinimalRectangleSize(minimalRectangleSize);
+        //imc.setExcludedRectangleFilling(true, 100);
         return  imc.compareImages();
     }
 
@@ -127,8 +128,9 @@ public class ScreenshotManager {
         
         //Create ImageComparison object and compare the images.
         ImageComparison imc = new ImageComparison(expectedImage, actualImage,resultFile);
-        imc.setExcludedAreas(excludedAreas);
+        if (excludedAreas != null) imc.setExcludedAreas(excludedAreas);
         imc.setMinimalRectangleSize(minimalRectangleSize);
+        //imc.setExcludedRectangleFilling(true, 100);
         return imc.compareImages();
     }
 

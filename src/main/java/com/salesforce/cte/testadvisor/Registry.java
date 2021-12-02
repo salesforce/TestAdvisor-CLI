@@ -341,6 +341,10 @@ public class Registry {
      * This exception is thrown when it failed to parse test result json
      */
     public TestRunSignal getTestRunSignal(Path path) throws IOException{
+        if (path == null) return null;
+        if (!path.getParent().resolve(SIGNAL_FILENAME).toFile().exists()
+            || !path.getParent().resolve(SIGNAL_FILENAME).toFile().canRead())
+            return null;
         String fileName = path.getParent().resolve(SIGNAL_FILENAME).toAbsolutePath().toString();
         
         try(InputStream is = new FileInputStream(fileName)){
@@ -440,6 +444,7 @@ public class Registry {
      * Test run created time
      */
     private ZonedDateTime getTestRunCreatedTime(Path path){
+        if (path == null) return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TESTADVISOR_TESTRUN_PATTERN_STRING);    
         Pattern pattern = Pattern.compile("(\\d{8}-\\d{6})");
         Matcher matcher = pattern.matcher(path.toAbsolutePath().toString());

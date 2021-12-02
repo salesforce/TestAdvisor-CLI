@@ -82,22 +82,28 @@ public class Processor {
         for(TestAdvisorTestCase testCase : testRun.getTestCaseList()){
             LOGGER.log(Level.INFO,"Processing test case {0}", testCase.getTestCaseFullName());
             //find baseline test run
-            Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());
             TestExecution testExection = new TestExecution();
-            testExection.baselineBuildId = registry.getTestRunId(baseline);
-            testExection.baselineBuildIdStartTime = getTestRunStartTime(baseline);
-            testExection.baselineSalesforceBuildId = getSalesforceId(baseline);
             testExection.testCaseName = testCase.getTestCaseFullName();
             testExection.startTime = testCase.getTestCaseStartTime();
             testExection.endTime = testCase.getTestCaseEndTime();
             testExection.status = enumPartialMatch(TestStatus.class, testCase.getTestCaseStatus());
             testExection.testSignals = new ArrayList<>();
-            //find baseline test case
-            TestAdvisorTestCase baselineCase = getTestCaseFromTestRun(baseline,testCase.getTestCaseFullName());
-            //try to find excluded areas for baseline test case
-            getExcludedAreas(baseline,testCase);
-            //find similarity and extract signals
-            testExection.similarity = compareTestCaseExecution(baselineCase, testCase, testExection.testSignals);
+
+            Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());
+            if (baseline != null){
+                testExection.baselineBuildId = registry.getTestRunId(baseline);
+                testExection.baselineBuildIdStartTime = getTestRunStartTime(baseline);
+                testExection.baselineSalesforceBuildId = getSalesforceId(baseline);
+                //find baseline test case
+                TestAdvisorTestCase baselineCase = getTestCaseFromTestRun(baseline,testCase.getTestCaseFullName());
+                //try to find excluded areas for baseline test case
+                getExcludedAreas(baseline,testCase);
+                //find similarity and extract signals
+                testExection.similarity = compareTestCaseExecution(baselineCase, testCase, testExection.testSignals);
+            }
+            else   
+                extractTestSignals(testCase,testExection.testSignals);
+
             testRunSignal.testExecutions.add(testExection);
         } 
     }
@@ -111,6 +117,13 @@ public class Processor {
         return null;
     }
 
+    public void extractTestSignals(TestAdvisorTestCase current, List<TestSignal> signalList){
+        for(TestAdvisorTestSignal event : current.getTestSignalList()){
+            if (event.getTestSignalLevel().equals("SEVERE") || event.getTestSignalLevel().equals("WARNING")){
+                signalList.add(createTestSignalFromEvent(event));
+            }
+        }
+    }
     /**
      * Compare test advisor test case execution result based on screenshots and collect signals
      * @param baseline baseline test case execution
@@ -162,8 +175,9 @@ public class Processor {
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
                 File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
-                ImageComparisonResult result = screenshotManager.screenshotsComparison(
-                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
+                ImageComparisonResult result = screenshotManager.screenshotsComparisonWithExcludedAreas(
+                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
+                    ,currentStep.getExcludedAreas());
                 
                 if (result.getImageComparisonState() == ImageComparisonState.MISMATCH){
                     //image comparison found diff
@@ -249,6 +263,8 @@ public class Processor {
     private TestAdvisorTestCase getTestCaseFromTestRun(Path testRun, String testCaseName) throws IOException, ProcessException{
         TestAdvisorTestRun advisorRun;
         if (testRun == null) return null;
+        if (!testRun.resolve(Registry.TESTADVISOR_TEST_RESULT).toFile().exists()
+            || !testRun.resolve(Registry.TESTADVISOR_TEST_RESULT).toFile().canRead()) return null;
         try(InputStream is = new FileInputStream(testRun.resolve(Registry.TESTADVISOR_TEST_RESULT).toFile())){
             advisorRun = new TestAdvisorResultAdapter().process(is);
         }
@@ -263,6 +279,8 @@ public class Processor {
     private Instant getTestRunStartTime(Path testRun) throws IOException, ProcessException{
         TestAdvisorTestRun advisorRun;
         if (testRun == null) return null;
+        if (!testRun.resolve(Registry.TESTADVISOR_TEST_RESULT).toFile().exists()
+            || !testRun.resolve(Registry.TESTADVISOR_TEST_RESULT).toFile().canRead()) return null;
         try(InputStream is = new FileInputStream(testRun.resolve(Registry.TESTADVISOR_TEST_RESULT).toFile())){
             advisorRun = new TestAdvisorResultAdapter().process(is);
         }
