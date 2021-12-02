@@ -7,6 +7,7 @@
 
 package com.salesforce.cte.testadvisor;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -187,7 +188,7 @@ public class CLI {
             for(Path path : registry.getUnprocessedTestRunList()){
                 LOGGER.log(Level.INFO,"Processing {0}", path);
                 testRunSignal.testRunId = registry.getTestRunId(path);
-                processTestAdvisorFile(registry.getTestAdvisorTestResultFile(path).toString(),testRunSignal);
+                processTestAdvisorFile(registry.getTestAdvisorTestResultFile(path),testRunSignal);
                 registry.saveTestRunSignal(testRunSignal);
             }
         }else{
@@ -210,6 +211,8 @@ public class CLI {
      * This exception is thrown when it fails to process test result
      */
     private void processFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException {
+        if (!new File(file).exists() && !new File(file).canRead())
+            return;
         try(InputStream is = new FileInputStream(file)){
             processor.process(is, testRunSignal, new TestNGAdapter());
         }
@@ -226,8 +229,10 @@ public class CLI {
      * @throws ProcessException
      * This exception is thrown when it fails to process test result
      */
-    private void processTestAdvisorFile(String file, TestRunSignal testRunSignal) throws IOException, ProcessException{
-        try(InputStream is = new FileInputStream(file)){
+    private void processTestAdvisorFile(Path filePath, TestRunSignal testRunSignal) throws IOException, ProcessException{
+        if (filePath == null || !filePath.toFile().exists() || !filePath.toFile().canRead())
+            return;
+        try(InputStream is = new FileInputStream(filePath.toString())){
             processor.process(is, testRunSignal, new TestAdvisorResultAdapter());
         }
     }
