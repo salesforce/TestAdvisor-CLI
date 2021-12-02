@@ -169,12 +169,14 @@ public class Processor {
                 j++;
             }
 
-            if(j<baselineSteps.size()){
+            if(j<baselineSteps.size() && fileExist(currentStep.getTestSignalScreenshotPath())
+                && fileExist(baselineSteps.get(j).getTestSignalScreenshotPath())){
                 // find a match baseline step
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
                 File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
+
                 ImageComparisonResult result = screenshotManager.screenshotsComparisonWithExcludedAreas(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
                     ,currentStep.getExcludedAreas());
@@ -199,6 +201,10 @@ public class Processor {
         return  (int)(((float)matchCount)/currentSteps.size() * 100);
     }
 
+    private boolean fileExist(String filename){
+        return new File(filename).exists() && new File(filename).canRead();
+    }
+    
     private TestSignal createTestSignalFromEvent(TestAdvisorTestSignal event){
         TestSignal signal = new TestSignal();
         signal.signalName = event.getTestSignalName();
@@ -332,7 +338,8 @@ public class Processor {
                 j++;
             }
                     
-            if(j<baselineSteps.size()){
+            if(j<baselineSteps.size() && fileExist(baselineSteps.get(j).getTestSignalScreenshotPath())
+                && fileExist(currentStep.getTestSignalScreenshotPath())){
                 // find a match baseline step
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
                 // image comparison
