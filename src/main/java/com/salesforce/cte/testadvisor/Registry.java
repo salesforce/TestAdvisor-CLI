@@ -237,6 +237,7 @@ public class Registry {
         try(Stream<Path> pathStream = Files.walk(registryRoot,1)){
             allTestRunList =  pathStream.filter(Files::isDirectory)
                                         .filter(path -> path.toString().contains(TESTADVISOR_TESTRUN_PREFIX))
+                                        .filter(path -> Files.exists(path.resolve(TESTADVISOR_TEST_RESULT)))
                                         .collect(Collectors.toList());
         }
 

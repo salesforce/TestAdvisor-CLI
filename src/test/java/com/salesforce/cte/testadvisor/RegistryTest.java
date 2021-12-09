@@ -85,8 +85,10 @@ public class RegistryTest {
         Registry registry = new Registry(root);
         
         Path testrun = RegistryHelper.createTestRun(registry, 0);
+        Files.createFile(testrun.resolve(Registry.TESTADVISOR_TEST_RESULT));
         Files.createFile(testrun.resolve(Registry.SIGNAL_FILENAME));
         Path testrun2 = RegistryHelper.createTestRun(registry, 2);
+        Files.createFile(testrun2.resolve(Registry.TESTADVISOR_TEST_RESULT));
 
         //test
         List<Path> list = registry.getUnprocessedTestRunList();
@@ -99,9 +101,11 @@ public class RegistryTest {
         //setup
         Registry registry = new Registry(root);
         Path testrun = RegistryHelper.createTestRun(registry,0);
+        Files.createFile(testrun.resolve(Registry.TESTADVISOR_TEST_RESULT));
         Files.createFile(testrun.resolve(Registry.SIGNAL_FILENAME));
         Path testrun2 = RegistryHelper.createTestRun(registry,2);
         Files.createFile(testrun2.resolve(Registry.PORTAL_RECORD_FILENAME));
+        Files.createFile(testrun2.resolve(Registry.TESTADVISOR_TEST_RESULT));
 
         //test
         List<Path> list = registry.getReadyToUploadTestRunList();
@@ -172,6 +176,10 @@ public class RegistryTest {
         Path testrun1 = RegistryHelper.createTestRun(registry,0);
         Path testrun2 = RegistryHelper.createTestRun(registry,1000);
         Path testrun3 = RegistryHelper.createTestRun(registry,300);
+        Files.createFile(testrun1.resolve(Registry.TESTADVISOR_TEST_RESULT));
+        Files.createFile(testrun2.resolve(Registry.TESTADVISOR_TEST_RESULT));
+        Files.createFile(testrun3.resolve(Registry.TESTADVISOR_TEST_RESULT));
+
         //test
         List<Path> allTestRunList = registry.getAllTestRuns();
 
@@ -182,11 +190,31 @@ public class RegistryTest {
     }
 
     @Test
+    public void testGetAllTestRunListFilterEmpty() throws IOException {
+        Registry registry = new Registry(root);
+        Path testrun1 = RegistryHelper.createTestRun(registry,0);
+        RegistryHelper.createTestRun(registry,1000);
+        Path testrun3 = RegistryHelper.createTestRun(registry,300);
+        Files.createFile(testrun1.resolve(Registry.TESTADVISOR_TEST_RESULT));
+        Files.createFile(testrun3.resolve(Registry.TESTADVISOR_TEST_RESULT));
+
+        //test
+        List<Path> allTestRunList = registry.getAllTestRuns();
+
+        assertEquals(2,allTestRunList.size());
+        assertEquals(testrun3.toString(), allTestRunList.get(0).toString());
+        assertEquals(testrun1.toString(), allTestRunList.get(1).toString());
+    }
+
+    @Test
     public void testFindBeforeTestRunList() throws IOException{
         Registry registry = new Registry(root);
         Path testrun1 = RegistryHelper.createTestRun(registry,0);
         Path testrun2 = RegistryHelper.createTestRun(registry,1000);
         Path testrun3 = RegistryHelper.createTestRun(registry,300);
+        Files.createFile(testrun1.resolve(Registry.TESTADVISOR_TEST_RESULT));
+        Files.createFile(testrun2.resolve(Registry.TESTADVISOR_TEST_RESULT));
+        Files.createFile(testrun3.resolve(Registry.TESTADVISOR_TEST_RESULT));
         registry.getAllTestRuns();
         
         //test
