@@ -47,8 +47,7 @@ import org.json.JSONTokener;
  * This class provide method to process test result with the provided adapter
  */
 public class Processor {
-
-    private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
     private Registry registry;
     private ScreenshotManager screenshotManager;
@@ -73,8 +72,8 @@ public class Processor {
     public void process(InputStream inputStream, TestRunSignal testRunSignal,TestAdvisorAdapter adapter) 
                             throws ProcessException, IOException{
         TestAdvisorTestRun testRun = adapter.process(inputStream);
-        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime() == null ? null : testRun.getTestSuiteStartTime();
-        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime() == null ? null : testRun.getTestSuiteEndTime();
+        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime();
+        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime();
         testRunSignal.clientLibraryVersion = testRun.getTestAdvisorVersion();
         testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;
@@ -211,7 +210,7 @@ public class Processor {
         signal.signalValue = event.getTestSignalValue();
         signal.signalTime = event.getTestSignalTime();
         signal.screenshotRecorderNumber = event.getTestSignalScreenshotRecorderNumber();
-        signal.locator = event.getTestSignalSeleniumLocator();
+        //signal.locator = event.getTestSignalSeleniumLocator();
         signal.locatorHash = getMD5Hash(signal.locator);
         signal.seleniumCmd = event.getTestSignalSeleniumCmd();
         return signal;

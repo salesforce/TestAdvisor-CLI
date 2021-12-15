@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -31,6 +32,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -46,9 +49,6 @@ import com.salesforce.cte.datamodel.client.RectangleDeserializer;
 import com.salesforce.cte.datamodel.client.RectangleSerializer;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 
-
-import org.openqa.selenium.InvalidArgumentException;
-
 /**
  * @author Yibing Tao
  * Registry class manages TestAdvisor registry, including TestAdvisor properties
@@ -56,6 +56,8 @@ import org.openqa.selenium.InvalidArgumentException;
  */
 public class Registry {
     
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     public static final String SIGNAL_FILENAME = "test-signal.json";
     public static final String PORTAL_RECORD_FILENAME = "test-result.record";
     public static final String TESTADVISOR_TESTRUN_PREFIX = "TestRun-";
@@ -443,15 +445,18 @@ public class Registry {
      * Path to the test run
      * @return
      * Test run created time
+     * or EPOCH (1970/1/1) if path is null or invalid
      */
     private ZonedDateTime getTestRunCreatedTime(Path path){
-        if (path == null) return null;
+        if (path == null) return Instant.EPOCH.atZone(ZoneId.of("UTC"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TESTADVISOR_TESTRUN_PATTERN_STRING);    
         Pattern pattern = Pattern.compile("(\\d{8}-\\d{6})");
         Matcher matcher = pattern.matcher(path.toAbsolutePath().toString());
         if  (matcher.find())
             return LocalDateTime.parse(matcher.group(0),formatter).atZone(ZoneId.of("UTC"));
-        throw new InvalidArgumentException("Path object doesn't contain created time, path="+path.toAbsolutePath().toString()) ;
+        
+        LOGGER.log(Level.WARNING, "Path object does NOT contain created time, path:{0}",path.toAbsolutePath());
+        return Instant.EPOCH.atZone(ZoneId.of("UTC"));
     }
 
     /**

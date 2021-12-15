@@ -42,9 +42,10 @@ import org.apache.commons.cli.ParseException;
  */
 public class CLI {
 
-    private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private static final String PORTAL_UPLOAD_ENDPOINT_V1 = "services/apexrest/v1/BSTRun/";
+    private static final String VERSION_PROPERTY = "testadvisor.cli.version";
 
     private String command; //testadvisor cli command, expect to be upper case
     public String getCommand(){
@@ -66,6 +67,11 @@ public class CLI {
     private SecretsManager secretsManager; // secrets manager handles encryption, decryption and screts storage
     private Processor processor = new Processor(registry);
 
+    private String version;
+    public String getVersion(){
+        return this.version;
+    }
+    
     public static void main(String[] args) throws Exception{
         LOGGER.log(Level.INFO, "CLI Starts...");
         CLI cli = new CLI(args);
@@ -98,6 +104,11 @@ public class CLI {
      * This exception is thrown when it failed to access registry properties
      */
     public CLI(String[] args) throws IOException, TestAdvisorCipherException, ParseException{
+        final Properties properties = new Properties();
+        properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
+        version = (properties.getProperty(VERSION_PROPERTY));
+        LOGGER.log(Level.INFO,"CLI version:{0}",version);
+
         processArgs(args);
 
         secretsManager = new SecretsManager(registry);
@@ -132,7 +143,7 @@ public class CLI {
             return;
         }
         if (cmd.hasOption("version")){
-            System.out.println(String.format("version:%s",CLI.class.getClass().getPackage().getImplementationVersion()));
+            System.out.println(String.format("version:%s",this.version));
             return;
         }
 
@@ -182,7 +193,7 @@ public class CLI {
         testRunSignal.testSuiteName = prop.getProperty("TestSuiteName");
         String clientBuildId = System.getenv("CLIENT_BUILD_ID");
         testRunSignal.clientBuildId =  clientBuildId == null ? System.getProperty("CLIENT_BUILD_ID") : clientBuildId;
-        testRunSignal.clientCliVersion = CLI.class.getClass().getPackage().getImplementationVersion();
+        testRunSignal.clientCliVersion = this.getVersion();
         
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){

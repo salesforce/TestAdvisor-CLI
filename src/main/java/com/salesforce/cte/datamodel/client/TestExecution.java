@@ -1,6 +1,7 @@
 package com.salesforce.cte.datamodel.client;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,15 +26,15 @@ public class TestExecution {
     @JsonProperty
     public TestStatus status;
     @JsonProperty
-    public String  testCaseName; // Regex "[a-zA-Z0-9\-_]{1,80}"
+    public String  testCaseName = ""; // Regex "[a-zA-Z0-9\-_]{1,80}"
     @JsonProperty
-    public String   baselineBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
+    public String   baselineBuildId = ""; // Regex "[a-zA-Z0-9]{1,20}" 
     @JsonProperty
     public Instant   baselineBuildIdStartTime; 
     @JsonProperty
-    public String   baselineSalesforceBuildId; // Regex "[a-zA-Z0-9]{1,20}" 
+    public String   baselineSalesforceBuildId = ""; // Regex "[a-zA-Z0-9]{1,20}" 
     @JsonProperty
     public int  similarity; //0-100
     @JsonProperty
-    public List<TestSignal> testSignals;
+    public List<TestSignal> testSignals = new ArrayList<>();
 }
