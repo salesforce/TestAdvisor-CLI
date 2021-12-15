@@ -47,8 +47,7 @@ import org.json.JSONTokener;
  * This class provide method to process test result with the provided adapter
  */
 public class Processor {
-
-    private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
     private Registry registry;
     private ScreenshotManager screenshotManager;
@@ -73,8 +72,8 @@ public class Processor {
     public void process(InputStream inputStream, TestRunSignal testRunSignal,TestAdvisorAdapter adapter) 
                             throws ProcessException, IOException{
         TestAdvisorTestRun testRun = adapter.process(inputStream);
-        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime() != null ? testRun.getTestSuiteStartTime() : null;
-        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime() != null ? testRun.getTestSuiteEndTime() : null;
+        testRunSignal.buildStartTime = testRun.getTestSuiteStartTime();
+        testRunSignal.buildEndTime = testRun.getTestSuiteEndTime();
         testRunSignal.clientLibraryVersion = testRun.getTestAdvisorVersion();
         testRunSignal.testSuiteName = testRunSignal.testSuiteName.isEmpty() ? testRun.getTestSuiteName() : testRunSignal.testSuiteName;
         testRunSignal.clientBuildId = testRunSignal.clientBuildId.isEmpty() ? testRun.getTestsSuiteInfo() : testRunSignal.clientBuildId;

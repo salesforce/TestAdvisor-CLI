@@ -38,7 +38,7 @@ import org.json.JSONTokener;
  * @author Yibing Tao
  */
 public class Connector {
-	private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
+	private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	private static final String CONTENT_TYPE_JSON = "application/json";
 	private static final String DEVICE_REQUEST = "/services/oauth2/token?response_type=device_code&scope=refresh_token%20api";

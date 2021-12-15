@@ -56,7 +56,7 @@ import com.salesforce.cte.datamodel.client.TestRunSignal;
  */
 public class Registry {
     
-    private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public static final String SIGNAL_FILENAME = "test-signal.json";
     public static final String PORTAL_RECORD_FILENAME = "test-result.record";
