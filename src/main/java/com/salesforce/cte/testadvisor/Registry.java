@@ -455,7 +455,7 @@ public class Registry {
         if  (matcher.find())
             return LocalDateTime.parse(matcher.group(0),formatter).atZone(ZoneId.of("UTC"));
         
-        LOGGER.log(Level.WARNING, "Path object doesn't contain created time, path:{0}",path.toAbsolutePath());
+        LOGGER.log(Level.WARNING, "Path object does NOT contain created time, path:{0}",path.toAbsolutePath());
         return Instant.EPOCH.atZone(ZoneId.of("UTC"));
     }
 
