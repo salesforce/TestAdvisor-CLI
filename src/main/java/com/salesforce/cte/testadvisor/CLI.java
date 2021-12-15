@@ -67,7 +67,10 @@ public class CLI {
     private SecretsManager secretsManager; // secrets manager handles encryption, decryption and screts storage
     private Processor processor = new Processor(registry);
 
-    public String version;
+    private String version;
+    public String getVersion(){
+        return this.version;
+    }
     
     public static void main(String[] args) throws Exception{
         LOGGER.log(Level.INFO, "CLI Starts...");
@@ -190,7 +193,7 @@ public class CLI {
         testRunSignal.testSuiteName = prop.getProperty("TestSuiteName");
         String clientBuildId = System.getenv("CLIENT_BUILD_ID");
         testRunSignal.clientBuildId =  clientBuildId == null ? System.getProperty("CLIENT_BUILD_ID") : clientBuildId;
-        testRunSignal.clientCliVersion = this.version;
+        testRunSignal.clientCliVersion = this.getVersion();
         
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){
