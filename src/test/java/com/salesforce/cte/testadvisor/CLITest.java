@@ -14,6 +14,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.salesforce.cte.helper.TestAdvisorCipherException;
 
@@ -55,6 +57,9 @@ public class CLITest {
             CLI cli = new CLI(args);
             assertNull(cli.getCommand());
             assertTrue(os.toString().contains("version:"));
+            Pattern pattern = Pattern.compile("(\\d+.\\d+.*)");
+            Matcher matcher = pattern.matcher(cli.getVersion());
+            assertTrue(matcher.find());
         }
     }
 

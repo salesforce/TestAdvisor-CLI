@@ -45,7 +45,7 @@ public class CLI {
     private static final Logger LOGGER = Logger.getLogger( Logger.GLOBAL_LOGGER_NAME );
 
     private static final String PORTAL_UPLOAD_ENDPOINT_V1 = "services/apexrest/v1/BSTRun/";
-    private static final String VERSION_PROPERTY = "version";
+    private static final String VERSION_PROPERTY = "testadvisor.cli.version";
 
     private String command; //testadvisor cli command, expect to be upper case
     public String getCommand(){
