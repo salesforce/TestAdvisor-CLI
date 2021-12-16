@@ -26,14 +26,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -41,13 +42,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import com.github.romankh3.image.comparison.model.Rectangle;
-import com.salesforce.cte.common.TestCaseExecution;
+import com.google.common.base.Strings;
 import com.salesforce.cte.common.TestAdvisorResult;
+import com.salesforce.cte.common.TestCaseExecution;
 import com.salesforce.cte.datamodel.client.RectangleDeserializer;
 import com.salesforce.cte.datamodel.client.RectangleSerializer;
+import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
+import com.salesforce.cte.datamodel.client.TestSignal;
 
 /**
  * @author Yibing Tao
@@ -164,6 +167,7 @@ public class Registry {
      * This exception is thrown when it failed to access registry properties
      */
     public String saveTestRunSignal(TestRunSignal testRunSignal) throws IOException {
+    	pruneRedundantExceptionsFrom(testRunSignal);
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
                                         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         SimpleModule module = new SimpleModule();
@@ -179,7 +183,81 @@ public class Registry {
         return fileName;
     }
 
-    /**
+    private void pruneRedundantExceptionsFrom(TestRunSignal testRunSignal) {
+		ListIterator<TestExecution> executions = testRunSignal.testExecutions.listIterator();
+		while (executions.hasNext()) {
+			TestExecution te = executions.next();
+			ListIterator<TestSignal> signals = te.testSignals.listIterator();
+			List<TestSignal> signalsToRemove = new ArrayList<>();
+			int cachedEventNo = -1;
+			String cachedExceptionType = null;
+			while (signals.hasNext()) {
+				TestSignal ts = signals.next();
+				if (!Strings.isNullOrEmpty(ts.signalValue) && ts.signalValue.contains("Exception Type")) {
+					/*
+					 * We got a signal worth looking at! 
+					 * Sample value: 
+					 * "eventno:58,type:Exception,timestamp:1639603525599 ms,cmd:findElementByWebDriver,
+					 * param1:Exception Type: org.openqa.selenium.NoSuchElementException,[..]"
+					 */
+					String signalValue = ts.signalValue;
+					int eventNo = getEventNoFromSignalValue(signalValue);
+					String exceptionType = getExceptionTypeFromSignalValue(signalValue);
+					
+					boolean isKeepSignal = false;
+					if (cachedEventNo == -1 || cachedExceptionType == null)
+						// nothing cached --> we need to keep signal
+						isKeepSignal = true;
+					else {
+						// are cached values different from this signal's values?
+						if (!cachedExceptionType.equals(exceptionType) || cachedEventNo != eventNo)
+							// yes, one or both are different --> we need to keep signal
+							isKeepSignal = true;
+					}
+
+					if (isKeepSignal) {
+						// cache this signal's event# and exception type
+						cachedExceptionType = exceptionType;
+						cachedEventNo = eventNo;
+						// we keep the signal
+					} else {
+						// prune this signal from signal list in current testExecution object
+						signalsToRemove.add(ts);
+					}
+				}
+			}
+			for (TestSignal ts : signalsToRemove) {
+				te.testSignals.remove(ts);
+			}
+		}
+	}
+    
+	/*
+	 * Get eventno value from string.
+	 * Sample value to parse: 
+	 * "eventno:58,type:Exception,timestamp:1639603525599 ms,cmd:findElementByWebDriver,
+	 * param1:Exception Type: org.openqa.selenium.NoSuchElementException,[..]"
+	 */
+    private int getEventNoFromSignalValue(String signalValue) {
+    	int labelLength = "eventno:".length();
+    	String value = signalValue.substring(labelLength, signalValue.indexOf(",", labelLength));
+    	return Integer.parseInt(value);
+    }
+
+	/*
+	 * Get exception type from string.
+	 * Sample value to parse: 
+	 * "eventno:58,type:Exception,timestamp:1639603525599 ms,cmd:findElementByWebDriver,
+	 * param1:Exception Type: org.openqa.selenium.NoSuchElementException,[..]"
+	 */
+    private String getExceptionTypeFromSignalValue(String signalValue) {
+    	String label = "Exception Type: ";
+    	int labelLength = label.length();
+    	int startIndex = signalValue.indexOf(label) + labelLength;
+    	return signalValue.substring(startIndex, signalValue.indexOf(",", startIndex));
+    }
+
+	/**
      * Get a list of Path with start with TestRun and doesn't contain a test-signal file
      * @return
      * List of Path object represent test runs haven't process yet

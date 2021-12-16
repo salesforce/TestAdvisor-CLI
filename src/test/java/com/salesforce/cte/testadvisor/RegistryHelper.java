@@ -73,6 +73,21 @@ public class RegistryHelper {
         testExecution.testSignals.add(createTestSignal("Automation","Exception"));
         testRunSignal.testExecutions.add(testExecution);
 
+        testExecution = createTestExecution("testcaseWithRedundantExceptions",TestStatus.FAIL);
+        final String signalName = "com.salesforce.cte.listener.selenium.AbstractEventListener";
+        final String exceptionType1 = "org.openqa.selenium.NoSuchElementException";
+        final String exceptionType2 = "org.openqa.selenium.StaleElementException";
+        final String exceptionType3 = "java.lang.NullPointerException";
+        final String format = "eventno:%d,type:Exception,timestamp:1639603525599 ms,cmd:findElementByWebDriver,param1:Exception Type: %s,...";
+        
+		testExecution.testSignals.add(createTestSignal(signalName, String.format(format,10, exceptionType1)));
+		testExecution.testSignals.add(createTestSignal(signalName, String.format(format,10, exceptionType1)));
+		testExecution.testSignals.add(createTestSignal(signalName, String.format(format,10, exceptionType1)));
+		testExecution.testSignals.add(createTestSignal(signalName, String.format(format,12, exceptionType1)));
+		testExecution.testSignals.add(createTestSignal(signalName, String.format(format,12, exceptionType2)));
+		testExecution.testSignals.add(createTestSignal(signalName, String.format(format,14, exceptionType3)));
+        testRunSignal.testExecutions.add(testExecution);
+
         return testRunSignal;
     }
 

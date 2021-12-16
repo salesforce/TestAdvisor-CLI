@@ -128,6 +128,9 @@ public class RegistryTest {
         TestRunSignal testRunSignal2 = registry.getTestRunSignal(Paths.get(filename));
 
         assertEquals(testRunSignal.clientRegistryGuid, testRunSignal2.clientRegistryGuid);
+        
+        // number of exceptions found was 6, but only 4 should have been saved
+        assertEquals(4, testRunSignal2.testExecutions.get(2).testSignals.size());
     }
 
     @Test
