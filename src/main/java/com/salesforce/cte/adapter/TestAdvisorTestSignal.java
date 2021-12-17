@@ -9,6 +9,7 @@ package com.salesforce.cte.adapter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.github.romankh3.image.comparison.model.Rectangle;
 
@@ -20,7 +21,7 @@ public interface TestAdvisorTestSignal {
     public String getTestSignalName();
     public String getTestSignalValue();
     public Instant getTestSignalTime();
-    public String getTestSignalLevel();
+    public Level getTestSignalLevel();
     public String getTestSignalSeleniumCmd();
     public String getTestSignalSeleniumParam();
     public String getTestSignalSeleniumLocator();

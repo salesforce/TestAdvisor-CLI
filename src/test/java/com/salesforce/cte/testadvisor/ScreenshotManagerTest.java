@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class ScreenshotManagerTest {
 
-    private ScreenshotManager screenshotManager = new ScreenshotManager(20);
+    private ScreenshotManager screenshotManager = new ScreenshotManager();
     @Test
     public void testScreenshotComparisonSame() throws URISyntaxException{
         URL baselineUrl = getClass().getClassLoader().getResource("image/login.png");

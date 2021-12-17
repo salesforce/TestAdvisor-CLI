@@ -109,6 +109,9 @@ public class Registry {
         if (!registryRoot.resolve(TESTADVISOR_PROPERTIES_FILENAME).toFile().exists())
             createRegistryProperties();
 
+        //load properties
+        getRegistryProperties();
+
         getAllTestRuns();
     }
 

@@ -23,8 +23,8 @@ import com.github.romankh3.image.comparison.model.Rectangle;
 public class ScreenshotManager {
 
     private int minimalRectangleSize;
-    public ScreenshotManager(int minimalRectangleSize){
-        this.minimalRectangleSize = minimalRectangleSize;
+    public ScreenshotManager(){
+        this.minimalRectangleSize = Configuration.getScreenshotMinDiffAreaSize();
     }
 
     /**
@@ -68,7 +68,6 @@ public class ScreenshotManager {
         ImageComparison imc =  new ImageComparison(expectedImage, actualImage);
         imc.setExcludedAreas(excludedAreas);
         imc.setMinimalRectangleSize(minimalRectangleSize);
-        //imc.setExcludedRectangleFilling(true, 100);
         return  imc.compareImages();
     }
 
@@ -130,7 +129,6 @@ public class ScreenshotManager {
         ImageComparison imc = new ImageComparison(expectedImage, actualImage,resultFile);
         if (excludedAreas != null) imc.setExcludedAreas(excludedAreas);
         imc.setMinimalRectangleSize(minimalRectangleSize);
-        //imc.setExcludedRectangleFilling(true, 100);
         return imc.compareImages();
     }
 
