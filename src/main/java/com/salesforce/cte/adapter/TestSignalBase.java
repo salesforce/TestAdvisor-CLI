@@ -8,7 +8,10 @@
 package com.salesforce.cte.adapter;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.github.romankh3.image.comparison.model.Rectangle;
 
@@ -17,17 +20,18 @@ import com.github.romankh3.image.comparison.model.Rectangle;
  * Base class for test case signal
  */
 public class TestSignalBase implements TestAdvisorTestSignal{
-
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     private String signalName;
     private String signalValue;
     private Instant signalTime;
-    private String signalLevel;
+    private Level signalLevel = Level.INFO;
     private String seleniumCmd;
     private String seleniumParam;
     private String seleniumLocator;
     private int screenshotRecorderNumber;
     private String screenshotPath;
-    private List<Rectangle> excludedAreas;
+    private List<Rectangle> excludedAreas = new ArrayList<>();
 
     public TestSignalBase(String name, String value, Instant time){
         signalName = name == null ? "" : name;
@@ -38,7 +42,11 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     public TestSignalBase(String name, String value, Instant time, 
         String level, String cmd, String param, String locator, int num, String path){
         this(name,value,time);
-        signalLevel = level == null ? "" : level;
+        try{
+            signalLevel = Level.parse(level);
+        }catch(Exception ex){
+            LOGGER.log(Level.WARNING, "Invalid level {0}", level);
+        }
         seleniumCmd = cmd == null ? "" : cmd;
         seleniumParam = param == null ? "" : param;
         seleniumLocator = locator == null ? "" : locator;
@@ -62,8 +70,8 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     }
 
     @Override
-    public String getTestSignalLevel() {
-        return signalLevel == null ? "" : signalLevel;
+    public Level getTestSignalLevel() {
+        return signalLevel;
     }
 
     @Override

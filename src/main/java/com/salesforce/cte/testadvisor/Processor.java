@@ -54,7 +54,7 @@ public class Processor {
 
     public Processor(Registry registry){
         this.registry = registry;
-        this.screenshotManager = new ScreenshotManager(20);
+        this.screenshotManager = new ScreenshotManager();
     }
     /**
      * 
@@ -89,7 +89,7 @@ public class Processor {
             testExection.testSignals = new ArrayList<>();
 
             Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());
-            if (baseline != null){
+            if (baseline != null && Configuration.getIsScreenshotComparisonEnabled()){
                 testExection.baselineBuildId = registry.getTestRunId(baseline);
                 testExection.baselineBuildIdStartTime = getTestRunStartTime(baseline);
                 testExection.baselineSalesforceBuildId = getSalesforceId(baseline);
@@ -118,7 +118,7 @@ public class Processor {
 
     public void extractTestSignals(TestAdvisorTestCase current, List<TestSignal> signalList){
         for(TestAdvisorTestSignal event : current.getTestSignalList()){
-            if (event.getTestSignalLevel().equals("SEVERE") || event.getTestSignalLevel().equals("WARNING")){
+            if (event.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue()){
                 signalList.add(createTestSignalFromEvent(event));
             }
         }
@@ -156,7 +156,7 @@ public class Processor {
         TestAdvisorTestSignal prevStep = null;
         //for every event in current test
         for(TestAdvisorTestSignal event : currentEventList){
-            if (event.getTestSignalLevel().equals("SEVERE") || event.getTestSignalLevel().equals("WARNING")){
+            if (event.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue()){
                 signalList.add(createTestSignalFromEvent(event));
             }
             if (i>=currentSteps.size() || event != currentSteps.get(i)) continue;
@@ -186,7 +186,8 @@ public class Processor {
                     TestSignal signal = createTestSignalFromEvent(event);
                     signal.screenshotDiffRatio = (int)(result.getDifferencePercent()*100);
                     signal.baselinScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
-                    signal.screenshotDiffAreas = result.getRectangles();
+                    if (Configuration.getExportScreenshotDiffArea())
+                        signal.screenshotDiffAreas = result.getRectangles();
                     signal.previousSignalTime = prevStep == null ?  null : prevStep.getTestSignalTime();
                     signalList.add(signal);
                 }
