@@ -3,7 +3,7 @@
 
 	<groupId>com.salesforce.cte</groupId>
 	<artifactId>testadvisor-cli</artifactId>
-	<version>0.1.14</version>
+	<version>0.1.15-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>testadvisor-cli</name>
@@ -264,7 +264,7 @@
 
 	<scm>
 		<developerConnection>scm:git:git@git.soma.salesforce.com:cqe/DrillBit-CLI.git</developerConnection>
-		<tag>v0.1.14</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
