@@ -3,7 +3,7 @@
 
 	<groupId>com.salesforce.cte</groupId>
 	<artifactId>testadvisor-cli</artifactId>
-	<version>0.1.15-SNAPSHOT</version>
+	<version>0.1.14-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>testadvisor-cli</name>
@@ -96,7 +96,7 @@
 		<dependency>
 			<groupId>com.salesforce.cte</groupId>
 			<artifactId>testadvisor-lib</artifactId>
-			<version>0.1.12</version>
+			<version>0.1.14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.romankh3</groupId>
