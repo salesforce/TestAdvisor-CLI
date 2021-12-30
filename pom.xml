@@ -96,7 +96,7 @@
 		<dependency>
 			<groupId>com.salesforce.cte</groupId>
 			<artifactId>testadvisor-lib</artifactId>
-			<version>0.1.14</version>
+			<version>0.1.15</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.romankh3</groupId>
