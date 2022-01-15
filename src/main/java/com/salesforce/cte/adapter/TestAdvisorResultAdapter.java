@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -29,7 +30,8 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         TestAdvisorResult testAdvisorResult;
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
-                                      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+                                      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                                      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             testAdvisorResult = objectMapper.readValue(input, new TypeReference<TestAdvisorResult>(){});
         } catch (IOException e) {
             throw new ProcessException(e);
