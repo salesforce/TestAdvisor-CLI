@@ -16,8 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
+
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -37,7 +40,7 @@ import com.salesforce.cte.datamodel.client.TestStatus;
  */
 public class RegistryHelper {
     
-    public static Path createTestRun(Registry registry, int plusSeconds){
+    public static Path createTestRun(Registry registry, int plusSeconds) throws StreamWriteException, DatabindException, IOException{
         DateTimeFormatter taDateFormatter = DateTimeFormatter.ofPattern(Registry.TESTADVISOR_TESTRUN_PATTERN_STRING);
         String testRunId = Registry.TESTADVISOR_TESTRUN_PREFIX + taDateFormatter.format(
             OffsetDateTime.now( ZoneOffset.UTC ).plusSeconds(plusSeconds));
@@ -124,11 +127,11 @@ public class RegistryHelper {
         return signal;
     }
 
-    public static TestAdvisorResult createTestAdvisorResult(){
+    public static TestAdvisorResult createTestAdvisorResult() throws IOException{
         TestAdvisorResult testAdvisorResult = new TestAdvisorResult();
         testAdvisorResult.version = "1.0.0";
         testAdvisorResult.buildStartTime = Instant.now();
-        testAdvisorResult.buildEndTime = testAdvisorResult.buildStartTime.plusSeconds(5);
+        testAdvisorResult.buildEndTime = testAdvisorResult.buildStartTime.plusSeconds(500);
         testAdvisorResult.testCaseExecutionList = new ArrayList<>();
 
         TestCaseExecution testCaseExecution = new TestCaseExecution();
