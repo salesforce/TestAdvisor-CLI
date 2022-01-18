@@ -39,7 +39,7 @@ public class TestSignal {
     @JsonProperty
     public int   screenshotRecorderNumber;
     @JsonProperty
-    public int   baselinScreenshotRecorderNumber;
+    public int   baselinScreenshotRecorderNumber=-1;
     @JsonProperty
     public int screenshotDiffRatio;
     @JsonProperty

@@ -100,4 +100,32 @@ public class ConfigurationTest {
         System.clearProperty("testadvisor.screenshotmindiffareasize");
     }
 
+    @Test
+    public void testGetExportScreenshotDiffImage(){
+        System.clearProperty("testadvisor.exportscreenshotdiffimage");
+        assertEquals(false,Configuration.getExportScreenshotDiffImage());
+
+        System.setProperty("testadvisor.exportscreenshotdiffimage","true");
+        assertEquals(true,Configuration.getExportScreenshotDiffImage());
+
+        System.setProperty("testadvisor.exportscreenshotdiffimage","false");
+        assertEquals(false,Configuration.getExportScreenshotDiffImage());
+
+        System.clearProperty("testadvisor.exportscreenshotdiffimage");
+    }
+
+    @Test
+    public void testGetScreenshotMinDiffRatio(){
+        System.clearProperty("testadvisor.screenshotmindiffratio");
+        assertEquals(1,Configuration.getScreenshotMinDiffRatio());
+
+        System.setProperty("testadvisor.screenshotmindiffratio","5");
+        assertEquals(5,Configuration.getScreenshotMinDiffRatio());
+
+        System.setProperty("testadvisor.screenshotmindiffratio","invalid");
+        assertEquals(1,Configuration.getScreenshotMinDiffRatio());
+
+        System.clearProperty("testadvisor.screenshotmindiffratio");
+    }
+
 }
