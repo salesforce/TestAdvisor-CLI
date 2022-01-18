@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.ImageComparisonState;
+import com.github.romankh3.image.comparison.model.Rectangle;
 import com.salesforce.cte.adapter.TestAdvisorAdapter;
 import com.salesforce.cte.adapter.TestAdvisorResultAdapter;
 import com.salesforce.cte.adapter.TestAdvisorTestCase;
@@ -155,15 +156,18 @@ public class Processor {
         
         TestAdvisorTestSignal prevStep = null;
         //for every event in current test
-        for(TestAdvisorTestSignal event : currentEventList){
-            if (event.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue()){
-                signalList.add(createTestSignalFromEvent(event));
+        for(TestAdvisorTestSignal event : currentEventList){         
+            if (i>=currentSteps.size() || event != currentSteps.get(i)) {
+                //current is NOT a test step
+                if (event.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue()){
+                    signalList.add(createTestSignalFromEvent(event));
+                }
+                continue;
             }
-            if (i>=currentSteps.size() || event != currentSteps.get(i)) continue;
-            TestAdvisorTestSignal currentStep = currentSteps.get(i);
 
-            //current event is a test step        
-            //try to find a match baseline steps       
+            //current event is a test step 
+            //try to find a match baseline steps  
+            TestAdvisorTestSignal currentStep = currentSteps.get(i);     
             while(j<baselineSteps.size() && !isMatchScreenshotEvent(currentStep, baselineSteps.get(j))){
                 j++;
             }
@@ -174,17 +178,25 @@ public class Processor {
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
                 // image comparison
                 Path currentPath = Paths.get(currentStep.getTestSignalScreenshotPath());
-                File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
 
-                ImageComparisonResult result = screenshotManager.screenshotsComparisonWithExcludedAreas(
+                ImageComparisonResult result;
+                if (Configuration.getExportScreenshotDiffImage()){
+                    File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
+                    result = screenshotManager.screenshotsComparisonWithExcludedAreas(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
                     ,currentStep.getExcludedAreas());
-                
-                if (result.getImageComparisonState() == ImageComparisonState.MISMATCH){
+                }else{
+                    result = screenshotManager.screenshotsComparisonWithExcludedAreas(
+                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath())
+                    ,currentStep.getExcludedAreas());
+                }
+
+                if (result.getImageComparisonState() == ImageComparisonState.MISMATCH 
+                    && isDiffAreaLargeThanThreshhold(result)){
                     //image comparison found diff
-                    LOGGER.info("Found diff from screenshot comparison, ratio:"+result.getDifferencePercent());
                     TestSignal signal = createTestSignalFromEvent(event);
-                    signal.screenshotDiffRatio = (int)(result.getDifferencePercent()*100);
+                    signal.screenshotDiffRatio = getDiffRatio(result); 
+                    LOGGER.log(Level.INFO, "Found diff from screenshot comparison, ratio:{0}",signal.screenshotDiffRatio);
                     signal.baselinScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
                     if (Configuration.getExportScreenshotDiffArea())
                         signal.screenshotDiffAreas = result.getRectangles();
@@ -199,6 +211,28 @@ public class Processor {
         }
 
         return  (int)(((float)matchCount)/currentSteps.size() * 100);
+    }
+
+    private int getDiffRatio(ImageComparisonResult result){
+        long imageSize = (long) result.getActual().getWidth() * result.getActual().getHeight();
+        long diffSize = 0;
+        for(Rectangle rect : result.getRectangles()){
+            diffSize += (long)rect.getHeight() * rect.getWidth();
+        }
+        return imageSize > 0 ? (int) (diffSize * 100 / (float)imageSize) : 0 ;
+    }
+
+    private boolean isDiffAreaLargeThanThreshhold(ImageComparisonResult result){
+        boolean ret = false;
+        for(Rectangle rect : result.getRectangles()){
+             ret |= Math.min(rect.getHeight(),rect.getWidth()) > Configuration.getScreenshotMinDiffAreaSize();
+        }
+
+        if (Configuration.getScreenshotMinDiffRatio()>0){
+            ret |= getDiffRatio(result) > Configuration.getScreenshotMinDiffRatio();
+        }
+
+        return ret;
     }
 
     private boolean fileExist(String filename){
