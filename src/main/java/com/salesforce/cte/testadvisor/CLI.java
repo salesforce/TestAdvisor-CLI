@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import com.salesforce.cte.adapter.TestAdvisorResultAdapter;
 import com.salesforce.cte.adapter.TestNGAdapter;
@@ -106,7 +107,7 @@ public class CLI {
     public CLI(String[] args) throws IOException, TestAdvisorCipherException, ParseException{
         final Properties properties = new Properties();
         properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
-        version = (properties.getProperty(VERSION_PROPERTY));
+        version = validateVersion(properties.getProperty(VERSION_PROPERTY));
         LOGGER.log(Level.INFO,"CLI version:{0}",version);
 
         processArgs(args);
@@ -115,6 +116,9 @@ public class CLI {
         connector = new Connector(registry, secretsManager);
     }
 
+    private String validateVersion(String versionString){
+        return Pattern.matches("\\d+\\.\\d+\\.[0-9a-zA-Z-]+", versionString) ? versionString : "";
+    }
     /**
      * 
      * @param args
