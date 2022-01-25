@@ -48,7 +48,7 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
             }
             
             testCaseList.add(new TestCaseBase(testExecution.getTestName(),testExecution.startTime,testExecution.endTime,
-                            testExecution.getTestStatus().toString(),testSignalList));
+                            testExecution.getTestStatus().toString(),testExecution.getTraceId(), testSignalList));
         }
 
         return new TestRunBase("","",testAdvisorResult.version,testAdvisorResult.buildStartTime,testAdvisorResult.buildEndTime,testCaseList);

@@ -32,6 +32,12 @@ public class TestCaseBase implements TestAdvisorTestCase {
         testCaseSignalList = signalList;
     }
 
+    public TestCaseBase(String name, Instant start, Instant end, 
+                    String status, String traceId, List<TestAdvisorTestSignal> signalList){
+        this(name,start,end,status,signalList);
+        this.traceId=traceId;
+    }
+
     @Override
     public String getTestCaseFullName() {
         return testCaseFullName;
