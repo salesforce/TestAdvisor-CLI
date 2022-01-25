@@ -8,6 +8,9 @@
 package com.salesforce.cte.testadvisor;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -208,6 +211,13 @@ public class Connector {
 	public String postApex(String endpoint, String payload) 
 			throws IOException, TestAdvisorPortalException, TestAdvisorCipherException {
 		String fullUrl = (endpoint.startsWith("/")) ? this.baseURL + endpoint : this.baseURL + "/" + endpoint;
+		
+		//try to validate URL
+		try {
+			new URL(fullUrl).toURI();
+		} catch (URISyntaxException | MalformedURLException e) {
+			throw new TestAdvisorPortalException(e);
+		}
 		
 		try (CloseableHttpClient httpClient = getHttpClient()){
 			HttpPost httpPost = new HttpPost(fullUrl);
