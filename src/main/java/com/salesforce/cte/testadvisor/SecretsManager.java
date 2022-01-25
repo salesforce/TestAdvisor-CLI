@@ -7,7 +7,6 @@
 
 package com.salesforce.cte.testadvisor;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -24,14 +23,11 @@ import javax.crypto.spec.DESedeKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.github.javakeyring.BackendNotSupportedException;
+import com.github.javakeyring.Keyring;
+import com.github.javakeyring.PasswordAccessException;
 import com.google.common.base.Strings;
 import com.salesforce.cte.helper.TestAdvisorCipherException;
-
-import net.east301.keyring.BackendNotSupportedException;
-import net.east301.keyring.Keyring;
-import net.east301.keyring.PasswordRetrievalException;
-import net.east301.keyring.PasswordSaveException;
-import net.east301.keyring.util.LockException;
 
 /**
  * This class provides support for handling pass phrase and access token required
@@ -48,7 +44,6 @@ public class SecretsManager {
 	private static final String ENCRYPTION_ACTIVE_VALUE = "yes";
 	private static final String KEYRING_ACCOUNT = "API";
 	private static final String KEYRING_DOMAIN = "TestAdvisor";
-	private static final String KEYRING_FILENAME = "TestAdvisor.crd";
 	private static final String REFRESH_TOKEN_PROPERTY = "portal.refreshtoken";
 
 	private Cipher cipher = null;
@@ -58,27 +53,32 @@ public class SecretsManager {
 	private Registry registry = null;
 
 	public SecretsManager(Registry registry) throws IOException, TestAdvisorCipherException  {
+		this(registry,false);
+	}
+
+	public SecretsManager(Registry registry, boolean cleanPassword) throws IOException, TestAdvisorCipherException  {
 		this.registry = registry;
 		//load credentials
 		credentials = registry.getRegistryProperties();
-		
-		initKeyStore();
+
+		//clean stored password
+		if (cleanPassword)
+			cleanKeyStore();
+
+		if (!isStoredInClearText() ){
+			initKeyStore();
+			initSecretKey();
+		}
 	}
 
 	/**
-	 * Initialize Key Store
+	 * Initialize secret key
 	 * @throws TestAdvisorCipherException
 	 */
-	private void initKeyStore() throws TestAdvisorCipherException {
-		//init secret key
-		if (isStoredInClearText())
-			// encryption is deactivated
-			return;
-							
+	private void initSecretKey() throws TestAdvisorCipherException {
 		try{
-			//SonarLint: Cipher algorithms should be robust (java:S5547)
-			final String encryptionScheme = "AES/GCM/NoPadding";
-			cipher = Cipher.getInstance(encryptionScheme);
+			//SonarLint: Cipher algorithms should be robust (java:S5547)		
+			cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
 			byte[] passPhrase24Chars = null;
 			if (passPhrase.length() >= 24)
 				passPhrase24Chars = (passPhrase.substring(0, 24)).getBytes(StandardCharsets.UTF_8);
@@ -86,7 +86,7 @@ public class SecretsManager {
 				// append whitespace to pass phrase until we reach a length of 24 chars
 				passPhrase24Chars = (String.format("%-24s", passPhrase)).getBytes(StandardCharsets.UTF_8);
 			}
-			secretKey = SecretKeyFactory.getInstance(encryptionScheme)
+			secretKey = SecretKeyFactory.getInstance("DESede")
 					.generateSecret(new DESedeKeySpec(passPhrase24Chars));
 		}catch(Exception ex){
 			throw new TestAdvisorCipherException(ex);
@@ -156,36 +156,25 @@ public class SecretsManager {
 	}
 
 	/**
-	 * Finds out if the client is run for the first time on this system. If that is the case then
-	 * the caller needs to authenticate and authorize this system with the TestAdvisor Portal app.
 	 * 
-	 * During this operation it will initialize the credentials file and save a randomly generated
+	 * Initialize the credentials store and save a randomly generated
 	 * password to this system's key store.
 	 * 
-	 * @return 
-	 * true if setup, meaning authentication and authorization, is required
 	 * @throws IOException
 	 * Failed to access registry properties
-	 * @throws NoSuchAlgorithmException
-	 * This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment. 
+	 * @throws TestAdvisorCipherException
+	 * This exception is thrown when failed to initialize key store 
 	 */
-	public boolean isSetupRequired() throws IOException, NoSuchAlgorithmException {
+	public void initKeyStore() throws IOException, TestAdvisorCipherException {
 	    Keyring keyring = null;
+		
+		// initiate key store
 		try {
-			// initiate key store
 			keyring = Keyring.create();
-			if (keyring.isKeyStorePathRequired()) {
-				// create empty file if none exists yet to avoid FileNotFoundException
-				new File(KEYRING_FILENAME).createNewFile();
-				keyring.setKeyStorePath(KEYRING_FILENAME);
-			}
 		} catch (BackendNotSupportedException ex) {
-			LOGGER.log(Level.SEVERE,"Local key store not supported!");
-			LOGGER.log(Level.SEVERE,"Supported OS: MacOS, Windows, GNOME");
-			LOGGER.log(Level.SEVERE,"Warning: tokens will be stored in clear text");
-			return true;
-		}
-
+			throw new TestAdvisorCipherException(ex);
+		}	
+		
 		/*
 		 * We create a random string as pass phrase, store it in the local system's key store, and tell
 		 * all helper methods in this class that encryption is activated. If saving the pass phrase fails,
@@ -195,23 +184,26 @@ public class SecretsManager {
 		try {
 			// obtain pass phrase from key store
 			passPhrase = keyring.getPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT);
-			// we are done
-			return false;
-		} catch (PasswordRetrievalException | LockException ex) {
+		} catch (PasswordAccessException ex) {
 			// no password found
-			String randomString = createRandomPassword();
+			String randomString;
+			try {
+				randomString = createRandomPassword();
+			} catch (NoSuchAlgorithmException ex1) {
+				throw new TestAdvisorCipherException(ex1);
+			}
 			try {
 				keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, randomString);
 				credentials.setProperty(ENCRYPTION_ACTIVE_PROPERTY, ENCRYPTION_ACTIVE_VALUE);
 				saveCredentials();
 				// if we get here, password is stored in key store; let's use it for encryption
 				passPhrase = randomString;
-			} catch (LockException | PasswordSaveException e) {
+			} catch (PasswordAccessException e) {
 				LOGGER.log(Level.SEVERE,"Saving encryption key to local key store failed");
 				LOGGER.log(Level.SEVERE,"Warning: tokens will be stored in clear text");
+				throw new TestAdvisorCipherException(e);
 			}
 		}
-		return true;
 	}
 
 	private void saveCredentials() throws IOException {
@@ -230,6 +222,21 @@ public class SecretsManager {
 			byte[] encryptedText = cipher.doFinal(unencrypted.getBytes(StandardCharsets.UTF_8));
 			return new String(Base64.encodeBase64(encryptedText));
 		}catch (Exception ex){
+			throw new TestAdvisorCipherException(ex);
+		}
+	}
+
+	/**
+	 * remove test advisor password from key ring
+	 * @throws TestAdvisorCipherException
+	 * throws this exception when it failed to init key store
+	 */
+	private void cleanKeyStore() throws TestAdvisorCipherException {
+		Keyring keyring;
+		try {
+			keyring = Keyring.create();
+			keyring.deletePassword(KEYRING_DOMAIN, KEYRING_ACCOUNT);
+		} catch (BackendNotSupportedException | PasswordAccessException ex) {
 			throw new TestAdvisorCipherException(ex);
 		}
 	}

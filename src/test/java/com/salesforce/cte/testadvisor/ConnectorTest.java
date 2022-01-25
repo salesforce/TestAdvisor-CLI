@@ -96,6 +96,7 @@ public class ConnectorTest {
 
         //should throw TestAdvisorPortalException 
         registry.saveRegistryProperty("portal.clientid", "123");
+        registry.saveRegistryProperty("portal.url", "https://testadvisor--e2e.my.salesforce.com");
         Connector connector = new Connector(registry, secretsManager);
         connector.setBuilder(builder);
 

@@ -16,4 +16,8 @@ public class TestAdvisorPortalException extends Exception {
     public TestAdvisorPortalException(String message){
         super(message);
     }
+
+    public TestAdvisorPortalException(Exception ex){
+        super(ex);
+    }
 }
