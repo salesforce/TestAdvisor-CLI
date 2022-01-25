@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
@@ -20,11 +22,14 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
 import com.github.javakeyring.BackendNotSupportedException;
 import com.github.javakeyring.Keyring;
+import com.github.javakeyring.KeyringStorageType;
 import com.github.javakeyring.PasswordAccessException;
 import com.google.common.base.Strings;
 import com.salesforce.cte.helper.TestAdvisorCipherException;
@@ -41,6 +46,7 @@ public class SecretsManager {
 	
 	private static final String ACCESS_TOKEN_PROPERTY = "portal.accesstoken";
 	private static final String ENCRYPTION_ACTIVE_PROPERTY = "portal.token.encrypted";
+	private static final String ENCRYPTION_PASS_PHRASE_PROPERTY = "portal.passphrase";
 	private static final String ENCRYPTION_ACTIVE_VALUE = "yes";
 	private static final String KEYRING_ACCOUNT = "API";
 	private static final String KEYRING_DOMAIN = "TestAdvisor";
@@ -66,8 +72,8 @@ public class SecretsManager {
 			cleanKeyStore();
 
 		if (!isStoredInClearText() ){
-			initKeyStore();
-			initSecretKey();
+			getPassPhrase();
+			createSecretKey();
 		}
 	}
 
@@ -75,20 +81,16 @@ public class SecretsManager {
 	 * Initialize secret key
 	 * @throws TestAdvisorCipherException
 	 */
-	private void initSecretKey() throws TestAdvisorCipherException {
+	private void createSecretKey() throws TestAdvisorCipherException {
 		try{
-			//SonarLint: Cipher algorithms should be robust (java:S5547)		
-			cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
-			byte[] passPhrase24Chars = null;
-			if (passPhrase.length() >= 24)
-				passPhrase24Chars = (passPhrase.substring(0, 24)).getBytes(StandardCharsets.UTF_8);
-			else {
-				// append whitespace to pass phrase until we reach a length of 24 chars
-				passPhrase24Chars = (String.format("%-24s", passPhrase)).getBytes(StandardCharsets.UTF_8);
-			}
-			secretKey = SecretKeyFactory.getInstance("DESede")
-					.generateSecret(new DESedeKeySpec(passPhrase24Chars));
-		}catch(Exception ex){
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+			// iterationCount = 65536
+			// keyLength = 256
+			byte[] salt = new byte[12];
+			new SecureRandom().nextBytes(salt);
+			KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, 65536, 256);
+			secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
+		}catch(InvalidKeySpecException | NoSuchAlgorithmException ex){
 			throw new TestAdvisorCipherException(ex);
 		}
 	}
@@ -164,15 +166,22 @@ public class SecretsManager {
 	 * Failed to access registry properties
 	 * @throws TestAdvisorCipherException
 	 * This exception is thrown when failed to initialize key store 
+	 * @throws NoSuchAlgorithmException
 	 */
-	public void initKeyStore() throws IOException, TestAdvisorCipherException {
+	public void getPassPhrase() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException {
 	    Keyring keyring = null;
 		
 		// initiate key store
 		try {
 			keyring = Keyring.create();
 		} catch (BackendNotSupportedException ex) {
-			throw new TestAdvisorCipherException(ex);
+			passPhrase = credentials.getProperty(ENCRYPTION_PASS_PHRASE_PROPERTY);
+			if (passPhrase==null){
+				passPhrase = createRandomPassword();
+				credentials.setProperty(ENCRYPTION_PASS_PHRASE_PROPERTY, passPhrase);
+				saveCredentials();
+			}
+			return;
 		}	
 		
 		/*
@@ -186,22 +195,14 @@ public class SecretsManager {
 			passPhrase = keyring.getPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT);
 		} catch (PasswordAccessException ex) {
 			// no password found
-			String randomString;
+			passPhrase = createRandomPassword();
 			try {
-				randomString = createRandomPassword();
-			} catch (NoSuchAlgorithmException ex1) {
-				throw new TestAdvisorCipherException(ex1);
-			}
-			try {
-				keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, randomString);
-				credentials.setProperty(ENCRYPTION_ACTIVE_PROPERTY, ENCRYPTION_ACTIVE_VALUE);
-				saveCredentials();
-				// if we get here, password is stored in key store; let's use it for encryption
-				passPhrase = randomString;
+				keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, passPhrase);
 			} catch (PasswordAccessException e) {
-				LOGGER.log(Level.SEVERE,"Saving encryption key to local key store failed");
-				LOGGER.log(Level.SEVERE,"Warning: tokens will be stored in clear text");
-				throw new TestAdvisorCipherException(e);
+				LOGGER.log(Level.SEVERE,"Saving passphrase to local key store failed");
+				LOGGER.log(Level.SEVERE,"Warning: passphrase will be stored in clear text");
+				credentials.setProperty(ENCRYPTION_PASS_PHRASE_PROPERTY, passPhrase);
+				saveCredentials();
 			}
 		}
 	}
