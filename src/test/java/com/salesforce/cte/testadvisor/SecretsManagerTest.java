@@ -22,6 +22,7 @@ import com.salesforce.cte.helper.TestAdvisorCipherException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SecretsManagerTest {
@@ -52,6 +53,7 @@ public class SecretsManagerTest {
     }
 
     @Test
+    @Ignore("strata pipeline doesn't support key store")
     public void encryptTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=yes\n");
@@ -70,6 +72,7 @@ public class SecretsManagerTest {
     }
 
     @Test
+    @Ignore("strata pipeline doesn't support key store")
     public void encryptForceTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=yes\n");
