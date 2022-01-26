@@ -87,6 +87,7 @@ public class Processor {
             testExection.startTime = testCase.getTestCaseStartTime();
             testExection.endTime = testCase.getTestCaseEndTime();
             testExection.status = enumPartialMatch(TestStatus.class, testCase.getTestCaseStatus());
+            testExection.traceId = testCase.getTraceId();
             testExection.testSignals = new ArrayList<>();
 
             Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());

@@ -20,6 +20,7 @@ public class TestCaseBase implements TestAdvisorTestCase {
     private Instant testCaseStartTime;
     private Instant testCaseEndTime;
     private String  testCaseStatus;
+    private String traceId;
     private List<TestAdvisorTestSignal> testCaseSignalList;
 
     public TestCaseBase(String name, Instant start, Instant end, 
@@ -29,6 +30,12 @@ public class TestCaseBase implements TestAdvisorTestCase {
         testCaseEndTime = end;
         testCaseStatus = status;
         testCaseSignalList = signalList;
+    }
+
+    public TestCaseBase(String name, Instant start, Instant end, 
+                    String status, String traceId, List<TestAdvisorTestSignal> signalList){
+        this(name,start,end,status,signalList);
+        this.traceId=traceId;
     }
 
     @Override
@@ -54,6 +61,11 @@ public class TestCaseBase implements TestAdvisorTestCase {
     @Override
     public List<TestAdvisorTestSignal> getTestSignalList() {
         return testCaseSignalList;
+    }
+
+    @Override
+    public String getTraceId() {
+        return traceId;
     }
     
 }

@@ -137,7 +137,9 @@ public class ProcessorTest{
         TestAdvisorTestCase current = createTeseCase(50, 200, "selcmd");
         List<TestSignal> signalList = new ArrayList<>();
 
+        System.setProperty("testadvisor.screenshotmindiffareasize","9");
         assertEquals(100, processor.compareTestCaseExecution(baseline, current, signalList));
+        assertEquals(6, signalList.size());
     }
 
     @Test
@@ -148,6 +150,7 @@ public class ProcessorTest{
 
         System.setProperty("testadvisor.screenshotcomparison","true");
         assertEquals(0, processor.compareTestCaseExecution(baseline, current, signalList));
+        assertEquals(4, signalList.size());
     }
 
     @Test
@@ -168,29 +171,29 @@ public class ProcessorTest{
     private TestCaseBase createTeseCase(int secOffset, int num, String seleniumCmd) throws IOException{
         List<TestAdvisorTestSignal> signalList = new ArrayList<>();
 
-        signalList.add(new TestSignalBase("signal name", "SEVERE", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase("signal name 1", "SEVERE", Instant.now().minusSeconds(1000), 
                                             Level.SEVERE.toString(), "", "", "", 
                                             num, "" ));
-        signalList.add(new TestSignalBase("signal name", "WARNING", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase("signal name 2", "WARNING", Instant.now().minusSeconds(900), 
                                             Level.WARNING.toString(), "", "", "", 
                                             num, "" ));                  
-        signalList.add(new TestSignalBase("signal name", "INFO", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase("signal name 3", "INFO", Instant.now().minusSeconds(800), 
                                             Level.INFO.toString(), "", "", "", 
                                             num, "" ));                    
-        signalList.add(new TestSignalBase("signal name", "signal value", Instant.now().minusSeconds(900), 
+        signalList.add(new TestSignalBase("signal name 4", "selenium signal value", Instant.now().minusSeconds(700), 
                                             Level.INFO.toString(), seleniumCmd, "slenium param", "selenium locaor1", 
                                             num, createSreenshot("test").toString()));
-        signalList.add(new TestSignalBase("signal name", "signal value", Instant.now().minusSeconds(800), 
+        signalList.add(new TestSignalBase("signal name 5", "selenium signal value", Instant.now().minusSeconds(600), 
                                             Level.INFO.toString(), seleniumCmd, "slenium param", "selenium locaor2", 
                                             num, createSreenshot("test").toString()));
 
-        signalList.add(new TestSignalBase("signal name", "SEVERE", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase("signal name 6 ", "SEVERE", Instant.now().minusSeconds(500), 
                                             Level.SEVERE.toString(), "", "", "", 
                                             num, "" ));
-        signalList.add(new TestSignalBase("signal name", "WARNING", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase("signal name 7", "WARNING", Instant.now().minusSeconds(400), 
                                             Level.WARNING.toString(), "", "", "", 
                                             num, "" ));                  
-        signalList.add(new TestSignalBase("signal name", "INFO", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase("signal name 8", "INFO", Instant.now().minusSeconds(300), 
                                             Level.INFO.toString(), "", "", "", 
                                             num, "" ));        
 

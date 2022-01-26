@@ -1,17 +1,17 @@
-package com.salesforce.cte.datamodel.client;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /*
  * Copyright (c) 2021, salesforce.com, inc.
  * All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+
+ package com.salesforce.cte.datamodel.client;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TestExecution {
     
@@ -25,6 +25,8 @@ public class TestExecution {
     public Instant    endTime;    
     @JsonProperty
     public TestStatus status;
+    @JsonProperty
+    public String     traceId = "";
     @JsonProperty
     public String  testCaseName = ""; // Regex "[a-zA-Z0-9\-_]{1,80}"
     @JsonProperty

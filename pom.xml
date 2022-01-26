@@ -98,8 +98,8 @@
 		<dependency>
 			<groupId>com.salesforce.cte</groupId>
 			<artifactId>testadvisor-lib</artifactId>
-			<version>0.1.17</version>
-		</dependency>
+			<version>0.2.1</version>
+		</dependency>	
 		<dependency>
 			<groupId>com.github.romankh3</groupId>
 			<artifactId>image-comparison</artifactId>
