@@ -19,5 +19,6 @@ public interface TestAdvisorTestCase {
     public Instant getTestCaseStartTime();
     public Instant getTestCaseEndTime();
     public String getTestCaseStatus();
+    public String getTraceId();
     public List<TestAdvisorTestSignal> getTestSignalList();
 }

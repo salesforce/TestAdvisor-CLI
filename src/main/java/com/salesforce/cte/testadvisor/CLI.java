@@ -107,7 +107,7 @@ public class CLI {
     public CLI(String[] args) throws IOException, TestAdvisorCipherException, ParseException{
         final Properties properties = new Properties();
         properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
-        version = validateVersion(properties.getProperty(VERSION_PROPERTY));
+        version = validateVersion(properties.getProperty(VERSION_PROPERTY,""));
         LOGGER.log(Level.INFO,"CLI version:{0}",version);
 
         processArgs(args);
