@@ -22,7 +22,6 @@ import com.salesforce.cte.helper.TestAdvisorCipherException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SecretsManagerTest {
@@ -53,14 +52,13 @@ public class SecretsManagerTest {
     }
 
     @Test
-    @Ignore("strata pipeline doesn't support key store")
     public void encryptTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=yes\n");
             writer.write("portal.accesstoken=abc\n");
             writer.write("portal.refreshtoken=xyz\n");
         }
-        SecretsManager manager = new SecretsManager(new Registry(root));
+        SecretsManager manager = new SecretsManager(new Registry(root),"passphase");
         assertNotNull(manager);
         String accessToken = "testAccessToken";
         String refreshToken = "testRefreshToken";
@@ -72,14 +70,13 @@ public class SecretsManagerTest {
     }
 
     @Test
-    @Ignore("strata pipeline doesn't support key store")
-    public void encryptForceTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException{
+    public void encryptDefaultTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=yes\n");
             writer.write("portal.accesstoken=abc\n");
             writer.write("portal.refreshtoken=xyz\n");
         }
-        SecretsManager manager = new SecretsManager(new Registry(root),true);
+        SecretsManager manager = new SecretsManager(new Registry(root));
         assertNotNull(manager);
         String accessToken = "testAccessToken";
         String refreshToken = "testRefreshToken";

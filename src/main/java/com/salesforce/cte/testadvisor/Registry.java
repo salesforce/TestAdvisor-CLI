@@ -110,25 +110,30 @@ public class Registry {
             createRegistryProperties();
 
         //load properties
-        getRegistryProperties();
+        loadRegistryProperties();
 
         getAllTestRuns();
     }
 
     /**
-     * Get TestAdvisor registry configuration from its default properties file
-     * @return
-     * TestAdvisor registry configruation properties
+     * Load TestAdvisor registry configuration from its default properties file
      * @throws IOException
      * This exception is thrown when it failed to access registry properties
      */
-    public Properties getRegistryProperties() throws IOException{
+    public void loadRegistryProperties() throws IOException{
         try(InputStream input = Files.newInputStream(registryRoot.resolve(TESTADVISOR_PROPERTIES_FILENAME))){
             registryConfig.load(input);
         }
-        return registryConfig;
     }
 
+    /**
+     * 
+     * @return current registry properties 
+     */
+    public Properties getRegistryProperties(){
+        return registryConfig;
+    }
+    
     /**
      * set and save registry properties
      * @param key
