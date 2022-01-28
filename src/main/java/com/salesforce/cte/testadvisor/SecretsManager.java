@@ -8,28 +8,31 @@
 package com.salesforce.cte.testadvisor;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Properties;
+import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
-
 import com.github.javakeyring.BackendNotSupportedException;
 import com.github.javakeyring.Keyring;
-import com.github.javakeyring.KeyringStorageType;
 import com.github.javakeyring.PasswordAccessException;
 import com.google.common.base.Strings;
 import com.salesforce.cte.helper.TestAdvisorCipherException;
@@ -46,34 +49,102 @@ public class SecretsManager {
 	
 	private static final String ACCESS_TOKEN_PROPERTY = "portal.accesstoken";
 	private static final String ENCRYPTION_ACTIVE_PROPERTY = "portal.token.encrypted";
-	private static final String ENCRYPTION_PASS_PHRASE_PROPERTY = "portal.passphrase";
 	private static final String ENCRYPTION_ACTIVE_VALUE = "yes";
+	private static final String ENCRYPTION_INACTIVE_VALUE = "no";
 	private static final String KEYRING_ACCOUNT = "API";
+	private static final String KEYRING_TEST_ACCOUNT = "API.TEST";
 	private static final String KEYRING_DOMAIN = "TestAdvisor";
 	private static final String REFRESH_TOKEN_PROPERTY = "portal.refreshtoken";
+	private static final String ENCRYPT_ALGORITHM_STRING = "AES/GCM/NoPadding";
 
-	private Cipher cipher = null;
-	private Properties credentials = null;
+	private static final int TAG_LENGTH_BIT = 128;
+    private static final int IV_LENGTH_BYTE = 12;
+	private static final int AES_KEY_BIT = 256;
+	private static final int AES_INTERATION_COUNT = 65536;
+
+
 	private String passPhrase = null;
 	private SecretKey secretKey = null;
 	private Registry registry = null;
+	private Keyring keyring = null;
 
-	public SecretsManager(Registry registry) throws IOException, TestAdvisorCipherException  {
-		this(registry,false);
+	public SecretsManager(Registry registry) throws TestAdvisorCipherException, IOException  {
+		this.registry = registry;
+
+		if (!verifyBackend()){
+			LOGGER.log(Level.WARNING, "Currently only Mac OS X, Windows and Linux (GNOME) are supported.");
+			LOGGER.log(Level.WARNING, "Disable encryption.");
+			registry.saveRegistryProperty(ENCRYPTION_ACTIVE_PROPERTY, ENCRYPTION_INACTIVE_VALUE);
+			return;
+		}
+
+		getPassPhrase();
+		
+		if (!isStoredInClearText() ){
+			createSecretKey();
+		}
 	}
 
-	public SecretsManager(Registry registry, boolean cleanPassword) throws IOException, TestAdvisorCipherException  {
+	public SecretsManager(Registry registry, String passphrase) throws IOException, TestAdvisorCipherException{
 		this.registry = registry;
-		//load credentials
-		credentials = registry.getRegistryProperties();
 
-		//clean stored password
-		if (cleanPassword)
-			cleanKeyStore();
+		if (!verifyBackend()){
+			LOGGER.log(Level.WARNING, "Currently only Mac OS X, Windows and Linux (GNOME) are supported.");
+			LOGGER.log(Level.WARNING, "Disable encryption.");
+			registry.saveRegistryProperty(ENCRYPTION_ACTIVE_PROPERTY, ENCRYPTION_INACTIVE_VALUE);
+			return;
+		}
 
+		setPassPhrase(passphrase);
+		
 		if (!isStoredInClearText() ){
-			getPassPhrase();
 			createSecretKey();
+		}
+	}
+
+	/**
+	 * Check if the backend supports secure key store
+	 * @return
+	 * true if the backend supports secure key store
+	 * false otherwise
+	 */
+	private boolean verifyBackend(){
+		try {
+			keyring = Keyring.create();
+		} catch (BackendNotSupportedException e) {
+			LOGGER.log(Level.WARNING,"Current backend does NOT support native OS key store.");
+			return false;
+		}
+		try {
+			keyring.setPassword(KEYRING_DOMAIN, KEYRING_TEST_ACCOUNT, "passPhrase");
+			keyring.getPassword(KEYRING_DOMAIN, KEYRING_TEST_ACCOUNT);
+			keyring.deletePassword(KEYRING_DOMAIN, KEYRING_TEST_ACCOUNT);
+		} catch (PasswordAccessException e) {
+			LOGGER.log(Level.WARNING,"Saving/Retriving key to/from native OS key store failed.");
+			return false;
+		}
+
+		return true;
+	}
+
+	private void setPassPhrase(String passPhrase) throws TestAdvisorCipherException {
+		try {
+			keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, passPhrase);
+			this.passPhrase = passPhrase;
+		} catch (PasswordAccessException e) {
+			throw new TestAdvisorCipherException(e);
+		}
+	}
+
+	private String getPassPhrase() throws TestAdvisorCipherException {
+		try {
+			passPhrase = keyring.getPassword(KEYRING_DOMAIN, KEYRING_TEST_ACCOUNT);
+			return passPhrase;
+		} catch (PasswordAccessException e) {
+			// no passpharse found, create a random one
+			passPhrase = createRandomPassword();
+			setPassPhrase(passPhrase);
+			return passPhrase;
 		}
 	}
 
@@ -86,9 +157,9 @@ public class SecretsManager {
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			// iterationCount = 65536
 			// keyLength = 256
-			byte[] salt = new byte[12];
+			byte[] salt = new byte[IV_LENGTH_BYTE];
 			new SecureRandom().nextBytes(salt);
-			KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, 65536, 256);
+			KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, AES_INTERATION_COUNT, AES_KEY_BIT);
 			secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
 		}catch(InvalidKeySpecException | NoSuchAlgorithmException ex){
 			throw new TestAdvisorCipherException(ex);
@@ -108,8 +179,7 @@ public class SecretsManager {
 	public void setAccessToken(String accessToken) throws IOException, TestAdvisorCipherException{
 		if (Strings.isNullOrEmpty(accessToken))
 			throw new IllegalArgumentException("Access token is missing; authentication is required!");
-		credentials.setProperty(ACCESS_TOKEN_PROPERTY, encrypt(accessToken));
-		saveCredentials();
+		registry.saveRegistryProperty(ACCESS_TOKEN_PROPERTY, encrypt(accessToken));
 	}
 
 	/**
@@ -122,7 +192,7 @@ public class SecretsManager {
 	 * or if access token could not be found in credentials file
 	 */
 	public String getAccessToken() throws TestAdvisorCipherException {
-		String token = credentials.getProperty(ACCESS_TOKEN_PROPERTY, "");
+		String token = registry.getRegistryProperties().getProperty(ACCESS_TOKEN_PROPERTY, "");
 		return (token.length() == 0) ? token : decrypt(token);
 	}
 
@@ -139,8 +209,7 @@ public class SecretsManager {
 	public void setRefreshToken(String refreshToken) throws IOException, TestAdvisorCipherException {
 		if (Strings.isNullOrEmpty(refreshToken))
 			throw new IllegalArgumentException("Refresh token is missing; authentication is required!");
-		credentials.setProperty(REFRESH_TOKEN_PROPERTY, encrypt(refreshToken));
-		saveCredentials();
+		registry.saveRegistryProperty(REFRESH_TOKEN_PROPERTY, encrypt(refreshToken));
 	}
 
 	/**
@@ -153,62 +222,8 @@ public class SecretsManager {
 	 * or if refresh token could not be found in credentials file
 	 */
 	public String getRefreshToken() throws TestAdvisorCipherException  {
-		String token = credentials.getProperty(REFRESH_TOKEN_PROPERTY, "");
+		String token = registry.getRegistryProperties().getProperty(REFRESH_TOKEN_PROPERTY, "");
 		return (token.length() == 0) ? token : decrypt(token);
-	}
-
-	/**
-	 * 
-	 * Initialize the credentials store and save a randomly generated
-	 * password to this system's key store.
-	 * 
-	 * @throws IOException
-	 * Failed to access registry properties
-	 * @throws TestAdvisorCipherException
-	 * This exception is thrown when failed to initialize key store 
-	 * @throws NoSuchAlgorithmException
-	 */
-	public void getPassPhrase() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException {
-	    Keyring keyring = null;
-		
-		// initiate key store
-		try {
-			keyring = Keyring.create();
-		} catch (BackendNotSupportedException ex) {
-			passPhrase = credentials.getProperty(ENCRYPTION_PASS_PHRASE_PROPERTY);
-			if (passPhrase==null){
-				passPhrase = createRandomPassword();
-				credentials.setProperty(ENCRYPTION_PASS_PHRASE_PROPERTY, passPhrase);
-				saveCredentials();
-			}
-			return;
-		}	
-		
-		/*
-		 * We create a random string as pass phrase, store it in the local system's key store, and tell
-		 * all helper methods in this class that encryption is activated. If saving the pass phrase fails,
-		 * encryption is deactivated. It further assumes this client requires setup, meaning authentication
-		 * and authorization. This need will be indicated in the return value.
-		 */
-		try {
-			// obtain pass phrase from key store
-			passPhrase = keyring.getPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT);
-		} catch (PasswordAccessException ex) {
-			// no password found
-			passPhrase = createRandomPassword();
-			try {
-				keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, passPhrase);
-			} catch (PasswordAccessException e) {
-				LOGGER.log(Level.SEVERE,"Saving passphrase to local key store failed");
-				LOGGER.log(Level.SEVERE,"Warning: passphrase will be stored in clear text");
-				credentials.setProperty(ENCRYPTION_PASS_PHRASE_PROPERTY, passPhrase);
-				saveCredentials();
-			}
-		}
-	}
-
-	private void saveCredentials() throws IOException {
-		registry.saveRegistryProperties();
 	}
 
 	private String encrypt(String unencrypted) throws TestAdvisorCipherException {
@@ -216,30 +231,20 @@ public class SecretsManager {
 			// no encryption required
 			return unencrypted;
 
-		if (unencrypted == null)
-			throw new IllegalArgumentException("String to be encrypted must not be null!");
-		try{
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-			byte[] encryptedText = cipher.doFinal(unencrypted.getBytes(StandardCharsets.UTF_8));
-			return new String(Base64.encodeBase64(encryptedText));
-		}catch (Exception ex){
-			throw new TestAdvisorCipherException(ex);
-		}
-	}
-
-	/**
-	 * remove test advisor password from key ring
-	 * @throws TestAdvisorCipherException
-	 * throws this exception when it failed to init key store
-	 */
-	private void cleanKeyStore() throws TestAdvisorCipherException {
-		Keyring keyring;
+		byte[] iv = new byte[IV_LENGTH_BYTE];
+        new SecureRandom().nextBytes(iv);
+		Cipher cipher;
 		try {
-			keyring = Keyring.create();
-			keyring.deletePassword(KEYRING_DOMAIN, KEYRING_ACCOUNT);
-		} catch (BackendNotSupportedException | PasswordAccessException ex) {
-			throw new TestAdvisorCipherException(ex);
+			cipher = Cipher.getInstance(ENCRYPT_ALGORITHM_STRING);
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
+			byte[] encryptedText = cipher.doFinal(unencrypted.getBytes());
+			//add IV to head of encrypted string
+			return bytesToString(iv) + bytesToString(encryptedText);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException 
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			throw new TestAdvisorCipherException(e);
 		}
+			
 	}
 
 	private String decrypt(String encrypted) throws TestAdvisorCipherException {
@@ -250,31 +255,58 @@ public class SecretsManager {
 		if (encrypted == null)
 			throw new IllegalArgumentException("String to be decrypted must not be null!");
 
-		try{
-			cipher.init(Cipher.DECRYPT_MODE, secretKey);
-			byte[] encryptedText = Base64.decodeBase64(encrypted);
-			return new String(cipher.doFinal(encryptedText));
-		}catch (Exception ex){
-			throw new TestAdvisorCipherException(ex);
+		byte[] encryptedBytes = stringToBytes(encrypted);
+		ByteBuffer bb = ByteBuffer.wrap(encryptedBytes);
+
+		//read IV first
+		byte[] iv = new byte[IV_LENGTH_BYTE];
+		bb.get(iv);
+
+		//read actural encrypted text
+		byte[] cipherText = new byte[bb.remaining()];
+		bb.get(cipherText);
+		Cipher cipher;
+		try {
+			cipher = Cipher.getInstance(ENCRYPT_ALGORITHM_STRING);
+			cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
+			byte[] plainText = cipher.doFinal(cipherText);
+			return new String(plainText, StandardCharsets.UTF_8);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException 
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			throw new TestAdvisorCipherException(e);
 		}
 	}
-	
+
+	public String bytesToString(byte[] bytes){
+		return Base64.getEncoder().encodeToString(bytes);
+	}
+
+	public byte[] stringToBytes(String string){
+		return Base64.getDecoder().decode(string);
+	}
+
 	private boolean isStoredInClearText() {
-		String encryptionActiveValue = credentials.getProperty(ENCRYPTION_ACTIVE_PROPERTY, "");
+		String encryptionActiveValue = registry.getRegistryProperties().getProperty(ENCRYPTION_ACTIVE_PROPERTY, "");
 		return Strings.isNullOrEmpty(encryptionActiveValue) || !ENCRYPTION_ACTIVE_VALUE.equalsIgnoreCase(encryptionActiveValue);
 	}
 	
-	private String createRandomPassword() throws NoSuchAlgorithmException {
+	private String createRandomPassword() throws TestAdvisorCipherException {
 	    int leftLimit = 48; // numeral '0'
 	    int rightLimit = 122; // letter 'z'
 	    int targetStringLength = 10;
 
-	    Random random = SecureRandom.getInstanceStrong(); // SecureRandom is preferred to Random
-
-	    return random.ints(leftLimit, rightLimit + 1)
+	    Random random;
+		try {
+			random = SecureRandom.getInstanceStrong();
+			return random.ints(leftLimit, rightLimit + 1)
 					.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
 					.limit(targetStringLength)
 					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 					.toString();
+		} catch (NoSuchAlgorithmException e) {
+			throw new TestAdvisorCipherException(e);
+		} 
+
+	    
 	}
 }
