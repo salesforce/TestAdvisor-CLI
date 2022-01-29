@@ -93,7 +93,7 @@ public class SecretsManagerTest {
     }
 
     @Test
-    public void mockKeyingEncryptTest() throws IOException, TestAdvisorCipherException, PasswordAccessException{
+    public void mockExistingKeyTest() throws IOException, TestAdvisorCipherException, PasswordAccessException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=yes\n");
             writer.write("portal.accesstoken=abc\n");
@@ -108,6 +108,22 @@ public class SecretsManagerTest {
         SecretsManager manager2 = new SecretsManager(registry,keyring);
 
         assertEncryptedToken(manager1, manager2);
+    }
+
+    @Test
+    public void mockNewKeyTest() throws IOException, TestAdvisorCipherException, PasswordAccessException{
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
+            writer.write("portal.token.encrypted=yes\n");
+            writer.write("portal.accesstoken=abc\n");
+            writer.write("portal.refreshtoken=xyz\n");
+        }
+        registry.loadRegistryProperties();
+
+        Keyring keyring = mock(Keyring.class);
+        when(keyring.getPassword(anyString(), anyString())).thenThrow(PasswordAccessException.class);
+        SecretsManager manager1 = new SecretsManager(registry,keyring);
+
+        assertEncryptedToken(manager1, manager1);
     }
 
     private void assertEncryptedToken(SecretsManager manager1, SecretsManager manager2) throws IOException, TestAdvisorCipherException{
