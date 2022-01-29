@@ -66,7 +66,10 @@ public class SecretsManagerTest {
 
         SecretsManager manager1 = new SecretsManager(registry);
         SecretsManager manager2 = new SecretsManager(registry);
-        assertEncryptedToken(manager1,manager2);
+        if (manager1.isStoredInClearText())
+            assertUnEncryptedToken(manager1);
+        else
+            assertEncryptedToken(manager1,manager2);
     }
 
     @Test
@@ -83,7 +86,7 @@ public class SecretsManagerTest {
             keyring.deletePassword("TestAdvisor", "secretkey");
             SecretsManager manager1 = new SecretsManager(registry,keyring);
             SecretsManager manager2 = new SecretsManager(registry,keyring);
-        assertEncryptedToken(manager1,manager2);
+            assertEncryptedToken(manager1,manager2);
         } catch (BackendNotSupportedException e) {
             e.printStackTrace();
         }

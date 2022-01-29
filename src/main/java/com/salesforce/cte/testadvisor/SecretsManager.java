@@ -264,7 +264,7 @@ public class SecretsManager {
 		return Base64.getDecoder().decode(string);
 	}
 
-	private boolean isStoredInClearText() {
+	public boolean isStoredInClearText() {
 		String encryptionActiveValue = registry.getRegistryProperties().getProperty(ENCRYPTION_ACTIVE_PROPERTY, "");
 		return Strings.isNullOrEmpty(encryptionActiveValue) || !ENCRYPTION_ACTIVE_VALUE.equalsIgnoreCase(encryptionActiveValue);
 	}
