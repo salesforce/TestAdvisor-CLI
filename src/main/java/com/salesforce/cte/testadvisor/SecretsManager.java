@@ -14,21 +14,17 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Base64;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.github.javakeyring.BackendNotSupportedException;
@@ -51,8 +47,8 @@ public class SecretsManager {
 	private static final String ENCRYPTION_ACTIVE_PROPERTY = "portal.token.encrypted";
 	private static final String ENCRYPTION_ACTIVE_VALUE = "yes";
 	private static final String ENCRYPTION_INACTIVE_VALUE = "no";
-	private static final String KEYRING_ACCOUNT = "API";
-	private static final String KEYRING_TEST_ACCOUNT = "API.TEST";
+	private static final String KEYRING_ACCOUNT = "secretkey";
+	private static final String KEYRING_TEST_ACCOUNT = "test";
 	private static final String KEYRING_DOMAIN = "TestAdvisor";
 	private static final String REFRESH_TOKEN_PROPERTY = "portal.refreshtoken";
 	private static final String ENCRYPT_ALGORITHM_STRING = "AES/GCM/NoPadding";
@@ -60,10 +56,7 @@ public class SecretsManager {
 	private static final int TAG_LENGTH_BIT = 128;
     private static final int IV_LENGTH_BYTE = 12;
 	private static final int AES_KEY_BIT = 256;
-	private static final int AES_INTERATION_COUNT = 65536;
 
-
-	private String passPhrase = null;
 	private SecretKey secretKey = null;
 	private Registry registry = null;
 	private Keyring keyring = null;
@@ -75,30 +68,21 @@ public class SecretsManager {
 			LOGGER.log(Level.WARNING, "Currently only Mac OS X, Windows and Linux (GNOME) are supported.");
 			LOGGER.log(Level.WARNING, "Disable encryption.");
 			registry.saveRegistryProperty(ENCRYPTION_ACTIVE_PROPERTY, ENCRYPTION_INACTIVE_VALUE);
+			registry.loadRegistryProperties();
 			return;
 		}
 
-		getPassPhrase();
-		
 		if (!isStoredInClearText() ){
-			createSecretKey();
+			getSecretKey();
 		}
 	}
 
-	public SecretsManager(Registry registry, String passphrase) throws IOException, TestAdvisorCipherException{
+	public SecretsManager(Registry registry, Keyring keyring) throws TestAdvisorCipherException{
 		this.registry = registry;
+		this.keyring = keyring;
 
-		if (!verifyBackend()){
-			LOGGER.log(Level.WARNING, "Currently only Mac OS X, Windows and Linux (GNOME) are supported.");
-			LOGGER.log(Level.WARNING, "Disable encryption.");
-			registry.saveRegistryProperty(ENCRYPTION_ACTIVE_PROPERTY, ENCRYPTION_INACTIVE_VALUE);
-			return;
-		}
-
-		setPassPhrase(passphrase);
-		
 		if (!isStoredInClearText() ){
-			createSecretKey();
+			getSecretKey();
 		}
 	}
 
@@ -127,43 +111,38 @@ public class SecretsManager {
 		return true;
 	}
 
-	private void setPassPhrase(String passPhrase) throws TestAdvisorCipherException {
-		try {
-			keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, passPhrase);
-			this.passPhrase = passPhrase;
-		} catch (PasswordAccessException e) {
-			throw new TestAdvisorCipherException(e);
-		}
-	}
-
-	private String getPassPhrase() throws TestAdvisorCipherException {
-		try {
-			passPhrase = keyring.getPassword(KEYRING_DOMAIN, KEYRING_TEST_ACCOUNT);
-			return passPhrase;
-		} catch (PasswordAccessException e) {
-			// no passpharse found, create a random one
-			passPhrase = createRandomPassword();
-			setPassPhrase(passPhrase);
-			return passPhrase;
-		}
-	}
-
 	/**
-	 * Initialize secret key
+	 * create a secret key 
 	 * @throws TestAdvisorCipherException
 	 */
-	private void createSecretKey() throws TestAdvisorCipherException {
+	private SecretKey createSecretKey() throws TestAdvisorCipherException {
 		try{
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			// iterationCount = 65536
-			// keyLength = 256
-			byte[] salt = new byte[IV_LENGTH_BYTE];
-			new SecureRandom().nextBytes(salt);
-			KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, AES_INTERATION_COUNT, AES_KEY_BIT);
-			secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
-		}catch(InvalidKeySpecException | NoSuchAlgorithmException ex){
+			KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+			keyGen.init(AES_KEY_BIT, SecureRandom.getInstanceStrong());
+			return keyGen.generateKey();
+		}catch(NoSuchAlgorithmException ex){
 			throw new TestAdvisorCipherException(ex);
 		}
+	}
+
+	private void getSecretKey() throws TestAdvisorCipherException{
+		String encodedKey;
+		try {
+			encodedKey = keyring.getPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT);
+		} catch (PasswordAccessException e) {
+			//no key found
+			secretKey = createSecretKey();
+			try{
+				keyring.setPassword(KEYRING_DOMAIN, KEYRING_ACCOUNT, Base64.getEncoder().encodeToString(secretKey.getEncoded()));
+			} catch (PasswordAccessException ex) {
+				throw new TestAdvisorCipherException(ex);
+			}
+			return;
+		}
+
+		byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
+		// rebuild key using SecretKeySpec
+		secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");		
 	}
 
 	/**
@@ -285,28 +264,8 @@ public class SecretsManager {
 		return Base64.getDecoder().decode(string);
 	}
 
-	private boolean isStoredInClearText() {
+	public boolean isStoredInClearText() {
 		String encryptionActiveValue = registry.getRegistryProperties().getProperty(ENCRYPTION_ACTIVE_PROPERTY, "");
 		return Strings.isNullOrEmpty(encryptionActiveValue) || !ENCRYPTION_ACTIVE_VALUE.equalsIgnoreCase(encryptionActiveValue);
-	}
-	
-	private String createRandomPassword() throws TestAdvisorCipherException {
-	    int leftLimit = 48; // numeral '0'
-	    int rightLimit = 122; // letter 'z'
-	    int targetStringLength = 10;
-
-	    Random random;
-		try {
-			random = SecureRandom.getInstanceStrong();
-			return random.ints(leftLimit, rightLimit + 1)
-					.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-					.limit(targetStringLength)
-					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-					.toString();
-		} catch (NoSuchAlgorithmException e) {
-			throw new TestAdvisorCipherException(e);
-		} 
-
-	    
 	}
 }

@@ -8,7 +8,10 @@
 package com.salesforce.cte.testadvisor;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
+import com.github.javakeyring.BackendNotSupportedException;
+import com.github.javakeyring.Keyring;
+import com.github.javakeyring.PasswordAccessException;
 import com.salesforce.cte.helper.TestAdvisorCipherException;
 
 import org.junit.After;
@@ -27,10 +33,12 @@ import org.junit.Test;
 public class SecretsManagerTest {
     
     private Path root;
+    private Registry registry;
     
     @Before
     public void setup() throws IOException, TestAdvisorCipherException{
         root = Files.createTempDirectory("testadvisor");
+        registry = new Registry(root);
     }
 
     @Test
@@ -40,15 +48,11 @@ public class SecretsManagerTest {
             writer.write("portal.accesstoken=\n");
             writer.write("portal.refreshtoken=\n");
         }
-        SecretsManager manager = new SecretsManager(new Registry(root));
+        registry.loadRegistryProperties();
+        
+        SecretsManager manager = new SecretsManager(registry);
        
-        String accessToken = "testAccessToken";
-        String refreshToken = "testRefreshToken";
-
-        manager.setAccessToken(accessToken);
-        assertEquals(accessToken,manager.getAccessToken());
-        manager.setRefreshToken(refreshToken);
-        assertEquals(refreshToken,manager.getRefreshToken());
+        assertUnEncryptedToken(manager);
     }
 
     @Test
@@ -58,33 +62,96 @@ public class SecretsManagerTest {
             writer.write("portal.accesstoken=abc\n");
             writer.write("portal.refreshtoken=xyz\n");
         }
-        SecretsManager manager = new SecretsManager(new Registry(root),"passphase");
-        assertNotNull(manager);
-        String accessToken = "testAccessToken";
-        String refreshToken = "testRefreshToken";
+        registry.loadRegistryProperties();
 
-        manager.setAccessToken(accessToken);
-        assertEquals(accessToken,manager.getAccessToken());
-        manager.setRefreshToken(refreshToken);
-        assertEquals(refreshToken,manager.getRefreshToken());
+        SecretsManager manager1 = new SecretsManager(registry);
+        SecretsManager manager2 = new SecretsManager(registry);
+        if (manager1.isStoredInClearText())
+            assertUnEncryptedToken(manager1);
+        else
+            assertEncryptedToken(manager1,manager2);
     }
 
     @Test
-    public void encryptDefaultTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException{
+    public void encryptDefaultTest() throws IOException, TestAdvisorCipherException, NoSuchAlgorithmException, PasswordAccessException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
             writer.write("portal.token.encrypted=yes\n");
             writer.write("portal.accesstoken=abc\n");
             writer.write("portal.refreshtoken=xyz\n");
         }
-        SecretsManager manager = new SecretsManager(new Registry(root));
-        assertNotNull(manager);
+        registry.loadRegistryProperties();
+        
+        try {
+            Keyring keyring = Keyring.create();
+            keyring.deletePassword("TestAdvisor", "secretkey");
+            SecretsManager manager1 = new SecretsManager(registry,keyring);
+            SecretsManager manager2 = new SecretsManager(registry,keyring);
+            assertEncryptedToken(manager1,manager2);
+        } catch (BackendNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void mockExistingKeyTest() throws IOException, TestAdvisorCipherException, PasswordAccessException{
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
+            writer.write("portal.token.encrypted=yes\n");
+            writer.write("portal.accesstoken=abc\n");
+            writer.write("portal.refreshtoken=xyz\n");
+        }
+        registry.loadRegistryProperties();
+
+        String encodedKey = "O7vS3cpKnz1pS1HROimySxvoOdgYiI1kzUkbV+0uWVg=";
+        Keyring keyring = mock(Keyring.class);
+        when(keyring.getPassword(anyString(), anyString())).thenReturn(encodedKey);
+        SecretsManager manager1 = new SecretsManager(registry,keyring);
+        SecretsManager manager2 = new SecretsManager(registry,keyring);
+
+        assertEncryptedToken(manager1, manager2);
+    }
+
+    @Test
+    public void mockNewKeyTest() throws IOException, TestAdvisorCipherException, PasswordAccessException{
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(root.resolve("testadvisor.properties").toFile()))){
+            writer.write("portal.token.encrypted=yes\n");
+            writer.write("portal.accesstoken=abc\n");
+            writer.write("portal.refreshtoken=xyz\n");
+        }
+        registry.loadRegistryProperties();
+
+        Keyring keyring = mock(Keyring.class);
+        when(keyring.getPassword(anyString(), anyString())).thenThrow(PasswordAccessException.class);
+        SecretsManager manager1 = new SecretsManager(registry,keyring);
+
+        assertEncryptedToken(manager1, manager1);
+    }
+
+    private void assertEncryptedToken(SecretsManager manager1, SecretsManager manager2) throws IOException, TestAdvisorCipherException{
+        String accessToken = "testAccessToken";
+        String refreshToken = "testRefreshToken";
+
+        manager1.setAccessToken(accessToken);
+        registry.loadRegistryProperties();
+        assertEquals(accessToken,manager2.getAccessToken());
+        assertNotEquals(registry.getRegistryProperties().getProperty("portal.accesstoken"),manager2.getAccessToken());
+        manager2.setRefreshToken(refreshToken);
+        registry.loadRegistryProperties();
+        assertEquals(refreshToken,manager1.getRefreshToken());
+        assertNotEquals(registry.getRegistryProperties().getProperty("portal.refreshtoken"),manager1.getRefreshToken());
+    }
+
+    private void assertUnEncryptedToken(SecretsManager manager) throws IOException, TestAdvisorCipherException{
         String accessToken = "testAccessToken";
         String refreshToken = "testRefreshToken";
 
         manager.setAccessToken(accessToken);
+        registry.loadRegistryProperties();
         assertEquals(accessToken,manager.getAccessToken());
+        assertEquals(registry.getRegistryProperties().getProperty("portal.accesstoken"),manager.getAccessToken());
         manager.setRefreshToken(refreshToken);
+        registry.loadRegistryProperties();
         assertEquals(refreshToken,manager.getRefreshToken());
+        assertEquals(registry.getRegistryProperties().getProperty("portal.refreshtoken"),manager.getRefreshToken());
     }
 
     @After
