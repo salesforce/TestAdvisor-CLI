@@ -10,6 +10,7 @@ package com.salesforce.cte.adapter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -38,6 +39,11 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         }
         
         List<TestAdvisorTestCase> testCaseList = new ArrayList<>();
+        
+        // sort test case by thread id and start time
+        testAdvisorResult.testCaseExecutionList.sort(Comparator.comparing(TestCaseExecution::getThreadId)
+            .thenComparing(TestCaseExecution::getStartTime));
+
         for(TestCaseExecution testExecution : testAdvisorResult.testCaseExecutionList){
             List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
             for(TestEvent event : testExecution.eventList){
@@ -48,7 +54,7 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
             }
             
             testCaseList.add(new TestCaseBase(testExecution.getTestName(),testExecution.startTime,testExecution.endTime,
-                            testExecution.getTestStatus().toString(),testExecution.getTraceId(), testSignalList));
+                            testExecution.getTestStatus().toString(),testExecution.getIsConfiguration(), testExecution.getTraceId(), testSignalList));
         }
 
         return new TestRunBase("","",testAdvisorResult.version,testAdvisorResult.buildStartTime,testAdvisorResult.buildEndTime,testCaseList);

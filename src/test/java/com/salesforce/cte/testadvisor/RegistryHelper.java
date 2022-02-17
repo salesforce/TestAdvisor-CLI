@@ -134,10 +134,9 @@ public class RegistryHelper {
         testAdvisorResult.buildEndTime = testAdvisorResult.buildStartTime.plusSeconds(500);
         testAdvisorResult.testCaseExecutionList = new ArrayList<>();
 
-        TestCaseExecution testCaseExecution = new TestCaseExecution();
+        TestCaseExecution testCaseExecution = new TestCaseExecution("testcasePass");
         testCaseExecution.browser = "chrome";
         testCaseExecution.browserVersion = "89";
-        testCaseExecution.testName = "testcasePass";
         testCaseExecution.startTime = Instant.now();
         testCaseExecution.endTime = testCaseExecution.startTime.plusSeconds(5);
         testCaseExecution.testStatus = com.salesforce.cte.common.TestStatus.PASSED;

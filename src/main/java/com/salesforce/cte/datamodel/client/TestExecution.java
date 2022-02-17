@@ -26,6 +26,8 @@ public class TestExecution {
     @JsonProperty
     public TestStatus status;
     @JsonProperty
+    public boolean    isConfiguration;
+    @JsonProperty
     public String     traceId = "";
     @JsonProperty
     public String  testCaseName = ""; // Regex "[a-zA-Z0-9\-_]{1,80}"

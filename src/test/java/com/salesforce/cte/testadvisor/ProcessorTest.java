@@ -198,7 +198,7 @@ public class ProcessorTest{
                                             num, "" ));        
 
         TestCaseBase testcase = new TestCaseBase("TestCase",Instant.now().minusSeconds(secOffset), 
-            Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),signalList);
+            Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),false, signalList);
 
         return testcase;
     }
@@ -210,10 +210,9 @@ public class ProcessorTest{
         testAdvisorResult.buildEndTime = testAdvisorResult.buildStartTime.plusSeconds(500);
         testAdvisorResult.testCaseExecutionList = new ArrayList<>();
 
-        TestCaseExecution testCaseExecution = new TestCaseExecution();
+        TestCaseExecution testCaseExecution = new TestCaseExecution("testcasePass");
         testCaseExecution.browser = "chrome";
         testCaseExecution.browserVersion = "89";
-        testCaseExecution.testName = "testcasePass";
         testCaseExecution.startTime = Instant.now();
         testCaseExecution.endTime = testCaseExecution.startTime.plusSeconds(50);
         testCaseExecution.testStatus = com.salesforce.cte.common.TestStatus.PASSED;
