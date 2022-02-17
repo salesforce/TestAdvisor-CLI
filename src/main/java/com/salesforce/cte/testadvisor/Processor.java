@@ -184,11 +184,11 @@ public class Processor {
                 if (Configuration.getExportScreenshotDiffImage()){
                     File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
                     result = screenshotManager.screenshotsComparisonWithExcludedAreas(
-                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
+                        new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
                     ,currentStep.getExcludedAreas());
                 }else{
                     result = screenshotManager.screenshotsComparisonWithExcludedAreas(
-                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath())
+                        new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath())
                     ,currentStep.getExcludedAreas());
                 }
 
@@ -347,10 +347,12 @@ public class Processor {
      */
     private void getExcludedAreas(Path testrun, TestAdvisorTestCase current) throws IOException, ProcessException{
         LOGGER.log(Level.INFO,"Start getExcludedAreas for test {0}",current.getTestCaseFullName());
+        LOGGER.log(Level.INFO,"baseline test run {0}",testrun);
 
         Path baselineRun = registry.getBaselineTestRun(testrun, current.getTestCaseFullName());
         if (baselineRun == null) // failed to find a baseline run
             return;
+        LOGGER.log(Level.INFO,"control test run {0}",baselineRun);
 
         TestAdvisorTestCase baseline = getTestCaseFromTestRun(baselineRun,current.getTestCaseFullName());
 
@@ -375,6 +377,7 @@ public class Processor {
                     
             if(j<baselineSteps.size() && fileExist(baselineSteps.get(j).getTestSignalScreenshotPath())
                 && fileExist(currentStep.getTestSignalScreenshotPath())){
+                LOGGER.log(Level.INFO,"current step number {0}",currentStep.getTestSignalScreenshotRecorderNumber());
                 // find a match baseline step
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
                 // image comparison
@@ -382,8 +385,10 @@ public class Processor {
                 File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".ignoredareas.png").toFile();
                 ImageComparisonResult result = screenshotManager.screenshotsComparison(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
-                
-                currentStep.setExcludedAreas(result.getRectangles());
+                if (result.getRectangles() != null){
+                    LOGGER.log(Level.INFO,"exclude areas list size {0}",result.getRectangles().size());
+                    currentStep.setExcludedAreas(result.getRectangles());
+                }
                 j++;
             }
         }
