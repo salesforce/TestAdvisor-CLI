@@ -198,7 +198,7 @@ public class Processor {
                     TestSignal signal = createTestSignalFromEvent(event);
                     signal.screenshotDiffRatio = getDiffRatio(result); 
                     LOGGER.log(Level.INFO, "Found diff from screenshot comparison, ratio:{0}",signal.screenshotDiffRatio);
-                    signal.baselinScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
+                    signal.baselineScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
                     if (Configuration.getExportScreenshotDiffArea())
                         signal.screenshotDiffAreas = result.getRectangles();
                     signal.previousSignalTime = prevStep == null ?  null : prevStep.getTestSignalTime();
