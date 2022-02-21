@@ -115,7 +115,7 @@ public class RegistryHelper {
         signal.signalValue = signalValue;
         signal.signalTime = now.plusSeconds(2);
         signal.errorMessage = "PreDefined";
-        signal.baselinScreenshotRecorderNumber = 1;
+        signal.baselineScreenshotRecorderNumber = 1;
         signal.screenshotRecorderNumber = 1;
         signal.previousSignalTime = signal.signalTime.minusSeconds(5);
         signal.locatorHash = "locator";
