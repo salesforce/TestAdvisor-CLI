@@ -187,11 +187,11 @@ public class Processor {
                 if (Configuration.getExportScreenshotDiffImage()){
                     File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".compareresult.png").toFile();
                     result = screenshotManager.screenshotsComparisonWithExcludedAreas(
-                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
+                        new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile
                     ,currentStep.getExcludedAreas());
                 }else{
                     result = screenshotManager.screenshotsComparisonWithExcludedAreas(
-                    new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath())
+                        new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath())
                     ,currentStep.getExcludedAreas());
                 }
 
@@ -201,7 +201,7 @@ public class Processor {
                     TestSignal signal = createTestSignalFromEvent(event);
                     signal.screenshotDiffRatio = getDiffRatio(result); 
                     LOGGER.log(Level.INFO, "Found diff from screenshot comparison, ratio:{0}",signal.screenshotDiffRatio);
-                    signal.baselinScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
+                    signal.baselineScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
                     if (Configuration.getExportScreenshotDiffArea())
                         signal.screenshotDiffAreas = result.getRectangles();
                     signal.previousSignalTime = prevStep == null ?  null : prevStep.getTestSignalTime();
@@ -350,10 +350,13 @@ public class Processor {
      * @throws ProcessException
      */
     private void setExcludedAreas(Path testrun, TestAdvisorTestCase current) throws IOException, ProcessException{
+        LOGGER.log(Level.INFO,"Start getExcludedAreas for test {0}",current.getTestCaseFullName());
+        LOGGER.log(Level.INFO,"baseline test run {0}",testrun);
+
         Path baselineRun = registry.getBaselineTestRun(testrun, current.getTestCaseFullName());
         if (baselineRun == null) // failed to find a baseline run
             return;
-        LOGGER.log(Level.INFO,"Found control test run to calculate excluded areas {0}",baselineRun);
+        LOGGER.log(Level.INFO,"control test run {0}",baselineRun);
 
         TestAdvisorTestCase baseline = getTestCaseFromTestRun(baselineRun,current.getTestCaseFullName());
 
@@ -378,6 +381,7 @@ public class Processor {
                     
             if(j<baselineSteps.size() && fileExist(baselineSteps.get(j).getTestSignalScreenshotPath())
                 && fileExist(currentStep.getTestSignalScreenshotPath())){
+                LOGGER.log(Level.INFO,"current step number {0}",currentStep.getTestSignalScreenshotRecorderNumber());
                 // find a match baseline step
                 TestAdvisorTestSignal baselineStep = baselineSteps.get(j);
                 // image comparison
@@ -385,9 +389,8 @@ public class Processor {
                 File resultFile = currentPath.getParent().resolve(currentPath.getFileName().toString()+".ignoredareas.png").toFile();
                 ImageComparisonResult result = screenshotManager.screenshotsComparison(
                     new File(baselineStep.getTestSignalScreenshotPath()),new File(currentStep.getTestSignalScreenshotPath()),resultFile);
-                
-                if (!result.getRectangles().isEmpty()){
-                    LOGGER.log(Level.INFO,"Set excluded areas for {0}",currentPath);
+                if (result.getRectangles() != null){
+                    LOGGER.log(Level.INFO,"exclude areas list size {0}",result.getRectangles().size());
                     currentStep.setExcludedAreas(result.getRectangles());
                 }
                 j++;
