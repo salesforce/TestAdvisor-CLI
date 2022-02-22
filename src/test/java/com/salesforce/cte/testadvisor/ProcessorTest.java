@@ -198,7 +198,7 @@ public class ProcessorTest{
                                             num, "" ));        
 
         TestCaseBase testcase = new TestCaseBase("TestCase",Instant.now().minusSeconds(secOffset), 
-            Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),false, signalList);
+            Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),false, 0, signalList);
 
         return testcase;
     }
