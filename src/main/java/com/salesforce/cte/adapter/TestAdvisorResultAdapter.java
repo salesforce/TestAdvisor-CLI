@@ -41,23 +41,23 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         List<TestAdvisorTestCase> testCaseList = new ArrayList<>();
         
         // sort test case by thread id and start time
-        testAdvisorResult.testCaseExecutionList.sort(Comparator.comparing(TestCaseExecution::getThreadId)
+        testAdvisorResult.getTestCaseExecutionList().sort(Comparator.comparing(TestCaseExecution::getThreadId)
             .thenComparing(TestCaseExecution::getStartTime));
 
-        for(TestCaseExecution testExecution : testAdvisorResult.testCaseExecutionList){
+        for(TestCaseExecution testExecution : testAdvisorResult.getTestCaseExecutionList()){
             List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
-            for(TestEvent event : testExecution.eventList){
+            for(TestEvent event : testExecution.getEventList()){
                 testSignalList.add(new TestSignalBase(event.getEventSource(),
                             event.getEventContent(),event.getEventTime(), event.getEventLevel(), event.getSeleniumCmd(),
                             event.getSeleniumCmdParam(),event.getSeleniumLocator(), event.getScreenshotRecordNumber(),
                             event.getScreenshotPath()));
             }
             
-            testCaseList.add(new TestCaseBase(testExecution.getTestName(),testExecution.startTime,testExecution.endTime,
-                            testExecution.getTestStatus().toString(),testExecution.getIsConfiguration(), testExecution.getTraceId(), testSignalList));
+            testCaseList.add(new TestCaseBase(testExecution.getTestName(),testExecution.getStartTime(),testExecution.getEndTime(),
+                            testExecution.getTestStatus().toString(),testExecution.isConfiguration(), testExecution.getTraceId(), testSignalList));
         }
 
-        return new TestRunBase("","",testAdvisorResult.version,testAdvisorResult.buildStartTime,testAdvisorResult.buildEndTime,testCaseList);
+        return new TestRunBase("","",testAdvisorResult.getVersion(),testAdvisorResult.getBuildStartTime(),testAdvisorResult.getBuildEndTime(),testCaseList);
     }
 
     

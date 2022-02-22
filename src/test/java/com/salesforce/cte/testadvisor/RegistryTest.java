@@ -255,7 +255,7 @@ public class RegistryTest {
 
         Path testrun1 = RegistryHelper.createTestRun(registry,0);
         TestAdvisorResult result = registry.getTestAdvisorResult(testrun1);
-        assertEquals(0, result.testCaseExecutionList.size());
+        assertEquals(0, result.getTestCaseExecutionList().size());
 
     }
 

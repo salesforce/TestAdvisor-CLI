@@ -204,7 +204,7 @@ public class Processor {
                     signal.baselineScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
                     if (Configuration.getExportScreenshotDiffArea())
                         signal.screenshotDiffAreas = result.getRectangles();
-                    signal.previousSignalTime = prevStep == null ?  null : prevStep.getTestSignalTime();
+                    signal.previousSignalTime = prevStep == null ?  current.getTestCaseStartTime() : prevStep.getTestSignalTime();
                     signalList.add(signal);
                 }
                 matchCount++;
