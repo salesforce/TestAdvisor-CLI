@@ -344,7 +344,7 @@ public class Registry {
      * @return Baseline test run path. null if no baseline was found.
      * @throws IOException throws this exception when fails to find baseline test run 
      */
-    public Path getBaselineTestRun(Path currentTestRun, String testCaseName) throws IOException{
+    public Path     getBaselineTestRun(Path currentTestRun, String testCaseName) throws IOException{
         List<Path> beforeTestRunList = findBeforeTestRunList(currentTestRun);
         
         // no test run found
@@ -374,8 +374,8 @@ public class Registry {
      */
     private boolean containsPassedTest(Path testRun, String testCaseName) throws IOException{
         TestAdvisorResult result = getTestAdvisorResult(testRun);
-        for(TestCaseExecution test : result.testCaseExecutionList){
-            if (test.testName.equals(testCaseName) && test.testStatus.equals(com.salesforce.cte.common.TestStatus.PASSED))
+        for(TestCaseExecution test : result.getTestCaseExecutionList()){
+            if (test.getTestName().equals(testCaseName) && test.getTestStatus().equals(com.salesforce.cte.common.TestStatus.PASSED))
                 return true;
         }
         return false;

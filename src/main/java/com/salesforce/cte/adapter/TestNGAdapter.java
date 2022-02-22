@@ -62,7 +62,7 @@ public class TestNGAdapter implements TestAdvisorAdapter {
                         String testCaseName = cls.getName() + "." + method.getName();
                         List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
                         TestCaseBase testCase = new TestCaseBase(testCaseName,startTime.toInstant(),endTime.toInstant(),
-                                                        method.getStatus(),testSignalList);
+                                                        method.getStatus(),false, 0, testSignalList);
                         testCaseList.add(testCase); 
                         if (method.getException() == null) continue;
                         TestSignalBase signal = new TestSignalBase(TestSignalEnum.AUTOMATION.toString(),

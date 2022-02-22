@@ -87,18 +87,21 @@ public class Processor {
             testExection.startTime = testCase.getTestCaseStartTime();
             testExection.endTime = testCase.getTestCaseEndTime();
             testExection.status = enumPartialMatch(TestStatus.class, testCase.getTestCaseStatus());
+            testExection.isConfiguration = testCase.getIsConfiguration();
             testExection.traceId = testCase.getTraceId();
             testExection.testSignals = new ArrayList<>();
 
             Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());
             if (baseline != null && Configuration.getIsScreenshotComparisonEnabled()){
+                LOGGER.log(Level.INFO,"Found baseline {0}", baseline);
                 testExection.baselineBuildId = registry.getTestRunId(baseline);
                 testExection.baselineBuildIdStartTime = getTestRunStartTime(baseline);
                 testExection.baselineSalesforceBuildId = getSalesforceId(baseline);
                 //find baseline test case
                 TestAdvisorTestCase baselineCase = getTestCaseFromTestRun(baseline,testCase.getTestCaseFullName());
+                
                 //try to find excluded areas for baseline test case
-                getExcludedAreas(baseline,testCase);
+                setExcludedAreas(baseline,testCase);
                 //find similarity and extract signals
                 testExection.similarity = compareTestCaseExecution(baselineCase, testCase, testExection.testSignals);
             }
@@ -201,7 +204,7 @@ public class Processor {
                     signal.baselineScreenshotRecorderNumber = baselineStep.getTestSignalScreenshotRecorderNumber();
                     if (Configuration.getExportScreenshotDiffArea())
                         signal.screenshotDiffAreas = result.getRectangles();
-                    signal.previousSignalTime = prevStep == null ?  null : prevStep.getTestSignalTime();
+                    signal.previousSignalTime = prevStep == null ?  current.getTestCaseStartTime() : prevStep.getTestSignalTime();
                     signalList.add(signal);
                 }
                 matchCount++;
@@ -247,7 +250,7 @@ public class Processor {
         signal.signalTime = event.getTestSignalTime();
         signal.screenshotRecorderNumber = event.getTestSignalScreenshotRecorderNumber();
         //signal.locator = event.getTestSignalSeleniumLocator();
-        signal.locatorHash = getMD5Hash(signal.locator);
+        signal.locatorHash = getHash(signal.locator);
         signal.seleniumCmd = event.getTestSignalSeleniumCmd();
         return signal;
     }
@@ -286,13 +289,13 @@ public class Processor {
                 && event1.getTestSignalSeleniumLocator().equals(event2.getTestSignalSeleniumLocator());
     }
 
-    private String getMD5Hash(String s) {
+    private String getHash(String s) {
         if (s==null || s.isEmpty()) 
             return "";
 
         MessageDigest messageDigest;
         try {
-            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             LOGGER.warning(e.toString());
             return "";
@@ -339,13 +342,14 @@ public class Processor {
     }
 
     /**
-     * Try to find excluded areas for current test case from image comparison
+     * Try to set excluded areas for current test case from image comparison
+     * excluded areas are defined as different image areas by compare last 2 success test runs
      * @param testrun
      * @param current
      * @throws IOException
      * @throws ProcessException
      */
-    private void getExcludedAreas(Path testrun, TestAdvisorTestCase current) throws IOException, ProcessException{
+    private void setExcludedAreas(Path testrun, TestAdvisorTestCase current) throws IOException, ProcessException{
         LOGGER.log(Level.INFO,"Start getExcludedAreas for test {0}",current.getTestCaseFullName());
         LOGGER.log(Level.INFO,"baseline test run {0}",testrun);
 

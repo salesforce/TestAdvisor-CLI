@@ -3,7 +3,7 @@
 
 	<groupId>com.salesforce.cte</groupId>
 	<artifactId>testadvisor-cli</artifactId>
-	<version>0.2.3-SNAPSHOT</version>
+	<version>0.2.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>testadvisor-cli</name>
@@ -28,7 +28,7 @@
 
 		<apache.httpclient.version>4.5.13</apache.httpclient.version>
 		<org.json.version>20210307</org.json.version>
-		<google.guava.version>30.1.1-jre</google.guava.version>
+		<google.guava.version>31.0.1-jre</google.guava.version>
 		<java-keyring.version>1.0.1</java-keyring.version>
 	</properties>
 
@@ -98,12 +98,25 @@
 		<dependency>
 			<groupId>com.salesforce.cte</groupId>
 			<artifactId>testadvisor-lib</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.4</version>
 		</dependency>	
 		<dependency>
 			<groupId>com.github.romankh3</groupId>
 			<artifactId>image-comparison</artifactId>
 			<version>4.4.0</version>
+		</dependency>
+		<!-- Add the following 2 dependency due to TestNG 7.3 depends on old version with security vulnerability-->
+		<!-- https://mvnrepository.com/artifact/org.apache.ant/ant -->
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.10.12</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.30</version>
 		</dependency>
 	</dependencies>
 
@@ -267,7 +280,7 @@
 
 	<scm>
 		<developerConnection>scm:git:git@git.soma.salesforce.com:cqe/DrillBit-CLI.git</developerConnection>
-		<tag>v0.2.2</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>

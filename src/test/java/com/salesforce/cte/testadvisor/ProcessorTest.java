@@ -198,41 +198,41 @@ public class ProcessorTest{
                                             num, "" ));        
 
         TestCaseBase testcase = new TestCaseBase("TestCase",Instant.now().minusSeconds(secOffset), 
-            Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),signalList);
+            Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),false, 0, signalList);
 
         return testcase;
     }
 
     public TestAdvisorResult createTestAdvisorResult() throws IOException{
         TestAdvisorResult testAdvisorResult = new TestAdvisorResult();
-        testAdvisorResult.version = "1.0.0";
-        testAdvisorResult.buildStartTime = Instant.now();
-        testAdvisorResult.buildEndTime = testAdvisorResult.buildStartTime.plusSeconds(500);
-        testAdvisorResult.testCaseExecutionList = new ArrayList<>();
+        testAdvisorResult.setVersion("1.0.0");
+        testAdvisorResult.setBuildStartTime(Instant.now());
+        testAdvisorResult.setBuildEndTime(testAdvisorResult.getBuildStartTime().plusSeconds(500));
+
 
         TestCaseExecution testCaseExecution = new TestCaseExecution();
-        testCaseExecution.browser = "chrome";
-        testCaseExecution.browserVersion = "89";
-        testCaseExecution.testName = "testcasePass";
-        testCaseExecution.startTime = Instant.now();
-        testCaseExecution.endTime = testCaseExecution.startTime.plusSeconds(50);
-        testCaseExecution.testStatus = com.salesforce.cte.common.TestStatus.PASSED;
-        testCaseExecution.screenResolution = "1920*1080";
-        testCaseExecution.eventList.add(new TestEvent("eventContent1", Level.SEVERE.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent2", Level.WARNING.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent3", Level.INFO.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent4", Level.INFO.toString(), "seleniumCommand1", 
+        testCaseExecution.setTestName("testcasePass");
+        testCaseExecution.setBrowser("chrome");
+        testCaseExecution.setBrowserVersion("89");
+        testCaseExecution.setStartTime(Instant.now());
+        testCaseExecution.setEndTime(testCaseExecution.getStartTime().plusSeconds(50));
+        testCaseExecution.setTestStatus(com.salesforce.cte.common.TestStatus.PASSED);
+        testCaseExecution.setScreenResolution("1920*1080");
+        testCaseExecution.getEventList().add(new TestEvent("eventContent1", Level.SEVERE.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent2", Level.WARNING.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent3", Level.INFO.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent4", Level.INFO.toString(), "seleniumCommand1", 
                     "seleniumParam", "locator1", 1, createSreenshot("test").toFile()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent5", Level.SEVERE.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent6", Level.WARNING.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent7", Level.INFO.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent", Level.INFO.toString(), "seleniumCommand2", 
+        testCaseExecution.getEventList().add(new TestEvent("eventContent5", Level.SEVERE.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent6", Level.WARNING.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent7", Level.INFO.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent", Level.INFO.toString(), "seleniumCommand2", 
                     "seleniumParam", "locator2", 1, createSreenshot("test").toFile()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent8", Level.SEVERE.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent9", Level.WARNING.toString()));
-        testCaseExecution.eventList.add(new TestEvent("eventContent10", Level.INFO.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent8", Level.SEVERE.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent9", Level.WARNING.toString()));
+        testCaseExecution.getEventList().add(new TestEvent("eventContent10", Level.INFO.toString()));
 
-        testAdvisorResult.testCaseExecutionList.add(testCaseExecution);
+        testAdvisorResult.getTestCaseExecutionList().add(testCaseExecution);
 
         return testAdvisorResult;
     }

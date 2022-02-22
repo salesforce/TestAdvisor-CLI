@@ -20,21 +20,25 @@ public class TestCaseBase implements TestAdvisorTestCase {
     private Instant testCaseStartTime;
     private Instant testCaseEndTime;
     private String  testCaseStatus;
+    private boolean isConfiguration;
+    private long threadId;
     private String traceId;
     private List<TestAdvisorTestSignal> testCaseSignalList;
 
     public TestCaseBase(String name, Instant start, Instant end, 
-                    String status, List<TestAdvisorTestSignal> signalList){
+                    String status, Boolean isConfiguration, long threadId, List<TestAdvisorTestSignal> signalList){
         testCaseFullName = name;
         testCaseStartTime = start;
         testCaseEndTime = end;
         testCaseStatus = status;
+        this.isConfiguration = isConfiguration;
+        this.threadId = threadId;
         testCaseSignalList = signalList;
     }
 
     public TestCaseBase(String name, Instant start, Instant end, 
-                    String status, String traceId, List<TestAdvisorTestSignal> signalList){
-        this(name,start,end,status,signalList);
+                    String status, boolean isConfiguration, long threadId, String traceId, List<TestAdvisorTestSignal> signalList){
+        this(name,start,end,status, isConfiguration, threadId, signalList);
         this.traceId=traceId;
     }
 
@@ -66,6 +70,16 @@ public class TestCaseBase implements TestAdvisorTestCase {
     @Override
     public String getTraceId() {
         return traceId;
+    }
+
+    @Override
+    public boolean getIsConfiguration() {
+        return isConfiguration;
+    }
+
+    @Override
+    public long getThreadId() {
+        return threadId;
     }
     
 }
