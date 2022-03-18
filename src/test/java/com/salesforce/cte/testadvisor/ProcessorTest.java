@@ -168,6 +168,31 @@ public class ProcessorTest{
         assertEquals(0, processor.compareTestCaseExecution(baseline, current, signalList));
     }
 
+    @Test
+    public void testSeleniumUrl() throws IOException{
+        TestAdvisorTestCase current = createTeseCase(50, 200, "selcmd2");
+        List<TestSignal> signalList = new ArrayList<>();
+        System.setProperty("testadvisor.selenium.url","true");
+        System.setProperty("testadvisor.signallevel","OFF");
+        processor.extractTestSignals(current, signalList);
+        assertEquals(1, signalList.size());
+        assertEquals(TestEventType.URL, signalList.get(0).signalName); 
+        System.setProperty("testadvisor.signallevel","WARNING");
+        System.setProperty("testadvisor.selenium.url","false");
+    }
+
+    @Test
+    public void testSeleniumException() throws IOException{
+        TestAdvisorTestCase current = createTeseCase(50, 200, "selcmd2");
+        List<TestSignal> signalList = new ArrayList<>();
+        System.setProperty("testadvisor.selenium.exception","true");
+        System.setProperty("testadvisor.signallevel","OFF");
+        processor.extractTestSignals(current, signalList);
+        assertEquals(1, signalList.size());
+        assertEquals(TestEventType.EXCEPTION, signalList.get(0).signalName); 
+        System.setProperty("testadvisor.signallevel","WARNING");
+        System.setProperty("testadvisor.selenium.exception","false");
+    }
 
     private TestCaseBase createTeseCase(int secOffset, int num, String seleniumCmd) throws IOException{
         List<TestAdvisorTestSignal> signalList = new ArrayList<>();
@@ -196,7 +221,13 @@ public class ProcessorTest{
                                             num, "" ));                  
         signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "INFO", Instant.now().minusSeconds(300), 
                                             Level.INFO.toString(), "", "", "", 
-                                            num, "" ));        
+                                            num, "" ));     
+        signalList.add(new TestSignalBase(TestEventType.URL, "url", Instant.now().minusSeconds(300), 
+                                            Level.INFO.toString(), "", "", "", 
+                                            num, "" ));                                                    
+        signalList.add(new TestSignalBase(TestEventType.EXCEPTION, "exception", Instant.now().minusSeconds(300), 
+                                            Level.INFO.toString(), "", "", "", 
+                                            num, "" ));     
 
         TestCaseBase testcase = new TestCaseBase("TestCase",Instant.now().minusSeconds(secOffset), 
             Instant.now(),com.salesforce.cte.common.TestStatus.PASSED.toString(),false, 0, signalList);

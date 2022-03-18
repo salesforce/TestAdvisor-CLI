@@ -17,20 +17,71 @@ import org.junit.Test;
 public class ConfigurationTest {
     
     @Test
-    public void testGetIsScreenshotComparisonEnabled(){
-        System.clearProperty("testadvisor.screenshotcomparison");
-        assertTrue(!Configuration.getIsScreenshotComparisonEnabled());
+    public void testGetIsSeleniumUrlEnabled(){
+        System.clearProperty("testadvisor.selenium.url");
+        assertTrue(!Configuration.getIsSeleniumUrlEnabled());
 
-        System.setProperty("testadvisor.screenshotcomparison","true");
-        assertTrue(Configuration.getIsScreenshotComparisonEnabled());
+        System.setProperty("testadvisor.selenium.url","true");
+        assertTrue(Configuration.getIsSeleniumUrlEnabled());
 
-        System.setProperty("testadvisor.screenshotcomparison","false");
-        assertTrue(!Configuration.getIsScreenshotComparisonEnabled());
+        System.setProperty("testadvisor.selenium.url","false");
+        assertTrue(!Configuration.getIsSeleniumUrlEnabled());
 
-        System.setProperty("testadvisor.screenshotcomparison","ok");
-        assertTrue(!Configuration.getIsScreenshotComparisonEnabled());
+        System.setProperty("testadvisor.selenium.url","ok");
+        assertTrue(!Configuration.getIsSeleniumUrlEnabled());
 
-        System.clearProperty("testadvisor.screenshotcomparison");
+        System.clearProperty("testadvisor.selenium.url");
+    }
+
+    @Test
+    public void testGetIsSeleniumExceptionEnabled(){
+        System.clearProperty("testadvisor.selenium.exception");
+        assertTrue(!Configuration.getIsSeleniumExceptionEnabled());
+
+        System.setProperty("testadvisor.selenium.exception","true");
+        assertTrue(Configuration.getIsSeleniumExceptionEnabled());
+
+        System.setProperty("testadvisor.selenium.exception","false");
+        assertTrue(!Configuration.getIsSeleniumExceptionEnabled());
+
+        System.setProperty("testadvisor.selenium.exception","ok");
+        assertTrue(!Configuration.getIsSeleniumExceptionEnabled());
+
+        System.clearProperty("testadvisor.selenium.exception");
+    }
+
+    @Test
+    public void testGetIsSeleniumErrorMessageEnabled(){
+        System.clearProperty("testadvisor.selenium.errormessage");
+        assertTrue(!Configuration.getIsSeleniumErrorMessageEnabled());
+
+        System.setProperty("testadvisor.selenium.errormessage","true");
+        assertTrue(Configuration.getIsSeleniumErrorMessageEnabled());
+
+        System.setProperty("testadvisor.selenium.errormessage","false");
+        assertTrue(!Configuration.getIsSeleniumErrorMessageEnabled());
+
+        System.setProperty("testadvisor.selenium.errormessage","ok");
+        assertTrue(!Configuration.getIsSeleniumErrorMessageEnabled());
+
+        System.clearProperty("testadvisor.selenium.errormessage");
+    }
+
+    @Test
+    public void testGetIsSeleniumScreenshotEnabled(){
+        System.clearProperty("testadvisor.selenium.screenshot");
+        assertTrue(!Configuration.getIsSeleniumScreenshotEnabled());
+
+        System.setProperty("testadvisor.selenium.screenshot","true");
+        assertTrue(Configuration.getIsSeleniumScreenshotEnabled());
+
+        System.setProperty("testadvisor.selenium.screenshot","false");
+        assertTrue(!Configuration.getIsSeleniumScreenshotEnabled());
+
+        System.setProperty("testadvisor.selenium.screenshot","ok");
+        assertTrue(!Configuration.getIsSeleniumScreenshotEnabled());
+
+        System.clearProperty("testadvisor.selenium.screenshot");
     }
 
     @Test
