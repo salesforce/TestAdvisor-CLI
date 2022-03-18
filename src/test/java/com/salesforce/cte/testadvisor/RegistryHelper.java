@@ -29,6 +29,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.romankh3.image.comparison.model.Rectangle;
 import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.common.TestCaseExecution;
+import com.salesforce.cte.common.TestEventType;
 import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 import com.salesforce.cte.datamodel.client.TestSignal;
@@ -67,17 +68,17 @@ public class RegistryHelper {
         testRunSignal.testExecutions = new ArrayList<>();
 
         TestExecution testExecution = createTestExecution("testcaseFail",TestStatus.FAIL);
-        testExecution.testSignals.add(createTestSignal("Selenium","Exception"));
-        testExecution.testSignals.add(createTestSignal("Automation","Exception"));
+        testExecution.testSignals.add(createTestSignal(TestEventType.EXCEPTION,"Exception"));
+        testExecution.testSignals.add(createTestSignal(TestEventType.AUTOMATION,"Exception"));
         testRunSignal.testExecutions.add(testExecution);
 
         testExecution = createTestExecution("testcasePass",TestStatus.PASS);
-        testExecution.testSignals.add(createTestSignal("Selenium","Exception"));
-        testExecution.testSignals.add(createTestSignal("Automation","Exception"));
+        testExecution.testSignals.add(createTestSignal(TestEventType.EXCEPTION,"Exception"));
+        testExecution.testSignals.add(createTestSignal(TestEventType.AUTOMATION,"Exception"));
         testRunSignal.testExecutions.add(testExecution);
 
         testExecution = createTestExecution("testcaseWithRedundantExceptions",TestStatus.FAIL);
-        final String signalName = "com.salesforce.cte.listener.selenium.AbstractEventListener";
+        final TestEventType signalName = TestEventType.AUTOMATION;
         final String exceptionType1 = "org.openqa.selenium.NoSuchElementException";
         final String exceptionType2 = "org.openqa.selenium.StaleElementException";
         final String exceptionType3 = "java.lang.NullPointerException";
@@ -106,7 +107,7 @@ public class RegistryHelper {
         return testExecution;
     }
 
-    public static TestSignal createTestSignal(String signalName, String signalValue){
+    public static TestSignal createTestSignal(TestEventType signalName, String signalValue){
         Instant now = Instant.now();
 
         TestSignal signal = new TestSignal();

@@ -37,6 +37,7 @@ import com.salesforce.cte.adapter.TestSignalBase;
 import com.salesforce.cte.common.TestAdvisorResult;
 import com.salesforce.cte.common.TestCaseExecution;
 import com.salesforce.cte.common.TestEvent;
+import com.salesforce.cte.common.TestEventType;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 import com.salesforce.cte.datamodel.client.TestSignal;
 import com.salesforce.cte.datamodel.client.TestStatus;
@@ -171,29 +172,29 @@ public class ProcessorTest{
     private TestCaseBase createTeseCase(int secOffset, int num, String seleniumCmd) throws IOException{
         List<TestAdvisorTestSignal> signalList = new ArrayList<>();
 
-        signalList.add(new TestSignalBase("signal name 1", "SEVERE", Instant.now().minusSeconds(1000), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "SEVERE", Instant.now().minusSeconds(1000), 
                                             Level.SEVERE.toString(), "", "", "", 
                                             num, "" ));
-        signalList.add(new TestSignalBase("signal name 2", "WARNING", Instant.now().minusSeconds(900), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "WARNING", Instant.now().minusSeconds(900), 
                                             Level.WARNING.toString(), "", "", "", 
                                             num, "" ));                  
-        signalList.add(new TestSignalBase("signal name 3", "INFO", Instant.now().minusSeconds(800), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "INFO", Instant.now().minusSeconds(800), 
                                             Level.INFO.toString(), "", "", "", 
                                             num, "" ));                    
-        signalList.add(new TestSignalBase("signal name 4", "selenium signal value", Instant.now().minusSeconds(700), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "selenium signal value", Instant.now().minusSeconds(700), 
                                             Level.INFO.toString(), seleniumCmd, "slenium param", "selenium locaor1", 
                                             num, createSreenshot("test").toString()));
-        signalList.add(new TestSignalBase("signal name 5", "selenium signal value", Instant.now().minusSeconds(600), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "selenium signal value", Instant.now().minusSeconds(600), 
                                             Level.INFO.toString(), seleniumCmd, "slenium param", "selenium locaor2", 
                                             num, createSreenshot("test").toString()));
 
-        signalList.add(new TestSignalBase("signal name 6 ", "SEVERE", Instant.now().minusSeconds(500), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "SEVERE", Instant.now().minusSeconds(500), 
                                             Level.SEVERE.toString(), "", "", "", 
                                             num, "" ));
-        signalList.add(new TestSignalBase("signal name 7", "WARNING", Instant.now().minusSeconds(400), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "WARNING", Instant.now().minusSeconds(400), 
                                             Level.WARNING.toString(), "", "", "", 
                                             num, "" ));                  
-        signalList.add(new TestSignalBase("signal name 8", "INFO", Instant.now().minusSeconds(300), 
+        signalList.add(new TestSignalBase(TestEventType.AUTOMATION, "INFO", Instant.now().minusSeconds(300), 
                                             Level.INFO.toString(), "", "", "", 
                                             num, "" ));        
 
@@ -218,19 +219,19 @@ public class ProcessorTest{
         testCaseExecution.setEndTime(testCaseExecution.getStartTime().plusSeconds(50));
         testCaseExecution.setTestStatus(com.salesforce.cte.common.TestStatus.PASSED);
         testCaseExecution.setScreenResolution("1920*1080");
-        testCaseExecution.getEventList().add(new TestEvent("eventContent1", Level.SEVERE.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent2", Level.WARNING.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent3", Level.INFO.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent4", Level.INFO.toString(), "seleniumCommand1", 
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent1", Level.SEVERE.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent2", Level.WARNING.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent3", Level.INFO.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent4", Level.INFO.toString(), "seleniumCommand1", 
                     "seleniumParam", "locator1", 1, createSreenshot("test").toFile()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent5", Level.SEVERE.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent6", Level.WARNING.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent7", Level.INFO.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent", Level.INFO.toString(), "seleniumCommand2", 
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent5", Level.SEVERE.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent6", Level.WARNING.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent7", Level.INFO.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent", Level.INFO.toString(), "seleniumCommand2", 
                     "seleniumParam", "locator2", 1, createSreenshot("test").toFile()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent8", Level.SEVERE.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent9", Level.WARNING.toString()));
-        testCaseExecution.getEventList().add(new TestEvent("eventContent10", Level.INFO.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent8", Level.SEVERE.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent9", Level.WARNING.toString()));
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent10", Level.INFO.toString()));
 
         testAdvisorResult.getTestCaseExecutionList().add(testCaseExecution);
 

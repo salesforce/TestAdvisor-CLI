@@ -16,7 +16,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import com.salesforce.cte.datamodel.client.TestSignalEnum;
+import com.salesforce.cte.common.TestEventType;
 import com.salesforce.cte.datamodel.testng.Class;
 import com.salesforce.cte.datamodel.testng.Suite;
 import com.salesforce.cte.datamodel.testng.Test;
@@ -65,7 +65,7 @@ public class TestNGAdapter implements TestAdvisorAdapter {
                                                         method.getStatus(),false, 0, testSignalList);
                         testCaseList.add(testCase); 
                         if (method.getException() == null) continue;
-                        TestSignalBase signal = new TestSignalBase(TestSignalEnum.AUTOMATION.toString(),
+                        TestSignalBase signal = new TestSignalBase(TestEventType.AUTOMATION,
                                                                 method.getException().getClazz(),
                                                                 endTime.toInstant());
                         testSignalList.add(signal);  
