@@ -47,7 +47,7 @@ public class TestAdvisorResultAdapter implements TestAdvisorAdapter {
         for(TestCaseExecution testExecution : testAdvisorResult.getTestCaseExecutionList()){
             List<TestAdvisorTestSignal> testSignalList = new ArrayList<>();
             for(TestEvent event : testExecution.getEventList()){
-                testSignalList.add(new TestSignalBase(event.getEventSource(),
+                testSignalList.add(new TestSignalBase(event.getEventType(),
                             event.getEventContent(),event.getEventTime(), event.getEventLevel(), event.getSeleniumCmd(),
                             event.getSeleniumCmdParam(),event.getSeleniumLocator(), event.getScreenshotRecordNumber(),
                             event.getScreenshotPath()));

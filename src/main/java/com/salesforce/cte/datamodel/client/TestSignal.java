@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.common.TestEventType;
 
 /**
  * @author Yibing Tao
@@ -23,7 +24,7 @@ import com.github.romankh3.image.comparison.model.Rectangle;
 public class TestSignal {
     
     @JsonProperty
-    public String   signalName="";    
+    public TestEventType   signalName;    
     @JsonProperty
     public String   signalValue="";    // Regex "[a-zA-Z0-9\-\._]{1,1000}"
     @JsonProperty

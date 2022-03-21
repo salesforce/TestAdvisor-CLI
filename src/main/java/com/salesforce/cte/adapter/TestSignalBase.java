@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.common.TestEventType;
 
 /**
  * @author Yibing TAo
@@ -22,7 +23,7 @@ import com.github.romankh3.image.comparison.model.Rectangle;
 public class TestSignalBase implements TestAdvisorTestSignal{
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
-    private String signalName;
+    private TestEventType signalName;
     private String signalValue;
     private Instant signalTime;
     private Level signalLevel = Level.INFO;
@@ -33,13 +34,13 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     private String screenshotPath;
     private List<Rectangle> excludedAreas = new ArrayList<>();
 
-    public TestSignalBase(String name, String value, Instant time){
-        signalName = name == null ? "" : name;
+    public TestSignalBase(TestEventType name, String value, Instant time){
+        signalName = name ;
         signalValue = value == null ? "" : value;
         signalTime = time;
     }
 
-    public TestSignalBase(String name, String value, Instant time, 
+    public TestSignalBase(TestEventType name, String value, Instant time, 
         String level, String cmd, String param, String locator, int num, String path){
         this(name,value,time);
         try{
@@ -55,8 +56,8 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     }
 
     @Override
-    public String getTestSignalName() {
-        return signalName == null ? "" : signalName;
+    public TestEventType getTestSignalName() {
+        return signalName;
     }
 
     @Override

@@ -19,7 +19,10 @@ public class Configuration {
 
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
-    private static final String SCREENHSOT_COMPARISON_PROPERTY = "testadvisor.screenshotcomparison";
+    private static final String SELENIUM_URL_PROPERTY = "testadvisor.selenium.url";
+    private static final String SELENIUM_EXCEPTION_PROPERTY = "testadvisor.selenium.exception";
+    private static final String SELENIUM_ERROR_MESSAGE_PROPERTY = "testadvisor.selenium.errormessage";
+    private static final String SELENIUM_SCREENSHOT_PROPERTY = "testadvisor.selenium.screenshot";
     private static final String SIGNAL_LEVEL_PROPERTY = "testadvisor.signallevel";
     private static final String EXPORT_SCREENSHOT_DIFF_AREA_PROPERTY = "testadvisor.exportscreenshotdiffarea";
     private static final String EXPORT_SCREENSHOT_DIFF_IMAGE_PROPERTY = "testadvisor.exportscreenshotdiffimage";
@@ -29,8 +32,20 @@ public class Configuration {
     //private constructor to prevent instance
     private Configuration() {}
 
-    public static boolean getIsScreenshotComparisonEnabled(){
-        return Boolean.parseBoolean(System.getProperty(SCREENHSOT_COMPARISON_PROPERTY, FALSE));
+    public static boolean getIsSeleniumUrlEnabled(){
+        return Boolean.parseBoolean(System.getProperty(SELENIUM_URL_PROPERTY, FALSE));
+    }
+
+    public static boolean getIsSeleniumExceptionEnabled(){
+        return Boolean.parseBoolean(System.getProperty(SELENIUM_EXCEPTION_PROPERTY, FALSE));
+    }
+
+    public static boolean getIsSeleniumErrorMessageEnabled(){
+        return Boolean.parseBoolean(System.getProperty(SELENIUM_ERROR_MESSAGE_PROPERTY, FALSE));
+    }
+
+    public static boolean getIsSeleniumScreenshotEnabled(){
+        return Boolean.parseBoolean(System.getProperty(SELENIUM_SCREENSHOT_PROPERTY, FALSE));
     }
 
     public static Level getSignalLevel(){

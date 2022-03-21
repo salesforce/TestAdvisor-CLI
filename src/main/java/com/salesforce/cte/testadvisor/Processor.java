@@ -33,6 +33,7 @@ import com.salesforce.cte.adapter.TestAdvisorResultAdapter;
 import com.salesforce.cte.adapter.TestAdvisorTestCase;
 import com.salesforce.cte.adapter.TestAdvisorTestRun;
 import com.salesforce.cte.adapter.TestAdvisorTestSignal;
+import com.salesforce.cte.common.TestEventType;
 import com.salesforce.cte.datamodel.client.TestExecution;
 import com.salesforce.cte.datamodel.client.TestRunSignal;
 import com.salesforce.cte.datamodel.client.TestSignal;
@@ -92,7 +93,7 @@ public class Processor {
             testExection.testSignals = new ArrayList<>();
 
             Path baseline = registry.getBaselineTestRun(registry.getTestRunPath(testRunSignal.testRunId), testCase.getTestCaseFullName());
-            if (baseline != null && Configuration.getIsScreenshotComparisonEnabled()){
+            if (baseline != null && Configuration.getIsSeleniumScreenshotEnabled()){
                 LOGGER.log(Level.INFO,"Found baseline {0}", baseline);
                 testExection.baselineBuildId = registry.getTestRunId(baseline);
                 testExection.baselineBuildIdStartTime = getTestRunStartTime(baseline);
@@ -122,12 +123,13 @@ public class Processor {
     }
 
     public void extractTestSignals(TestAdvisorTestCase current, List<TestSignal> signalList){
-        for(TestAdvisorTestSignal event : current.getTestSignalList()){
-            if (event.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue()){
-                signalList.add(createTestSignalFromEvent(event));
-            }
-        }
+        current.getTestSignalList().stream().filter(signal ->  
+            (Configuration.getIsSeleniumExceptionEnabled() && signal.getTestSignalName() == TestEventType.EXCEPTION) 
+            || (Configuration.getIsSeleniumUrlEnabled() && signal.getTestSignalName() == TestEventType.URL)
+            || (signal.getTestSignalName() == TestEventType.AUTOMATION) && signal.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue())
+            .forEach(signal -> signalList.add(createTestSignalFromEvent(signal))); 
     }
+
     /**
      * Compare test advisor test case execution result based on screenshots and collect signals
      * @param baseline baseline test case execution

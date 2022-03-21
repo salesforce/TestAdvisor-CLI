@@ -12,13 +12,14 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.salesforce.cte.common.TestEventType;
 
 /**
  * @author Yibing Tao
  * ITestSignal interface define how to get signal for a single test case
  */
 public interface TestAdvisorTestSignal {
-    public String getTestSignalName();
+    public TestEventType getTestSignalName();
     public String getTestSignalValue();
     public Instant getTestSignalTime();
     public Level getTestSignalLevel();

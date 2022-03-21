@@ -13,7 +13,7 @@
 		<jdk.version>1.8</jdk.version>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
-	    <jackson.version>2.13.1</jackson.version>
+	    <jackson.version>2.13.2</jackson.version>
 	    <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 	    <junit.version>4.13.2</junit.version>
 	    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>com.salesforce.cte</groupId>
 			<artifactId>testadvisor-lib</artifactId>
-			<version>0.2.4</version>
+			<version>0.2.5</version>
 		</dependency>	
 		<dependency>
 			<groupId>com.github.romankh3</groupId>

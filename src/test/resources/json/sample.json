@@ -19,7 +19,7 @@
       "signalValue" : "org.testng.Assert.assertEquals",
       "signalTime" : "2021-05-25T03:36:14.420563Z"
     }, {
-      "signalName" : "SELENIUM",
+      "signalName" : "EXCEPTION",
       "signalValue" : "org.openqa.selenium.NoSuchElementException",
       "signalTime" : "2021-05-25T03:36:15.420563Z"
     } ]
