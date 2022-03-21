@@ -7,6 +7,8 @@
 
 package com.salesforce.cte.adapter;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,9 @@ public class TestSignalBase implements TestAdvisorTestSignal{
         signalName = name ;
         signalValue = value == null ? "" : value;
         signalTime = time;
+
+        if (name == TestEventType.URL)
+            signalValue = processUrl(signalValue);
     }
 
     public TestSignalBase(TestEventType name, String value, Instant time, 
@@ -108,6 +113,21 @@ public class TestSignalBase implements TestAdvisorTestSignal{
     @Override
     public void setExcludedAreas(List<Rectangle> excludedAreas){
         this.excludedAreas = excludedAreas;
+    }
+
+    private String processUrl(String url){
+        URI uri;
+        try {
+            uri = new URI(url);
+            return new URI(uri.getScheme(),
+                       uri.getAuthority(),
+                       uri.getPath(),
+                       null, // Ignore the query part of the input url
+                       uri.getFragment()).toString();
+        } catch (URISyntaxException e) {
+            LOGGER.log(Level.WARNING, "Invalid url {0}", url);
+            return "";
+        }
     }
 }
 
