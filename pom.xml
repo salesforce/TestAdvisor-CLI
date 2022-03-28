@@ -1,13 +1,90 @@
+<!--
+ * Copyright (c) 2021, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.salesforce.cte</groupId>
 	<artifactId>testadvisor-cli</artifactId>
-	<version>0.2.5-SNAPSHOT</version>
+	<version>0.2.15-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>testadvisor-cli</name>
+	<description>Command line tool to process and upload Test Advisor Signals</description>
 	<url>http://maven.apache.org</url>
+
+	<licenses>
+		<license>
+			<name>BSD 3-Clause</name>
+			<url>file://${basedir}/LICENSE.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:salesforce/TestAdvisor.git</connection>
+		<developerConnection>scm:git:git@github.com:salesforce/TestAdvisor.git</developerConnection>
+		<url>http://github.com/salesforce/TestAdvisor/tree/main</url>
+		<tag>v0.2.14</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Georg Neumann</name>
+			<roles>
+				<role>Member</role>
+			</roles>
+			<email>cte-tech@salesforce.com</email>
+			<organization>Salesforce</organization>
+		</developer>
+		<developer>
+			<name>Yibing Tao</name>
+			<roles>
+				<role>Member</role>
+			</roles>
+			<email>cte-tech@salesforce.com</email>
+			<organization>Salesforce</organization>
+		</developer>
+	</developers>
+
+	<profiles>
+        <profile>
+            <id>internal</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+            </properties>
+            <distributionManagement>
+                <repository>
+                    <id>nexus</id>
+                    <url>https://nexus.soma.salesforce.com/nexus/content/repositories/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>nexus</id>
+                    <url>https://nexus.soma.salesforce.com/nexus/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    
+        <profile>
+            <id>public</id>
+            <properties>
+            </properties>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
 	<properties>
 		<jdk.version>1.8</jdk.version>
@@ -22,6 +99,8 @@
 	    <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
 	    <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 	    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+	    <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+	    <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 	    <mockito.version>4.2.0</mockito.version>
 	    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 	    <testng.version>7.4.0</testng.version>
@@ -221,6 +300,7 @@
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
 				<version>${nexus-staging-maven-plugin.version}</version>
+				<extensions>true</extensions>
 				<executions>
 					<execution>
 						<id>default-deploy</id>
@@ -231,7 +311,9 @@
 					</execution>
 				</executions>
 				<configuration>
-					<skipStaging>true</skipStaging>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 
@@ -252,6 +334,20 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven-gpg-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>${maven-source-plugin.version}</version>
 				<executions>
@@ -266,7 +362,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<archive>                   
 						<manifest>
@@ -277,20 +373,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<scm>
-		<developerConnection>scm:git:git@git.soma.salesforce.com:cqe/DrillBit-CLI.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
-
-	<distributionManagement>
-		<repository>
-			<id>nexus</id>
-			<url>https://nexus.soma.salesforce.com/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus</id>
-			<url>https://nexus.soma.salesforce.com/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
