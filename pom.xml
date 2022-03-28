@@ -9,10 +9,11 @@
 
 	<groupId>com.salesforce.cte</groupId>
 	<artifactId>testadvisor-cli</artifactId>
-	<version>0.2.15-SNAPSHOT</version>
+	<version>0.2.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>testadvisor-cli</name>
+	<description>Command line tool to process and upload Test Advisor Signals</description>
 	<url>http://maven.apache.org</url>
 
 	<licenses>
@@ -28,6 +29,25 @@
 		<url>http://github.com/salesforce/TestAdvisor/tree/main</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<developers>
+		<developer>
+			<name>Georg Neumann</name>
+			<roles>
+				<role>Member</role>
+			</roles>
+			<email>cte-tech@salesforce.com</email>
+			<organization>Salesforce</organization>
+		</developer>
+		<developer>
+			<name>Yibing Tao</name>
+			<roles>
+				<role>Member</role>
+			</roles>
+			<email>cte-tech@salesforce.com</email>
+			<organization>Salesforce</organization>
+		</developer>
+	</developers>
 
 	<profiles>
         <profile>
