@@ -69,7 +69,8 @@ public class Registry {
     public static final String TESTADVISOR_DEFAULT_REGISGRY = ".testadvisor"; //TODO: what about different platform
     public static final String TESTADVISOR_TEST_RESULT = "test-result.json";
     public static final String TESTADVISOR_PROPERTY_CLIENT_GUID = "ClientRegistryGuid";
-    
+    public static final String VERSION_PROPERTY = "testadvisor.cli.version";
+
     private List<Path> allTestRunList = new ArrayList<>();
     private Properties registryConfig = new Properties();
     private Path registryRoot;
@@ -134,6 +135,29 @@ public class Registry {
         return registryConfig;
     }
     
+    /**
+     * Get test run properties
+     * @return
+     * @throws IOException
+     */
+    public TestRunSignal getTestRunProperties() throws IOException{
+        TestRunSignal testRunSignal = new TestRunSignal();
+        Properties prop = getRegistryProperties();
+        testRunSignal.sandboxInstance = prop.getProperty("SandboxInstance","");
+        testRunSignal.sandboxOrgId = prop.getProperty("SandboxOrgId","");
+        testRunSignal.sandboxOrgName = prop.getProperty("SandboxOrgName","");
+        testRunSignal.clientRegistryGuid =  UUID.fromString(prop.getProperty(TESTADVISOR_PROPERTY_CLIENT_GUID, UUID.randomUUID().toString()));
+        testRunSignal.testSuiteName = prop.getProperty("TestSuiteName","");
+        testRunSignal.clientBuildId =  System.getProperty("CLIENT_BUILD_ID","");
+
+        final Properties properties = new Properties();
+        properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
+        String versionString = properties.getProperty(VERSION_PROPERTY,"");
+        testRunSignal.clientCliVersion = Pattern.matches("\\d+\\.\\d+\\.[0-9a-zA-Z-]+", versionString) ? versionString : "";
+
+        return testRunSignal;
+    }
+
     /**
      * set and save registry properties
      * @param key

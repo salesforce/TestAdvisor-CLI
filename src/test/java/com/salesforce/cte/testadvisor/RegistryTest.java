@@ -41,16 +41,16 @@ public class RegistryTest {
         Properties regProperties = registry.getRegistryProperties();   
         regProperties.setProperty("ClientRegistryGuid", "02957862-f1d9-475a-8ce0-d7ec128ccf42");     
         regProperties.setProperty("SandboxInstance", "CS46");
-        regProperties.setProperty("SandboxOrgId", "00D9A0000009HXt");
+        regProperties.setProperty("SandboxOrgId", "00D8A0000008HXt");
         regProperties.setProperty("SandboxOrgName", "Pleasekeep");
-        regProperties.setProperty("TestSuiteName", "Schneider-Sales-Clone");
+        regProperties.setProperty("TestSuiteName", "Dev401-Clone");
 
         assertEquals(root,registry.getRegistryRoot());
         assertEquals("02957862-f1d9-475a-8ce0-d7ec128ccf42", regProperties.getProperty("ClientRegistryGuid"));
         assertEquals("CS46", regProperties.getProperty("SandboxInstance"));
-        assertEquals("00D9A0000009HXt", regProperties.getProperty("SandboxOrgId"));
+        assertEquals("00D8A0000008HXt", regProperties.getProperty("SandboxOrgId"));
         assertEquals("Pleasekeep", regProperties.getProperty("SandboxOrgName"));
-        assertEquals("Schneider-Sales-Clone", regProperties.getProperty("TestSuiteName"));
+        assertEquals("Dev401-Clone", regProperties.getProperty("TestSuiteName"));
     }
 
     @Test
@@ -58,16 +58,16 @@ public class RegistryTest {
         Registry registry = new Registry(root);
         registry.saveRegistryProperty("ClientRegistryGuid", "02957862-f1d9-475a-8ce0-d7ec128ccf42");     
         registry.saveRegistryProperty("SandboxInstance", "CS46");
-        registry.saveRegistryProperty("SandboxOrgId", "00D9A0000009HXt");
+        registry.saveRegistryProperty("SandboxOrgId", "00D8A0000008HXt");
         registry.saveRegistryProperty("SandboxOrgName", "Pleasekeep");
-        registry.saveRegistryProperty("TestSuiteName", "Schneider-Sales-Clone");
+        registry.saveRegistryProperty("TestSuiteName", "Dev401-Clone");
 
         Properties regProperties = registry.getRegistryProperties();   
         assertEquals("02957862-f1d9-475a-8ce0-d7ec128ccf42", regProperties.getProperty("ClientRegistryGuid"));
         assertEquals("CS46", regProperties.getProperty("SandboxInstance"));
-        assertEquals("00D9A0000009HXt", regProperties.getProperty("SandboxOrgId"));
+        assertEquals("00D8A0000008HXt", regProperties.getProperty("SandboxOrgId"));
         assertEquals("Pleasekeep", regProperties.getProperty("SandboxOrgName"));
-        assertEquals("Schneider-Sales-Clone", regProperties.getProperty("TestSuiteName"));
+        assertEquals("Dev401-Clone", regProperties.getProperty("TestSuiteName"));
     }
 
     @Test
@@ -256,8 +256,45 @@ public class RegistryTest {
         Path testrun1 = RegistryHelper.createTestRun(registry,0);
         TestAdvisorResult result = registry.getTestAdvisorResult(testrun1);
         assertEquals(0, result.getTestCaseExecutionList().size());
-
     }
+
+    @Test
+    public void testGetTestRunPropertiesDefault() throws IOException{
+        Registry registry = new Registry(root);
+
+        TestRunSignal testRunSignal = registry.getTestRunProperties();
+
+        assertEquals("", testRunSignal.sandboxInstance);
+        assertEquals("", testRunSignal.sandboxOrgId);
+        assertEquals("", testRunSignal.sandboxOrgName);
+        assertEquals("", testRunSignal.testSuiteName);
+        assertEquals("", testRunSignal.clientBuildId);
+        assertNotNull(testRunSignal.clientRegistryGuid);
+        assertTrue(testRunSignal.clientCliVersion.trim().length()>0);
+    }
+
+    @Test
+    public void testGetTestRunProperties() throws IOException{
+        Registry registry = new Registry(root);
+        registry.saveRegistryProperty("ClientRegistryGuid", "02957862-f1d9-475a-8ce0-d7ec128ccf42");     
+        registry.saveRegistryProperty("SandboxInstance", "CS46");
+        registry.saveRegistryProperty("SandboxOrgId", "00D8A0000008HXt");
+        registry.saveRegistryProperty("SandboxOrgName", "Pleasekeep");
+        registry.saveRegistryProperty("TestSuiteName", "Dev401-Clone");
+        System.setProperty("CLIENT_BUILD_ID","123");
+        registry.loadRegistryProperties();
+
+        TestRunSignal testRunSignal = registry.getTestRunProperties();
+
+        assertEquals("CS46", testRunSignal.sandboxInstance);
+        assertEquals("00D8A0000008HXt", testRunSignal.sandboxOrgId);
+        assertEquals("Pleasekeep", testRunSignal.sandboxOrgName);
+        assertEquals("Dev401-Clone", testRunSignal.testSuiteName);
+        assertEquals("123", testRunSignal.clientBuildId);
+        assertEquals("02957862-f1d9-475a-8ce0-d7ec128ccf42", testRunSignal.clientRegistryGuid.toString());
+        assertTrue(testRunSignal.clientCliVersion.trim().length()>0);
+    }
+
 
     @After
     public void teardown() throws IOException{
