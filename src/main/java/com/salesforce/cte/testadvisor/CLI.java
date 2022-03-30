@@ -188,16 +188,7 @@ public class CLI {
     public void process() throws IOException, ProcessException {
         //process test results and save the signal file
         LOGGER.log(Level.INFO,"Process test result");
-        TestRunSignal testRunSignal = new TestRunSignal();
-        Properties prop = registry.getRegistryProperties();
-        testRunSignal.sandboxInstance = prop.getProperty("SandboxInstance");
-        testRunSignal.sandboxOrgId = prop.getProperty("SandboxOrgId");
-        testRunSignal.sandboxOrgName = prop.getProperty("SandboxOrgName");
-        testRunSignal.clientRegistryGuid =  UUID.fromString(prop.getProperty("ClientRegistryGuid"));
-        testRunSignal.testSuiteName = prop.getProperty("TestSuiteName");
-        String clientBuildId = System.getenv("CLIENT_BUILD_ID");
-        testRunSignal.clientBuildId =  clientBuildId == null ? System.getProperty("CLIENT_BUILD_ID") : clientBuildId;
-        testRunSignal.clientCliVersion = this.getVersion();
+        TestRunSignal testRunSignal = registry.getTestRunProperties();
         
         if (resultFileName == null || resultFileName.isEmpty()){
             for(Path path : registry.getUnprocessedTestRunList()){
