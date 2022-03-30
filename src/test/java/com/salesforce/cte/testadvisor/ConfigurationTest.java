@@ -17,6 +17,24 @@ import org.junit.Test;
 public class ConfigurationTest {
     
     @Test
+    public void testGetUploadAllConfTest(){
+        System.clearProperty("testadvisor.uploadallconfigurationtest");
+        assertTrue(!Configuration.getUploadAllConfTest());
+
+        System.setProperty("testadvisor.uploadallconfigurationtest","true");
+        assertTrue(Configuration.getUploadAllConfTest());
+
+        System.setProperty("testadvisor.uploadallconfigurationtest","false");
+        assertTrue(!Configuration.getUploadAllConfTest());
+
+        System.setProperty("testadvisor.uploadallconfigurationtest","ok");
+        assertTrue(!Configuration.getUploadAllConfTest());
+
+        System.clearProperty("testadvisor.uploadallconfigurationtest");
+    }
+
+
+    @Test
     public void testGetIsSeleniumUrlEnabled(){
         System.clearProperty("testadvisor.selenium.url");
         assertTrue(!Configuration.getIsSeleniumUrlEnabled());

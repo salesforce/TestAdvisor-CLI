@@ -82,6 +82,12 @@ public class Processor {
         testRunSignal.testExecutions = new ArrayList<>();
         for(TestAdvisorTestCase testCase : testRun.getTestCaseList()){
             LOGGER.log(Level.INFO,"Processing test case {0}", testCase.getTestCaseFullName());
+
+            //only upload failed configuration test by default
+            if (!Configuration.getUploadAllConfTest() 
+                && testCase.getIsConfiguration() && !testCase.getTestCaseStatus().equalsIgnoreCase("Failed"))
+                continue;
+
             //find baseline test run
             TestExecution testExection = new TestExecution();
             testExection.testCaseName = testCase.getTestCaseFullName();

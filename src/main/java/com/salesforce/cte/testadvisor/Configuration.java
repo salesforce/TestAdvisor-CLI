@@ -28,6 +28,7 @@ public class Configuration {
     private static final String EXPORT_SCREENSHOT_DIFF_IMAGE_PROPERTY = "testadvisor.exportscreenshotdiffimage";
     private static final String SCREENSHOT_MIN_DIFF_AREA_SIZE_PROPERTY = "testadvisor.screenshotmindiffareasize";
     private static final String SCREENSHOT_MIN_DIFF_RATIO_PROPERTY = "testadvisor.screenshotmindiffratio";
+    private static final String UPLOAD_ALL_CONF_TEST_PROPERTY = "testadvisor.uploadallconfigurationtest";
 
     //private constructor to prevent instance
     private Configuration() {}
@@ -79,6 +80,16 @@ public class Configuration {
                 System.getProperty(SCREENSHOT_MIN_DIFF_RATIO_PROPERTY));
             return 1;
         }   
+    }
+
+    /**
+     * If upload all configuration test signals
+     * @return
+     * false, default value, only upload failed configuration test signals
+     * true, upload all configuration test signals
+     */
+    public static boolean getUploadAllConfTest(){
+        return Boolean.parseBoolean(System.getProperty(UPLOAD_ALL_CONF_TEST_PROPERTY, FALSE));
     }
 
 }
