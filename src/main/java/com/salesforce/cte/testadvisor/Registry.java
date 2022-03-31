@@ -66,7 +66,7 @@ public class Registry {
     public static final String TESTADVISOR_TESTRUN_PREFIX = "TestRun-";
     public static final String TESTADVISOR_TESTRUN_PATTERN_STRING = "yyyyMMdd-HHmmss";
     public static final String TESTADVISOR_PROPERTIES_FILENAME = "testadvisor.properties";
-    public static final String TESTADVISOR_DEFAULT_REGISGRY = ".testadvisor"; //TODO: what about different platform
+    public static final String TESTADVISOR_DEFAULT_REGISGRY = "testadvisor";
     public static final String TESTADVISOR_TEST_RESULT = "test-result.json";
     public static final String TESTADVISOR_PROPERTY_CLIENT_GUID = "ClientRegistryGuid";
     public static final String VERSION_PROPERTY = "testadvisor.cli.version";
@@ -80,14 +80,9 @@ public class Registry {
 
     public Registry() throws IOException{
         //get registry root
-        if (System.getenv("TESTADVISOR") == null){
-            //env not set
-            registryRoot = Paths.get(System.getProperty("user.dir"))
-                            .resolve(Paths.get(TESTADVISOR_DEFAULT_REGISGRY))
-                            .toAbsolutePath();
-        }
-        else
-            registryRoot = Paths.get(System.getenv("TESTADVISOR"));
+        registryRoot = System.getenv("TEST_ADVISOR_REGISTRY") != null ?
+                        Paths.get(System.getenv("TEST_ADVISOR_REGISTRY")).normalize()
+                        :Paths.get(System.getProperty("user.dir"),TESTADVISOR_DEFAULT_REGISGRY).normalize();   
         initRegistry();
     }
 
@@ -137,8 +132,8 @@ public class Registry {
     
     /**
      * Get test run properties
-     * @return
-     * @throws IOException
+     * @return TestRunSignal object contains test run properties
+     * @throws IOException when failed to access registry properties
      */
     public TestRunSignal getTestRunProperties() throws IOException{
         TestRunSignal testRunSignal = new TestRunSignal();
