@@ -127,8 +127,31 @@ public class ProcessorTest{
             processor.process(is, testRunSignal,adapter);
         }
         
-        assertEquals(1, testRunSignal.testExecutions.size());
+        assertEquals(2, testRunSignal.testExecutions.size());
         assertEquals(TestStatus.PASS, testRunSignal.testExecutions.get(0).status);
+    }
+
+    @Test
+    public void testUploadAllConfTest() throws IOException, ProcessException{
+        Path currentTestRun = RegistryHelper.createTestRun(registry, 1000);
+        RegistryHelper.saveTestAdvisorResult(currentTestRun, createTestAdvisorResult());
+        registry.getAllTestRuns();
+
+        TestRunSignal testRunSignal = registry.getTestRunProperties();
+        TestAdvisorAdapter adapter = new TestAdvisorResultAdapter();
+        try(InputStream is = new FileInputStream(currentTestRun.resolve("test-result.json").toFile())){
+            processor.process(is, testRunSignal,adapter);
+        }
+
+        assertEquals(2, testRunSignal.testExecutions.size());
+
+        System.setProperty("testadvisor.uploadallconfigurationtest","true");
+        testRunSignal = registry.getTestRunProperties();
+        try(InputStream is = new FileInputStream(currentTestRun.resolve("test-result.json").toFile())){
+            processor.process(is, testRunSignal,adapter);
+        }
+        assertEquals(3, testRunSignal.testExecutions.size());
+        System.setProperty("testadvisor.uploadallconfigurationtest","false");
 
     }
 
@@ -264,6 +287,24 @@ public class ProcessorTest{
         testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent9", Level.WARNING.toString()));
         testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent10", Level.INFO.toString()));
 
+        testAdvisorResult.getTestCaseExecutionList().add(testCaseExecution);
+
+        testCaseExecution = new TestCaseExecution();
+        testCaseExecution.setTestName("testcaseSetup");
+        testCaseExecution.setConfiguration(true);
+        testCaseExecution.setStartTime(Instant.now());
+        testCaseExecution.setEndTime(testCaseExecution.getStartTime().plusSeconds(50));
+        testCaseExecution.setTestStatus(com.salesforce.cte.common.TestStatus.PASSED);
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent10", Level.INFO.toString()));
+        testAdvisorResult.getTestCaseExecutionList().add(testCaseExecution);
+
+        testCaseExecution = new TestCaseExecution();
+        testCaseExecution.setTestName("testcaseSetup");
+        testCaseExecution.setConfiguration(true);
+        testCaseExecution.setStartTime(Instant.now());
+        testCaseExecution.setEndTime(testCaseExecution.getStartTime().plusSeconds(50));
+        testCaseExecution.setTestStatus(com.salesforce.cte.common.TestStatus.FAILED);
+        testCaseExecution.getEventList().add(new TestEvent(TestEventType.AUTOMATION,"eventContent10", Level.INFO.toString()));
         testAdvisorResult.getTestCaseExecutionList().add(testCaseExecution);
 
         return testAdvisorResult;
