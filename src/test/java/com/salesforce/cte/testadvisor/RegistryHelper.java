@@ -68,12 +68,12 @@ public class RegistryHelper {
         testRunSignal.testExecutions = new ArrayList<>();
 
         TestExecution testExecution = createTestExecution("testcaseFail",TestStatus.FAIL);
-        testExecution.testSignals.add(createTestSignal(TestEventType.EXCEPTION,"Exception"));
+        testExecution.testSignals.add(createTestSignal(TestEventType.TEST_EXCEPTION,"Exception"));
         testExecution.testSignals.add(createTestSignal(TestEventType.AUTOMATION,"Exception"));
         testRunSignal.testExecutions.add(testExecution);
 
         testExecution = createTestExecution("testcasePass",TestStatus.PASS);
-        testExecution.testSignals.add(createTestSignal(TestEventType.EXCEPTION,"Exception"));
+        testExecution.testSignals.add(createTestSignal(TestEventType.TEST_EXCEPTION,"Exception"));
         testExecution.testSignals.add(createTestSignal(TestEventType.AUTOMATION,"Exception"));
         testRunSignal.testExecutions.add(testExecution);
 

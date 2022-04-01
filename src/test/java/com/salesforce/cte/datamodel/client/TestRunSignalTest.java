@@ -66,7 +66,7 @@ public class TestRunSignalTest {
     signal.signalTime = now.plusSeconds(1);
     testExecution.testSignals.add(signal);
     signal = new TestSignal();
-    signal.signalName = TestEventType.EXCEPTION;
+    signal.signalName = TestEventType.TEST_EXCEPTION;
     signal.signalValue = "org.openqa.selenium.NoSuchElementException";
     signal.signalTime = now.plusSeconds(2);
     signal.errorMessage = "PreDefined";
@@ -135,7 +135,7 @@ public class TestRunSignalTest {
     assertEquals(TestEventType.AUTOMATION, testRunSignal.testExecutions.get(0).testSignals.get(0).signalName);
     assertEquals("org.testng.Assert.assertEquals", testRunSignal.testExecutions.get(0).testSignals.get(0).signalValue);
     assertEquals("2021-05-25T03:36:14.420563Z", testRunSignal.testExecutions.get(0).testSignals.get(0).signalTime.toString());
-    assertEquals(TestEventType.EXCEPTION, testRunSignal.testExecutions.get(0).testSignals.get(1).signalName);
+    assertEquals(TestEventType.TEST_EXCEPTION, testRunSignal.testExecutions.get(0).testSignals.get(1).signalName);
     assertEquals("org.openqa.selenium.NoSuchElementException", testRunSignal.testExecutions.get(0).testSignals.get(1).signalValue);
     assertEquals("2021-05-25T03:36:15.420563Z", testRunSignal.testExecutions.get(0).testSignals.get(1).signalTime.toString());
   }
