@@ -212,7 +212,7 @@ public class ProcessorTest{
         System.setProperty("testadvisor.signallevel","OFF");
         processor.extractTestSignals(current, signalList);
         assertEquals(1, signalList.size());
-        assertEquals(TestEventType.EXCEPTION, signalList.get(0).signalName); 
+        assertEquals(TestEventType.TEST_EXCEPTION, signalList.get(0).signalName); 
         System.setProperty("testadvisor.signallevel","WARNING");
         System.setProperty("testadvisor.selenium.exception","false");
     }
@@ -248,7 +248,7 @@ public class ProcessorTest{
         signalList.add(new TestSignalBase(TestEventType.URL, "url", Instant.now().minusSeconds(300), 
                                             Level.INFO.toString(), "", "", "", 
                                             num, "" ));                                                    
-        signalList.add(new TestSignalBase(TestEventType.EXCEPTION, "exception", Instant.now().minusSeconds(300), 
+        signalList.add(new TestSignalBase(TestEventType.TEST_EXCEPTION, "exception", Instant.now().minusSeconds(300), 
                                             Level.INFO.toString(), "", "", "", 
                                             num, "" ));     
 

@@ -130,7 +130,7 @@ public class Processor {
 
     public void extractTestSignals(TestAdvisorTestCase current, List<TestSignal> signalList){
         current.getTestSignalList().stream().filter(signal ->  
-            (Configuration.getIsSeleniumExceptionEnabled() && signal.getTestSignalName() == TestEventType.EXCEPTION) 
+            (Configuration.getIsSeleniumExceptionEnabled() && signal.getTestSignalName() == TestEventType.TEST_EXCEPTION) 
             || (Configuration.getIsSeleniumUrlEnabled() && signal.getTestSignalName() == TestEventType.URL)
             || (signal.getTestSignalName() == TestEventType.AUTOMATION) && signal.getTestSignalLevel().intValue() >= Configuration.getSignalLevel().intValue())
             .forEach(signal -> signalList.add(createTestSignalFromEvent(signal))); 

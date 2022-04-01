@@ -108,7 +108,7 @@
 		<jdk.version>1.8</jdk.version>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
-	    <jackson.version>2.13.2.1</jackson.version>
+	    <jackson.version>2.13.2.2</jackson.version>
 	    <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 	    <junit.version>4.13.2</junit.version>
 	    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -122,11 +122,18 @@
 	    <mockito.version>4.2.0</mockito.version>
 	    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 	    <testng.version>7.4.0</testng.version>
-
 		<apache.httpclient.version>4.5.13</apache.httpclient.version>
 		<org.json.version>20210307</org.json.version>
 		<google.guava.version>31.0.1-jre</google.guava.version>
 		<java-keyring.version>1.0.1</java-keyring.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <activation.version>1.1</activation.version>
+        <jaxb-runtime.version>2.3.1</jaxb-runtime.version>
+        <commons-cli.version>1.4</commons-cli.version>
+        <testadvisor-lib.version>0.3.0</testadvisor-lib.version>
+        <image-comparison.version>4.4.0</image-comparison.version>
+        <ant.version>1.10.12</ant.version>
+        <snakeyaml.version>1.30</snakeyaml.version>
 	</properties>
 
 	<dependencies>
@@ -144,18 +151,18 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.3.1</version>
+			<version>${jaxb-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
-			<version>1.1</version>
+			<version>${activation.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.1</version>
+			<version>${jaxb-runtime.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -183,7 +190,7 @@
 		<dependency>
 			<groupId>commons-cli</groupId>
 			<artifactId>commons-cli</artifactId>
-			<version>1.4</version>
+			<version>${commons-cli.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<dependency>
@@ -195,25 +202,25 @@
 		<dependency>
 			<groupId>com.salesforce.cte</groupId>
 			<artifactId>testadvisor-lib</artifactId>
-			<version>0.2.5</version>
+			<version>${testadvisor-lib.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>com.github.romankh3</groupId>
 			<artifactId>image-comparison</artifactId>
-			<version>4.4.0</version>
+			<version>${image-comparison.version}</version>
 		</dependency>
 		<!-- Add the following 2 dependency due to TestNG 7.3 depends on old version with security vulnerability-->
 		<!-- https://mvnrepository.com/artifact/org.apache.ant/ant -->
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
-			<version>1.10.12</version>
+			<version>${ant.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.30</version>
+			<version>${snakeyaml.version}</version>
 		</dependency>
 	</dependencies>
 
